@@ -6,7 +6,7 @@ from pathlib import Path
 
 from clippeur import cache
 from clippeur.segments import format_horodatage
-from clippeur.transcription import MODELE_PAR_DEFAUT, transcrire
+from clippeur.transcription import LANGUE_PAR_DEFAUT, MODELE_PAR_DEFAUT, FilmIllisible, transcrire
 
 
 def commande_transcrire(args: argparse.Namespace) -> int:
@@ -15,14 +15,44 @@ def commande_transcrire(args: argparse.Namespace) -> int:
         print(f"Fichier introuvable : {film}", file=sys.stderr)
         return 1
 
-    resultat = transcrire(film, modele=args.modele, forcer=args.forcer)
+    try:
+        resultat = transcrire(film, modele=args.modele, langue=args.langue, forcer=args.forcer)
+    except FilmIllisible as e:
+        print(e, file=sys.stderr)
+        return 1
     segments = resultat["segments"]
     print(f"\n{len(segments)} réplique{'s' if len(segments) > 1 else ''} ({resultat['source']}).")
     for s in segments[:5]:
         print(f"  [{format_horodatage(s['debut'])}] {s['texte']}")
     if len(segments) > 5:
         print("  ...")
-    print(f"\nRésultat complet : {cache.dossier_du_film(film) / 'transcription.json'}")
+    print(f"\nRésultat complet : {cache.dossier_du_film(film) / f'transcription_{args.langue}.json'}")
+    return 0
+
+
+def commande_extraits(args: argparse.Namespace) -> int:
+    from clippeur.export import dossier_de_sortie, exporter
+    from clippeur.extraits import proposer
+    from clippeur.transcription import afficher_dans_terminal
+
+    film = Path(args.film).expanduser().resolve()
+    if not film.is_file():
+        print(f"Fichier introuvable : {film}", file=sys.stderr)
+        return 1
+    try:
+        proposition = proposer(film, args.langue, args.nombre, afficher_dans_terminal)
+    except FilmIllisible as e:
+        print(e, file=sys.stderr)
+        return 1
+
+    print()
+    for e in proposition["extraits"]:
+        print(f"{e['numero']:2d}. [{format_horodatage(e['debut'])} → {format_horodatage(e['fin'])}, {e['duree']:.0f} s]"
+              f" note {e['score']:.0f} · {e['raison']}")
+        print(f"    « {e['titre']} »")
+    if args.exporter:
+        exporter(film, proposition["extraits"], afficher_dans_terminal)
+        print(f"Extraits dans : {dossier_de_sortie(film)}")
     return 0
 
 
@@ -41,8 +71,16 @@ def main() -> int:
     p.add_argument("film", help="chemin du fichier vidéo")
     p.add_argument("--modele", default=MODELE_PAR_DEFAUT,
                    help="modèle Whisper : tiny, base, small, medium (plus gros = plus précis mais plus lent)")
+    p.add_argument("--langue", choices=["fr", "en"], default=LANGUE_PAR_DEFAUT, help="langue des dialogues (fr par défaut)")
     p.add_argument("--forcer", action="store_true", help="refait la transcription même si elle est en cache")
     p.set_defaults(fonction=commande_transcrire)
+
+    p = sous.add_parser("extraits", help="propose les meilleurs extraits du film, et les exporte si demandé")
+    p.add_argument("film", help="chemin du fichier vidéo")
+    p.add_argument("--langue", choices=["fr", "en"], default=LANGUE_PAR_DEFAUT, help="langue des dialogues (fr par défaut)")
+    p.add_argument("--nombre", type=int, default=10, help="nombre d'extraits (10 par défaut)")
+    p.add_argument("--exporter", action="store_true", help="découpe et enregistre les extraits en MP4")
+    p.set_defaults(fonction=commande_extraits)
 
     p = sous.add_parser("interface", help="ouvre la page web locale")
     p.add_argument("--port", type=int, default=5000)

@@ -1,4 +1,4 @@
-"""Recherche des sous-titres français d'un film : fichier .srt à côté, ou piste intégrée."""
+"""Recherche des sous-titres d'un film dans une langue donnée : fichier .srt à côté, ou piste intégrée."""
 
 import json
 import subprocess
@@ -7,16 +7,19 @@ from pathlib import Path
 from clippeur.segments import Segment
 from clippeur.srt import lire_fichier_srt, lire_srt
 
-_SUFFIXES_FR = ["", ".fr", ".fre", ".fra", ".french", ".vf"]
-_LANGUES_FR = {"fre", "fra", "fr", "french"}
+# Pour chaque langue : suffixes possibles du fichier .srt et codes de langue des pistes.
+LANGUES = {
+    "fr": {"suffixes": ["", ".fr", ".fre", ".fra", ".french", ".vf"], "codes": {"fre", "fra", "fr", "french"}},
+    "en": {"suffixes": ["", ".en", ".eng", ".english", ".vo"], "codes": {"eng", "en", "english"}},
+}
 # Pistes texte convertibles en SRT. Les sous-titres en image (PGS des Blu-ray,
 # VobSub des DVD) ne peuvent pas être lus sans reconnaissance de caractères.
 _CODECS_TEXTE = {"subrip", "srt", "ass", "ssa", "mov_text", "webvtt", "text"}
 
 
-def trouver_srt_adjacent(film: Path) -> Path | None:
-    """Cherche film.srt, film.fr.srt, etc. dans le même dossier que le film."""
-    for suffixe in _SUFFIXES_FR:
+def trouver_srt_adjacent(film: Path, langue: str = "fr") -> Path | None:
+    """Cherche film.srt, film.fr.srt (ou film.en.srt...) dans le même dossier que le film."""
+    for suffixe in LANGUES[langue]["suffixes"]:
         candidat = film.with_name(f"{film.stem}{suffixe}.srt")
         if candidat.is_file():
             return candidat
@@ -35,8 +38,8 @@ def _pistes_sous_titres(film: Path) -> list[dict]:
     return json.loads(resultat.stdout).get("streams", [])
 
 
-def choisir_piste(pistes: list[dict]) -> dict | None:
-    """Choisit la piste française complète, à défaut une piste sans langue indiquée.
+def choisir_piste(pistes: list[dict], langue: str = "fr") -> dict | None:
+    """Choisit la piste complète dans la langue voulue, à défaut une piste sans langue indiquée.
 
     Les pistes « forcées » sont ignorées : elles ne traduisent que quelques passages.
     """
@@ -45,7 +48,7 @@ def choisir_piste(pistes: list[dict]) -> dict | None:
         if p.get("codec_name") in _CODECS_TEXTE and not p.get("disposition", {}).get("forced")
     ]
     for p in utilisables:
-        if p.get("tags", {}).get("language", "").lower() in _LANGUES_FR:
+        if p.get("tags", {}).get("language", "").lower() in LANGUES[langue]["codes"]:
             return p
     for p in utilisables:
         if not p.get("tags", {}).get("language") or p["tags"]["language"] == "und":
@@ -53,9 +56,9 @@ def choisir_piste(pistes: list[dict]) -> dict | None:
     return None
 
 
-def extraire_piste_integree(film: Path) -> list[Segment] | None:
-    """Extrait la piste de sous-titres français intégrée au fichier, s'il y en a une."""
-    piste = choisir_piste(_pistes_sous_titres(film))
+def extraire_piste_integree(film: Path, langue: str = "fr") -> list[Segment] | None:
+    """Extrait la piste de sous-titres intégrée au fichier dans la langue voulue, s'il y en a une."""
+    piste = choisir_piste(_pistes_sous_titres(film), langue)
     if piste is None:
         return None
     resultat = subprocess.run(

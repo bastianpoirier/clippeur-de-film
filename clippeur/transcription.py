@@ -18,10 +18,27 @@ from clippeur.sous_titres import extraire_piste_integree, trouver_srt_adjacent
 from clippeur.srt import lire_fichier_srt
 
 MODELE_PAR_DEFAUT = "small"
+LANGUE_PAR_DEFAUT = "fr"
 FREQUENCE_WHISPER = 16000  # Whisper attend du son mono à 16 kHz
 
 # Fonction appelée pour signaler l'avancement : (message, pourcentage ou None).
 Suivi = Callable[[str, float | None], None]
+
+
+class FilmIllisible(Exception):
+    """Le fichier n'est pas une vidéo lisible (fichier abîmé ou téléchargement pas terminé)."""
+
+
+def verifier_lisible(film: Path) -> None:
+    resultat = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(film)],
+        capture_output=True, text=True, errors="replace",
+    )
+    if resultat.returncode != 0:
+        raise FilmIllisible(
+            f"Impossible de lire « {film.name} » : ce n'est pas une vidéo valide. "
+            "Le fichier est peut-être abîmé, ou son téléchargement n'est pas terminé."
+        )
 
 
 def afficher_dans_terminal(message: str, pourcentage: float | None) -> None:
@@ -47,7 +64,7 @@ def extraire_audio(film: Path) -> "numpy.ndarray":
     return numpy.frombuffer(resultat.stdout, numpy.int16).astype(numpy.float32) / 32768.0
 
 
-def transcrire_avec_whisper(film: Path, modele: str, suivi: Suivi) -> list[Segment]:
+def transcrire_avec_whisper(film: Path, modele: str, langue: str, suivi: Suivi) -> list[Segment]:
     os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
     from faster_whisper import WhisperModel  # import lent, fait seulement si nécessaire
 
@@ -55,7 +72,7 @@ def transcrire_avec_whisper(film: Path, modele: str, suivi: Suivi) -> list[Segme
     audio = extraire_audio(film)
     suivi(f"Chargement du modèle Whisper « {modele} » (téléchargé au premier lancement)...", None)
     whisper = WhisperModel(modele, device="cpu", compute_type="int8")
-    morceaux, info = whisper.transcribe(audio, language="fr", vad_filter=True)
+    morceaux, info = whisper.transcribe(audio, language=langue, vad_filter=True)
 
     segments = []
     depart = time.monotonic()
@@ -74,34 +91,37 @@ def transcrire_avec_whisper(film: Path, modele: str, suivi: Suivi) -> list[Segme
 def transcrire(
     film: Path,
     modele: str = MODELE_PAR_DEFAUT,
+    langue: str = LANGUE_PAR_DEFAUT,
     forcer: bool = False,
     suivi: Suivi = afficher_dans_terminal,
 ) -> dict:
     """Renvoie la transcription du film, depuis le cache si elle a déjà été faite."""
     if not forcer:
-        en_cache = cache.lire(film, "transcription")
+        en_cache = cache.lire(film, f"transcription_{langue}")
         if en_cache:
             suivi("Transcription déjà faite, lecture depuis le cache.", None)
             return en_cache
 
-    srt = trouver_srt_adjacent(film)
+    verifier_lisible(film)
+    srt = trouver_srt_adjacent(film, langue)
     if srt:
         suivi(f"Sous-titres trouvés : {srt.name}", None)
         source, segments = f"fichier {srt.name}", lire_fichier_srt(srt)
     else:
         suivi("Recherche d'une piste de sous-titres dans le fichier...", None)
-        segments = extraire_piste_integree(film)
+        segments = extraire_piste_integree(film, langue)
         if segments:
-            suivi("Piste de sous-titres français trouvée dans le fichier.", None)
+            suivi("Piste de sous-titres trouvée dans le fichier.", None)
             source = "piste intégrée"
         else:
-            suivi("Aucun sous-titre français : transcription avec Whisper. Cela peut prendre un moment.", None)
-            source, segments = f"whisper {modele}", transcrire_avec_whisper(film, modele, suivi)
+            suivi("Aucun sous-titre dans cette langue : transcription avec Whisper. Cela peut prendre un moment.", None)
+            source, segments = f"whisper {modele}", transcrire_avec_whisper(film, modele, langue, suivi)
 
     resultat = {
         "film": film.name,
+        "langue": langue,
         "source": source,
         "segments": [s.vers_dict() for s in segments],
     }
-    cache.ecrire(film, "transcription", resultat)
+    cache.ecrire(film, f"transcription_{langue}", resultat)
     return resultat

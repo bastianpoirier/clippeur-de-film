@@ -48,3 +48,11 @@ def test_choisit_la_piste_francaise_complete():
 
 def test_ignore_les_pistes_dans_une_autre_langue():
     assert choisir_piste([{"index": 2, "codec_name": "subrip", "tags": {"language": "eng"}}]) is None
+
+
+def test_choisit_la_piste_anglaise_si_demandee():
+    pistes = [
+        {"index": 2, "codec_name": "subrip", "tags": {"language": "fre"}},
+        {"index": 3, "codec_name": "subrip", "tags": {"language": "eng"}},
+    ]
+    assert choisir_piste(pistes, "en")["index"] == 3

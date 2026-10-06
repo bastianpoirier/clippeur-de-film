@@ -8,7 +8,7 @@
   :root {
     --fond: #f6f5f2; --carte: #ffffff; --texte: #1d1c1a; --discret: #6b6862;
     --bord: #e2dfd8; --accent: #c2410c; --accent-texte: #ffffff; --erreur: #b91c1c;
-    --piste: #ece9e3; --survol: #faf8f4;
+    --piste: #ece9e3; --survol: #faf8f4; --ecarte: .45;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -22,7 +22,7 @@
     margin: 0; background: var(--fond); color: var(--texte);
     font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  main { max-width: 960px; margin: 0 auto; padding: 32px 16px 64px; }
   h1 { font-size: 24px; margin: 0 0 4px; }
   .sous-titre { color: var(--discret); margin: 0 0 28px; }
   .carte {
@@ -37,13 +37,15 @@
   }
   button.principal { background: var(--accent); border-color: var(--accent); color: var(--accent-texte); }
   button:disabled { opacity: .45; cursor: not-allowed; }
-  select, input[type=search] {
+  select, input[type=search], input[type=number] {
     font: inherit; padding: 8px 10px; border-radius: 8px;
     border: 1px solid var(--bord); background: var(--carte); color: var(--texte);
   }
+  input[type=number] { width: 72px; }
   .chemin { color: var(--discret); word-break: break-all; font-size: 14px; }
   .chemin strong { color: var(--texte); }
   label { display: inline-flex; gap: 6px; align-items: center; color: var(--discret); font-size: 14px; }
+  .note { color: var(--discret); font-size: 13px; margin: 10px 0 0; }
   .barre { height: 8px; background: var(--piste); border-radius: 99px; overflow: hidden; margin: 12px 0 8px; }
   .barre > div { height: 100%; width: 0; background: var(--accent); transition: width .4s; }
   .barre.indeterminee > div { width: 30%; animation: va-et-vient 1.2s ease-in-out infinite alternate; }
@@ -52,17 +54,29 @@
   .journal { color: var(--discret); font-size: 13px; margin: 8px 0 0; padding-left: 18px; }
   .erreur { color: var(--erreur); font-weight: 600; white-space: pre-wrap; }
   .resume { color: var(--discret); margin: 0 0 12px; }
-  .repliques { max-height: 60vh; overflow-y: auto; border-top: 1px solid var(--bord); margin-top: 12px; }
+  .repliques { max-height: 320px; overflow-y: auto; border-top: 1px solid var(--bord); margin-top: 12px; }
   .replique { display: flex; gap: 14px; padding: 8px 4px; border-bottom: 1px solid var(--bord); }
   .replique:hover { background: var(--survol); }
-  .heure { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; flex: none; font-size: 14px; padding-top: 1px; }
+  .heure { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; flex: none; font-size: 14px; }
+  .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 14px; }
+  .extrait { border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  .extrait.ecarte { opacity: var(--ecarte); }
+  .extrait img, .extrait video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #000; }
+  .extrait .corps { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .extrait .entete { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+  .extrait .titre { font-weight: 600; }
+  .extrait .raison { color: var(--discret); font-size: 13px; }
+  .extrait details { font-size: 13px; color: var(--discret); }
+  .extrait details p { margin: 4px 0; }
+  .extrait .garder { margin-top: auto; padding-top: 6px; color: var(--texte); }
+  .extrait .fichier { font-size: 12px; color: var(--discret); word-break: break-all; }
   [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main>
   <h1>Clippeur de film</h1>
-  <p class="sous-titre">Étape 1 : transcription horodatée des dialogues, en local.</p>
+  <p class="sous-titre">Transcription, choix des meilleurs moments et export des extraits, en local.</p>
 
   <section class="carte">
     <h2>1. Film</h2>
@@ -75,6 +89,12 @@
   <section class="carte">
     <h2>2. Transcription</h2>
     <div class="ligne">
+      <label>Langue
+        <select id="langue">
+          <option value="fr">Français</option>
+          <option value="en">Anglais</option>
+        </select>
+      </label>
       <label>Modèle Whisper
         <select id="modele">
           <option value="tiny">tiny (très rapide, peu précis)</option>
@@ -86,18 +106,39 @@
       <label><input type="checkbox" id="forcer"> Refaire même si déjà en cache</label>
       <button class="principal" id="lancer" disabled>Lancer la transcription</button>
     </div>
-    <p class="journal" style="padding:0;margin-top:10px">Le modèle ne sert que si le film n'a pas de sous-titres français.</p>
-
-    <div id="suivi" hidden>
-      <div class="barre" id="barre"><div></div></div>
-      <div class="message" id="message"></div>
-      <ul class="journal" id="journal"></ul>
-      <p class="erreur" id="erreur" hidden></p>
-    </div>
+    <p class="note">Le modèle ne sert que si le film n'a pas de sous-titres dans la langue choisie.</p>
   </section>
 
+  <section class="carte" id="suivi" hidden>
+    <h2>Avancement</h2>
+    <div class="barre" id="barre"><div></div></div>
+    <div class="message" id="message"></div>
+    <ul class="journal" id="journal"></ul>
+    <p class="erreur" id="erreur" hidden></p>
+  </section>
+
+
+  <section class="carte" id="carte-extraits" hidden>
+    <h2>3. Extraits</h2>
+    <div class="ligne">
+      <label>Nombre d'extraits <input type="number" id="nombre" min="1" max="30" value="10"></label>
+      <button class="principal" id="proposer">Proposer des extraits</button>
+    </div>
+    <p class="note">
+      Choix provisoire, fait en local : densité des dialogues, volume sonore et répliques exclamatives.
+      La recherche en ligne des scènes cultes viendra l'améliorer. La première fois, l'analyse de l'image
+      prend environ 2 minutes par heure de film.
+    </p>
+    <div id="liste-extraits" hidden>
+      <div class="grille" id="grille"></div>
+      <div class="ligne" style="margin-top:16px">
+        <button class="principal" id="exporter">Exporter</button>
+        <button id="ouvrir" hidden>Ouvrir le dossier des extraits</button>
+      </div>
+    </div>
+  </section>
   <section class="carte" id="resultats" hidden>
-    <h2>3. Répliques</h2>
+    <h2>4. Répliques</h2>
     <p class="resume" id="resume"></p>
     <input type="search" id="filtre" placeholder="Chercher une réplique…" style="width:100%">
     <div class="repliques" id="repliques"></div>
@@ -108,6 +149,8 @@
   const $ = id => document.getElementById(id);
   let cheminFilm = null;
   let repliques = [];
+  let etatCourant = {};
+  const ecartes = new Set();  // numéros des extraits décochés
 
   $("modele").value = "{{ modele_par_defaut }}";
 
@@ -117,105 +160,185 @@
       .map(n => String(n).padStart(2, "0")).join(":");
   }
 
+  function element(balise, classe, texte) {
+    const e = document.createElement(balise);
+    if (classe) e.className = classe;
+    if (texte != null) e.textContent = texte;
+    return e;
+  }
+
+  function afficherFilm(chemin) {
+    cheminFilm = chemin;
+    $("chemin").innerHTML = "";
+    $("chemin").append(element("strong", null, chemin.split(/[\\/]/).pop()), document.createElement("br"), chemin);
+    $("lancer").disabled = false;
+  }
+
   $("choisir").onclick = async () => {
     $("choisir").disabled = true;
     try {
       const r = await (await fetch("/api/choisir", { method: "POST" })).json();
-      if (r.chemin) {
-        cheminFilm = r.chemin;
-        const nom = r.chemin.split(/[\\/]/).pop();
-        $("chemin").innerHTML = "";
-        const fort = document.createElement("strong");
-        fort.textContent = nom;
-        $("chemin").append(fort, document.createElement("br"), r.chemin);
-        $("lancer").disabled = false;
-      }
+      if (r.chemin) afficherFilm(r.chemin);
     } finally {
       $("choisir").disabled = false;
     }
   };
 
-  $("lancer").onclick = async () => {
-    const reponse = await fetch("/api/transcrire", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chemin: cheminFilm, modele: $("modele").value, forcer: $("forcer").checked }),
+  async function demarrer(url, corps) {
+    const reponse = await fetch(url, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corps),
     });
     if (!reponse.ok) {
-      afficherErreur((await reponse.json()).erreur);
+      $("suivi").hidden = false;
+      $("erreur").hidden = false;
+      $("erreur").textContent = (await reponse.json()).erreur;
       return;
     }
-    $("resultats").hidden = true;
     suivre();
-  };
-
-  function afficherErreur(texte) {
-    $("suivi").hidden = false;
-    $("erreur").hidden = false;
-    $("erreur").textContent = texte;
   }
 
+  const reglages = () => ({ chemin: cheminFilm, langue: $("langue").value, modele: $("modele").value });
+
+  $("lancer").onclick = () => demarrer("/api/transcrire", { ...reglages(), forcer: $("forcer").checked });
+  $("proposer").onclick = () => {
+    ecartes.clear();
+    demarrer("/api/extraits/proposer", { ...reglages(), nombre: Number($("nombre").value) || 10 });
+  };
+  $("exporter").onclick = () => {
+    const numeros = etatCourant.proposition.extraits.map(e => e.numero).filter(n => !ecartes.has(n));
+    demarrer("/api/extraits/exporter", { numeros });
+  };
+  $("ouvrir").onclick = () => fetch("/api/ouvrir_dossier", { method: "POST" });
+
+  let derniereProposition = null, derniersExports = null, derniereTranscription = null;
+
   async function suivre() {
-    const etat = await (await fetch("/api/etat")).json();
-    $("suivi").hidden = false;
-    $("choisir").disabled = etat.en_cours;
+    const etat = etatCourant = await (await fetch("/api/etat")).json();
+    if (etat.chemin && !cheminFilm) afficherFilm(etat.chemin);
+
+    $("suivi").hidden = !(etat.en_cours || etat.erreur || etat.journal.length);
+    for (const id of ["choisir", "proposer", "exporter"]) $(id).disabled = etat.en_cours;
     $("lancer").disabled = etat.en_cours || !cheminFilm;
 
     const barre = $("barre");
     barre.classList.toggle("indeterminee", etat.en_cours && etat.pourcentage == null);
     barre.firstElementChild.style.width = etat.pourcentage != null ? etat.pourcentage + "%" : (etat.en_cours ? "" : "100%");
     $("message").textContent = (etat.pourcentage != null ? etat.pourcentage.toFixed(1) + " % — " : "") + (etat.message || "");
-
-    $("journal").innerHTML = "";
-    for (const ligne of etat.journal || []) {
-      const li = document.createElement("li");
-      li.textContent = ligne;
-      $("journal").append(li);
-    }
-
+    $("journal").replaceChildren(...etat.journal.map(ligne => element("li", null, ligne)));
     $("erreur").hidden = !etat.erreur;
     $("erreur").textContent = etat.erreur || "";
 
-    if (etat.en_cours) {
-      setTimeout(suivre, 1000);
-    } else if (etat.resultat) {
-      afficherResultat(etat.resultat);
+    // On ne redessine un résultat que s'il a changé, pour ne pas interrompre la lecture d'une vidéo.
+    if (etat.transcription !== derniereTranscription && JSON.stringify(etat.transcription) !== JSON.stringify(derniereTranscription)) {
+      derniereTranscription = etat.transcription;
+      if (etat.transcription) afficherTranscription(etat.transcription);
     }
+    $("resultats").hidden = !etat.transcription;
+    $("carte-extraits").hidden = !etat.transcription && !etat.proposition;
+
+    const signature = JSON.stringify([etat.proposition, etat.exports]);
+    if (signature !== JSON.stringify([derniereProposition, derniersExports])) {
+      derniereProposition = etat.proposition;
+      derniersExports = etat.exports;
+      afficherExtraits(etat.proposition, etat.exports);
+    }
+
+    if (etat.en_cours) setTimeout(suivre, 1000);
   }
 
-  function afficherResultat(resultat) {
+  function afficherTranscription(resultat) {
     repliques = resultat.segments;
     const duree = repliques.length ? heure(repliques[repliques.length - 1].fin) : "00:00:00";
     $("resume").textContent = `${resultat.film} · ${repliques.length} réplique${repliques.length > 1 ? "s" : ""} · source : ${resultat.source} · dernière réplique à ${duree}`;
+    if (resultat.langue) $("langue").value = resultat.langue;
     $("filtre").value = "";
     afficherRepliques();
-    $("resultats").hidden = false;
   }
 
   function afficherRepliques() {
     const recherche = $("filtre").value.trim().toLowerCase();
-    const conteneur = $("repliques");
-    conteneur.innerHTML = "";
     const fragment = document.createDocumentFragment();
     for (const r of repliques) {
       if (recherche && !r.texte.toLowerCase().includes(recherche)) continue;
-      const ligne = document.createElement("div");
-      ligne.className = "replique";
-      const h = document.createElement("span");
-      h.className = "heure";
-      h.textContent = heure(r.debut);
-      const t = document.createElement("span");
-      t.textContent = r.texte;
-      ligne.append(h, t);
+      const ligne = element("div", "replique");
+      ligne.append(element("span", "heure", heure(r.debut)), element("span", null, r.texte));
       fragment.append(ligne);
     }
-    conteneur.append(fragment);
+    $("repliques").replaceChildren(fragment);
   }
-
   $("filtre").oninput = afficherRepliques;
 
-  // Si une transcription tourne déjà (page rechargée), on reprend son suivi.
-  fetch("/api/etat").then(r => r.json()).then(etat => { if (etat.en_cours || etat.resultat) suivre(); });
+  function afficherExtraits(proposition, exports) {
+    $("liste-extraits").hidden = !proposition;
+    if (!proposition) return;
+    const fichiers = new Map((exports || []).map(f => [f.numero, f.fichier]));
+    const grille = document.createDocumentFragment();
+
+    for (const e of proposition.extraits) {
+      const carte = element("article", "extrait");
+      const fichier = fichiers.get(e.numero);
+      carte.classList.toggle("ecarte", exports ? !fichier : ecartes.has(e.numero));
+      const miniature = `/media/miniature/${e.numero}?v=${encodeURIComponent(e.debut)}`;
+
+      if (fichier) {
+        const video = element("video");
+        video.controls = true;
+        video.preload = "metadata";
+        video.poster = miniature;
+        video.src = "/media/extrait/" + encodeURIComponent(fichier);
+        carte.append(video);
+      } else {
+        const image = element("img");
+        image.src = miniature;
+        image.alt = "";
+        carte.append(image);
+      }
+
+      const corps = element("div", "corps");
+      const entete = element("div", "entete");
+      entete.append(
+        element("span", "heure", `#${e.numero} · ${heure(e.debut)} → ${heure(e.fin)}`),
+        element("span", null, `${Math.round(e.duree)} s`),
+      );
+      corps.append(entete, element("div", "titre", `« ${e.titre} »`), element("div", "raison", e.raison));
+
+      const details = element("details");
+      details.append(element("summary", null, `${e.repliques.length} répliques`));
+      for (const r of e.repliques) details.append(element("p", null, r));
+      corps.append(details);
+
+      if (fichier) {
+        corps.append(element("div", "fichier", fichier));
+      } else if (!exports) {
+        const garder = element("label", "garder");
+        const case_ = element("input");
+        case_.type = "checkbox";
+        case_.checked = !ecartes.has(e.numero);
+        case_.onchange = () => {
+          case_.checked ? ecartes.delete(e.numero) : ecartes.add(e.numero);
+          carte.classList.toggle("ecarte", !case_.checked);
+          majBoutonExport(proposition);
+        };
+        garder.append(case_, " Garder cet extrait");
+        corps.append(garder);
+      }
+      carte.append(corps);
+      grille.append(carte);
+    }
+    $("grille").replaceChildren(grille);
+    $("exporter").hidden = !!exports;
+    $("ouvrir").hidden = !exports;
+    majBoutonExport(proposition);
+  }
+
+  function majBoutonExport(proposition) {
+    const n = proposition.extraits.filter(e => !ecartes.has(e.numero)).length;
+    $("exporter").textContent = `Exporter ${n} extrait${n > 1 ? "s" : ""}`;
+    $("exporter").disabled = n === 0 || etatCourant.en_cours;
+  }
+
+  // Au chargement (ou après un rechargement de la page), on reprend l'état du serveur.
+  suivre();
 </script>
 </body>
 </html>
