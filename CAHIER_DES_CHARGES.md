@@ -159,9 +159,7 @@
 
 ## 8. Questions ouvertes
 
-1. **Transcription sans sous-titres** : sans carte graphique, transcrire un film de 2 h sur le PC peut prendre de 30 min à plus d'une heure. Deux options :
-   - **A. Transcription locale** : gratuite, mais lente.
-   - **B. Service de transcription en ligne** : rapide (quelques minutes), avec un petit coût par film. La connexion est de toute façon obligatoire.
+1. ~~**Transcription sans sous-titres**~~ → **décidé le 2026-10-07 : transcription locale** avec Whisper (`faster-whisper`, sur le processeur). Gratuite mais lente : de 30 min à plus d'une heure pour un film de 2 h.
 2. **Budget d'IA** : quel coût maximum par film accepter ? Ce coût est estimé à moins de 1 € par film et sera mesuré lors des premiers tests.
 
 ---
