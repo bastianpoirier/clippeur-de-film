@@ -56,6 +56,38 @@ def commande_extraits(args: argparse.Namespace) -> int:
     return 0
 
 
+def commande_rechercher(args: argparse.Namespace) -> int:
+    from clippeur.identification import identifier, nom_complet
+    from clippeur.recherche import rechercher
+    from clippeur.transcription import afficher_dans_terminal
+
+    film = Path(args.film).expanduser().resolve()
+    if not film.is_file():
+        print(f"Fichier introuvable : {film}", file=sys.stderr)
+        return 1
+    identification = identifier(film, forcer=True)
+    print(f"Identifié : {nom_complet(identification['fiche'])} (d'après : {identification['fiche']['source']})")
+    if identification["avertissement"]:
+        print(f"  ⚠ {identification['avertissement']}")
+    try:
+        transcription = transcrire(film, langue=args.langue)
+    except FilmIllisible as e:
+        print(e, file=sys.stderr)
+        return 1
+    resultat = rechercher(film, identification["fiche"], transcription, afficher_dans_terminal, page=args.page)
+
+    print(f"\nPage Wikiquote : {resultat['page'] or 'aucune'}")
+    autres = [p for p in resultat["pages_possibles"] if p != resultat["page"]]
+    if autres:
+        print(f"  Autres pages possibles (option --page) : {', '.join(autres)}")
+    for a in resultat["avertissements"]:
+        print(f"⚠ {a}")
+    for r in sorted(resultat["resultats"], key=lambda r: r["position"] is None):
+        position = f"à {format_horodatage(r['position']['debut'])}" if r["position"] else "non retrouvée"
+        print(f"[{position}] {r['titre']}")
+    return 0
+
+
 def commande_interface(args: argparse.Namespace) -> int:
     from clippeur.web import lancer  # Flask n'est chargé que pour l'interface
 
@@ -81,6 +113,12 @@ def main() -> int:
     p.add_argument("--nombre", type=int, default=10, help="nombre d'extraits (10 par défaut)")
     p.add_argument("--exporter", action="store_true", help="découpe et enregistre les extraits en MP4")
     p.set_defaults(fonction=commande_extraits)
+
+    p = sous.add_parser("rechercher", help="identifie le film et recherche ses citations cultes sur Wikiquote")
+    p.add_argument("film", help="chemin du fichier vidéo")
+    p.add_argument("--langue", choices=["fr", "en"], default=LANGUE_PAR_DEFAUT, help="langue des dialogues (fr par défaut)")
+    p.add_argument("--page", help="page Wikiquote à utiliser, si celle trouvée automatiquement n'est pas la bonne")
+    p.set_defaults(fonction=commande_rechercher)
 
     p = sous.add_parser("interface", help="ouvre la page web locale")
     p.add_argument("--port", type=int, default=5000)

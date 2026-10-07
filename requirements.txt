@@ -1,4 +1,8 @@
 faster-whisper==1.2.1
 flask==3.1.3
+guessit==4.4.0
 numpy
 pytest==9.1.1
+python-dotenv==1.2.4
+rapidfuzz==3.14.6
+requests==2.34.2

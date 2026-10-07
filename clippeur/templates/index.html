@@ -62,6 +62,18 @@
   .extrait { border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
   .extrait.ecarte { opacity: var(--ecarte); }
   .extrait img, .extrait video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #000; }
+  .vignette { position: relative; cursor: pointer; }
+  .vignette.en-lecture { cursor: auto; }
+  .vignette .lecture {
+    position: absolute; inset: 0; margin: auto; width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center; padding-left: 4px; font-size: 20px;
+    background: rgba(0, 0, 0, .6); color: #fff; transition: transform .15s, background .15s;
+  }
+  .vignette:hover .lecture { transform: scale(1.1); background: var(--accent); }
+  .vignette .attente {
+    position: absolute; left: 8px; right: 8px; top: 8px; padding: 6px 10px; border-radius: 6px;
+    background: rgba(0, 0, 0, .7); color: #fff; font-size: 13px; text-align: center;
+  }
   .extrait .corps { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .extrait .entete { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
   .extrait .titre { font-weight: 600; }
@@ -70,19 +82,78 @@
   .extrait details p { margin: 4px 0; }
   .extrait .garder { margin-top: auto; padding-top: 6px; color: var(--texte); }
   .extrait .fichier { font-size: 12px; color: var(--discret); word-break: break-all; }
+  h3 { font-size: 14px; margin: 18px 0 8px; }
+  code { font-size: 13px; background: var(--piste); padding: 1px 5px; border-radius: 4px; }
+  .fiche { display: flex; gap: 16px; margin-top: 16px; align-items: flex-start; }
+  .fiche img { width: 92px; border-radius: 6px; flex: none; }
+  .fiche p { margin: 6px 0; font-size: 14px; }
+  .fiche-titre { font-weight: 700; font-size: 16px; }
+  .avertissement { color: var(--erreur); font-size: 13px; }
+  .correction { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-top: 14px;
+    padding-top: 14px; border-top: 1px solid var(--bord); }
+  .correction input[type=text] { min-width: 220px; }
+  .correction input, .correction select { font: inherit; padding: 7px 9px; border-radius: 8px;
+    border: 1px solid var(--bord); background: var(--carte); color: var(--texte); }
+  .correction input[type=number] { width: 90px; }
+  .pastille { font-size: 13px; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--bord); }
+  .pastille.ok { color: var(--accent); border-color: var(--accent); }
+  .avertissements { color: var(--erreur); font-size: 13px; padding-left: 18px; }
+  .liste-references { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+  .reference { border: 1px solid var(--bord); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+  .reference.absente { opacity: var(--ecarte); }
+  .reference .entete { display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; justify-content: space-between; }
+  .reference .titre { font-weight: 600; }
+  .reference .meta { color: var(--discret); font-size: 13px; }
+  .reference .repl { color: var(--discret); font-style: italic; margin: 4px 0 0; }
+  .reference a { color: var(--accent); }
+  label.reference { display: block; cursor: pointer; color: var(--texte); }
+  label.reference input { accent-color: var(--accent); }
+  .extrait .sources a { color: var(--accent); font-size: 12px; margin-right: 8px; }
   [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main>
   <h1>Clippeur de film</h1>
-  <p class="sous-titre">Transcription, choix des meilleurs moments et export des extraits, en local.</p>
+  <p class="sous-titre">Identification, transcription, citations cultes, choix des meilleurs moments et export des extraits.</p>
 
   <section class="carte">
     <h2>1. Film</h2>
     <div class="ligne">
       <button id="choisir">Choisir un film…</button>
       <span class="chemin" id="chemin">Aucun film choisi.</span>
+    </div>
+
+    <div id="identification" hidden>
+      <div class="fiche">
+        <img id="affiche" alt="" hidden>
+        <div>
+          <div class="fiche-titre" id="fiche-titre"></div>
+          <div class="note" id="fiche-source"></div>
+          <p id="fiche-synopsis"></p>
+          <p class="note" id="fiche-acteurs"></p>
+          <p class="avertissement" id="fiche-avertissement" hidden></p>
+          <button id="corriger">Ce n'est pas le bon ? Corriger</button>
+        </div>
+      </div>
+      <form id="form-cle" class="correction" hidden>
+        <span>Pour la fiche complète (synopsis, acteurs, affiche), collez une clé TMDb gratuite —
+          <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">l'obtenir</a> :</span>
+        <input type="text" id="cle-tmdb" placeholder="Clé d'API TMDb" autocomplete="off" required>
+        <button class="principal" type="submit">Enregistrer</button>
+        <span class="avertissement" id="erreur-cle" hidden></span>
+      </form>
+      <form id="correction" class="correction" hidden>
+        <label id="ligne-candidats">Résultats TMDb <select id="candidats"></select></label>
+        <label>Titre <input type="text" id="c-titre" required></label>
+        <label>Année <input type="number" id="c-annee" min="1890" max="2100"></label>
+        <label>Type
+          <select id="c-type"><option value="film">Film</option><option value="serie">Série</option></select>
+        </label>
+        <label class="si-serie">Saison <input type="number" id="c-saison" min="1"></label>
+        <label class="si-serie">Épisode <input type="number" id="c-episode" min="1"></label>
+        <button class="principal" type="submit">Valider</button>
+      </form>
     </div>
   </section>
 
@@ -118,16 +189,40 @@
   </section>
 
 
+  <section class="carte" id="carte-recherche" hidden>
+    <h2>3. Citations cultes (Wikiquote)</h2>
+    <div class="ligne">
+      <button class="principal" id="rechercher">Chercher sur Wikiquote</button>
+      <label id="ligne-pages" hidden>Page Wikiquote <select id="pages"></select></label>
+      <a id="lien-page" target="_blank" rel="noopener noreferrer" hidden>ouvrir la page</a>
+    </div>
+    <p class="note">
+      Gratuit. Les citations célèbres de l'œuvre sont cherchées sur Wikiquote, puis retrouvées dans les dialogues
+      du film. Cochez celles qui doivent compter pour le choix des extraits. Si la page n'est pas la bonne,
+      choisissez-en une autre dans la liste.
+    </p>
+    <div id="resultats-recherche" hidden>
+      <p class="resume" id="resume-recherche"></p>
+      <ul class="avertissements" id="avertissements"></ul>
+      <div class="ligne" id="actions-citations">
+        <button id="tout-cocher">Tout cocher</button>
+        <button id="tout-decocher">Tout décocher</button>
+      </div>
+      <div class="liste-references" id="references"></div>
+      <p class="note" id="a-reproposer" hidden>Choix enregistré. Cliquez sur « Proposer des extraits » pour en tenir compte.</p>
+    </div>
+  </section>
+
   <section class="carte" id="carte-extraits" hidden>
-    <h2>3. Extraits</h2>
+    <h2>4. Extraits</h2>
     <div class="ligne">
       <label>Nombre d'extraits <input type="number" id="nombre" min="1" max="30" value="10"></label>
       <button class="principal" id="proposer">Proposer des extraits</button>
     </div>
     <p class="note">
-      Choix provisoire, fait en local : densité des dialogues, volume sonore et répliques exclamatives.
-      La recherche en ligne des scènes cultes viendra l'améliorer. La première fois, l'analyse de l'image
-      prend environ 2 minutes par heure de film.
+      Le choix combine les citations cultes cochées ci-dessus et des indices locaux (dialogues, volume sonore).
+      Sans citation cochée, seuls les indices locaux comptent.
+      La première fois, l'analyse de l'image prend environ 2 minutes par heure de film.
     </p>
     <div id="liste-extraits" hidden>
       <div class="grille" id="grille"></div>
@@ -138,7 +233,7 @@
     </div>
   </section>
   <section class="carte" id="resultats" hidden>
-    <h2>4. Répliques</h2>
+    <h2>5. Répliques</h2>
     <p class="resume" id="resume"></p>
     <input type="search" id="filtre" placeholder="Chercher une réplique…" style="width:100%">
     <div class="repliques" id="repliques"></div>
@@ -178,7 +273,10 @@
     $("choisir").disabled = true;
     try {
       const r = await (await fetch("/api/choisir", { method: "POST" })).json();
-      if (r.chemin) afficherFilm(r.chemin);
+      if (r.chemin) {
+        afficherFilm(r.chemin);
+        demarrer("/api/identifier", { chemin: r.chemin });  // F4 et F5 : identification automatique
+      }
     } finally {
       $("choisir").disabled = false;
     }
@@ -209,8 +307,158 @@
     demarrer("/api/extraits/exporter", { numeros });
   };
   $("ouvrir").onclick = () => fetch("/api/ouvrir_dossier", { method: "POST" });
+  $("rechercher").onclick = () => demarrer("/api/rechercher", { chemin: cheminFilm });
+
+  // --- Identification (F4 à F6) ---
+  $("corriger").onclick = () => { $("correction").hidden = !$("correction").hidden; };
+  $("c-type").onchange = majChampsSerie;
+  function majChampsSerie() {
+    for (const e of document.querySelectorAll(".si-serie")) e.hidden = $("c-type").value !== "serie";
+  }
+  $("candidats").onchange = () => {
+    const c = (etatCourant.identification?.candidats || [])[Number($("candidats").value)];
+    if (c) { $("c-titre").value = c.titre; $("c-annee").value = c.annee || ""; $("c-type").value = c.type; majChampsSerie(); }
+  };
+  $("correction").onsubmit = evenement => {
+    evenement.preventDefault();
+    const c = (etatCourant.identification?.candidats || [])[Number($("candidats").value)];
+    const correction = {
+      titre: $("c-titre").value.trim(), annee: $("c-annee").value || null, type: $("c-type").value,
+      saison: $("c-type").value === "serie" ? ($("c-saison").value || null) : null,
+      episode: $("c-type").value === "serie" ? ($("c-episode").value || null) : null,
+    };
+    // Si l'utilisateur a choisi un résultat TMDb sans retoucher le titre, on prend directement cette fiche.
+    if (c && c.titre === correction.titre) correction.tmdb_id = c.tmdb_id;
+    $("correction").hidden = true;
+    demarrer("/api/identifier", { chemin: cheminFilm, correction });
+  };
+
+  function afficherIdentification(ident) {
+    $("identification").hidden = !ident;
+    if (!ident) return;
+    const f = ident.fiche;
+    let nom = f.titre || "?";
+    if (f.titre_original && f.titre_original !== f.titre) nom += ` / ${f.titre_original}`;
+    if (f.annee) nom += ` (${f.annee})`;
+    if (f.type === "serie" && f.saison) nom += ` — saison ${f.saison}, épisode ${f.episode}` + (f.titre_episode ? ` « ${f.titre_episode} »` : "");
+    $("fiche-titre").textContent = nom;
+    $("fiche-source").textContent = `${f.type === "serie" ? "Série" : "Film"} · identifié d'après : ${f.source}`;
+    $("fiche-synopsis").textContent = f.synopsis_episode || f.synopsis || "";
+    $("fiche-acteurs").textContent = (f.acteurs || []).length
+      ? "Avec " + f.acteurs.map(a => a.personnage ? `${a.nom} (${a.personnage})` : a.nom).join(", ") : "";
+    $("affiche").hidden = !f.affiche;
+    if (f.affiche) $("affiche").src = f.affiche;
+    $("fiche-avertissement").hidden = !ident.avertissement;
+    $("fiche-avertissement").textContent = ident.avertissement || "";
+
+    const candidats = ident.candidats || [];
+    $("ligne-candidats").hidden = !candidats.length;
+    $("candidats").replaceChildren(...candidats.map((c, i) => {
+      const o = element("option", null, `${c.titre}${c.annee ? ` (${c.annee})` : ""}${c.titre_original && c.titre_original !== c.titre ? ` — ${c.titre_original}` : ""}`);
+      o.value = i;
+      o.selected = c.tmdb_id === f.tmdb_id;
+      return o;
+    }));
+    $("c-titre").value = f.titre || ident.devine.titre;
+    $("c-annee").value = f.annee || "";
+    $("c-type").value = f.type || ident.devine.type;
+    $("c-saison").value = f.saison || "";
+    $("c-episode").value = f.episode || "";
+    majChampsSerie();
+  }
+
+  // --- Clé TMDb gratuite, saisie dans la page ---
+  async function afficherCles() {
+    const cles = await (await fetch("/api/cles")).json();
+    $("form-cle").hidden = cles.tmdb || !cheminFilm;
+  }
+  $("form-cle").onsubmit = async evenement => {
+    evenement.preventDefault();
+    const reponse = await fetch("/api/cles", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tmdb: $("cle-tmdb").value }),
+    });
+    const r = await reponse.json();
+    $("erreur-cle").hidden = reponse.ok;
+    $("erreur-cle").textContent = r.erreur || "";
+    if (!reponse.ok) return;
+    $("cle-tmdb").value = "";
+    $("form-cle").hidden = true;
+    // La clé est valide : on refait l'identification pour récupérer la fiche complète.
+    demarrer("/api/identifier", { chemin: cheminFilm, forcer: true });
+  };
+
+  // --- Citations cultes sur Wikiquote (F7, F9, F10), cochées ou non par l'utilisateur ---
+  $("pages").onchange = () => demarrer("/api/rechercher", { chemin: cheminFilm, page: $("pages").value });
+
+  function enregistrerChoix() {
+    const retenues = [...document.querySelectorAll("#references input[type=checkbox]")]
+      .filter(c => c.checked).map(c => Number(c.dataset.rang));
+    fetch("/api/recherche/choix", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ retenues }),
+    }).then(r => { if (r.ok) $("a-reproposer").hidden = !etatCourant.proposition; });
+  }
+  function toutCocher(valeur) {
+    for (const c of document.querySelectorAll("#references input[type=checkbox]:not(:disabled)")) c.checked = valeur;
+    enregistrerChoix();
+  }
+  $("tout-cocher").onclick = () => toutCocher(true);
+  $("tout-decocher").onclick = () => toutCocher(false);
+
+  function lien(nom, url) {
+    if (!url) return element("span", null, nom);
+    const a = element("a", null, nom);
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    return a;
+  }
+
+  function afficherRecherche(rech) {
+    $("resultats-recherche").hidden = !rech;
+    $("ligne-pages").hidden = !rech || !rech.pages_possibles.length;
+    $("lien-page").hidden = !rech || !rech.url;
+    $("a-reproposer").hidden = true;
+    if (!rech) return;
+
+    $("pages").replaceChildren(...rech.pages_possibles.map(p => {
+      const o = element("option", null, p);
+      o.value = p;
+      o.selected = p === rech.page;
+      return o;
+    }));
+    if (!rech.page) $("pages").prepend(Object.assign(element("option", null, "— choisir une page —"), { value: "", selected: true }));
+    if (rech.url) $("lien-page").href = rech.url;
+
+    const trouves = rech.resultats.filter(r => r.position).length;
+    $("resume-recherche").textContent = rech.page
+      ? `${rech.resultats.length} citations sur la page « ${rech.page} », dont ${trouves} retrouvées dans le film`
+      : "";
+    $("avertissements").replaceChildren(...rech.avertissements.map(a => element("li", null, a)));
+    $("actions-citations").hidden = !trouves;
+
+    // Les citations retrouvées dans le film d'abord, dans l'ordre du film.
+    const ordre = rech.resultats.map((r, rang) => ({ r, rang }))
+      .sort((a, b) => (!!b.r.position - !!a.r.position) || ((a.r.position?.debut ?? 0) - (b.r.position?.debut ?? 0)));
+    $("references").replaceChildren(...ordre.map(({ r, rang }) => {
+      const bloc = element("label", "reference" + (r.position ? "" : " absente"));
+      const entete = element("div", "entete");
+      const titre = element("span", "titre");
+      const coche = element("input");
+      coche.type = "checkbox";
+      coche.dataset.rang = rang;
+      coche.checked = !!r.retenue;
+      coche.disabled = !r.position;  // une citation absente du film ne peut pas désigner un extrait
+      coche.onchange = enregistrerChoix;
+      titre.append(coche, " ", r.titre);
+      entete.append(titre, element("span", "meta", r.position ? `retrouvée à ${heure(r.position.debut)}` : "non retrouvée dans le film"));
+      bloc.append(entete, element("p", "repl", r.repliques.map(x => `« ${x} »`).join(" ")));
+      return bloc;
+    }));
+  }
 
   let derniereProposition = null, derniersExports = null, derniereTranscription = null;
+  let derniereIdentification = null, derniereRecherche = null;
 
   async function suivre() {
     const etat = etatCourant = await (await fetch("/api/etat")).json();
@@ -235,6 +483,19 @@
     }
     $("resultats").hidden = !etat.transcription;
     $("carte-extraits").hidden = !etat.transcription && !etat.proposition;
+    $("carte-recherche").hidden = !etat.transcription;
+    $("rechercher").disabled = etat.en_cours || !etat.transcription;
+
+    if (JSON.stringify(etat.identification) !== JSON.stringify(derniereIdentification)) {
+      derniereIdentification = etat.identification;
+      afficherIdentification(etat.identification);
+    }
+    if (JSON.stringify(etat.recherche) !== JSON.stringify(derniereRecherche)) {
+      derniereRecherche = etat.recherche;
+      afficherRecherche(etat.recherche);
+    }
+    $("pages").disabled = etat.en_cours;
+    if (!etat.en_cours) afficherCles();
 
     const signature = JSON.stringify([etat.proposition, etat.exports]);
     if (signature !== JSON.stringify([derniereProposition, derniersExports])) {
@@ -288,10 +549,7 @@
         video.src = "/media/extrait/" + encodeURIComponent(fichier);
         carte.append(video);
       } else {
-        const image = element("img");
-        image.src = miniature;
-        image.alt = "";
-        carte.append(image);
+        carte.append(vignette(e, miniature));
       }
 
       const corps = element("div", "corps");
@@ -301,6 +559,11 @@
         element("span", null, `${Math.round(e.duree)} s`),
       );
       corps.append(entete, element("div", "titre", `« ${e.titre} »`), element("div", "raison", e.raison));
+      if ((e.sources || []).length) {
+        const sources = element("div", "sources");
+        for (const s of e.sources) sources.append(lien(s.nom, s.url));
+        corps.append(sources);
+      }
 
       const details = element("details");
       details.append(element("summary", null, `${e.repliques.length} répliques`));
@@ -329,6 +592,31 @@
     $("exporter").hidden = !!exports;
     $("ouvrir").hidden = !exports;
     majBoutonExport(proposition);
+  }
+
+  // Miniature cliquable : au clic, le serveur prépare un aperçu léger de l'extrait, puis on le lit.
+  function vignette(e, miniature) {
+    const conteneur = element("div", "vignette");
+    conteneur.title = "Regarder l'extrait";
+    const image = element("img");
+    image.src = miniature;
+    image.alt = "";
+    conteneur.append(image, element("span", "lecture", "▶"));
+
+    conteneur.onclick = () => {
+      const video = element("video");
+      video.controls = true;
+      video.autoplay = true;
+      video.poster = miniature;
+      const attente = element("span", "attente", "Préparation de l'aperçu… (quelques secondes)");
+      video.addEventListener("loadeddata", () => attente.remove());
+      video.addEventListener("error", () => { attente.textContent = "Impossible de préparer l'aperçu."; });
+      video.src = `/media/apercu/${e.numero}?v=${encodeURIComponent(e.debut)}`;
+      conteneur.onclick = null;
+      conteneur.classList.add("en-lecture");
+      conteneur.replaceChildren(video, attente);
+    };
+    return conteneur;
   }
 
   function majBoutonExport(proposition) {

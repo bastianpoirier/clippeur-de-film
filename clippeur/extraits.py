@@ -5,6 +5,7 @@ from pathlib import Path
 from clippeur import cache
 from clippeur.analyse import detecter_plans, duree_video, mesurer_volume
 from clippeur.export import creer_miniature
+from clippeur.recherche import recherche_en_cache
 from clippeur.segments import Segment
 from clippeur.selection import proposer_extraits
 from clippeur.transcription import Suivi, transcrire
@@ -20,8 +21,16 @@ def proposer(film: Path, langue: str, nombre: int, suivi: Suivi, modele: str | N
     suivi("Détection des changements de plan (environ 2 min par heure de film)...", None)
     plans = detecter_plans(film, suivi)
 
+    recherche = recherche_en_cache(film, transcription.get("langue", langue)) or {}
+    retenues = sum(1 for r in recherche.get("resultats", []) if r.get("retenue"))
+    if retenues:
+        suivi(f"Prise en compte de {retenues} citation(s) culte(s) de Wikiquote.", None)
+    else:
+        suivi("Aucune citation culte retenue : choix sur les seuls indices locaux.", None)
+
     suivi("Choix des meilleurs moments...", None)
-    extraits = proposer_extraits(segments, plans, volume, duree_video(film), nombre)
+    extraits = proposer_extraits(segments, plans, volume, duree_video(film), nombre,
+                                 references=recherche.get("resultats"))
 
     suivi("Création des miniatures...", None)
     dossier_miniatures = cache.dossier_du_film(film) / "miniatures"

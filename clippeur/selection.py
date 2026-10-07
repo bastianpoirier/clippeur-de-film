@@ -1,12 +1,11 @@
-"""Choix des meilleurs moments du film, à partir d'indices calculés en local.
+"""Choix des meilleurs moments du film (F16).
 
-Version provisoire, en attendant la recherche en ligne et l'analyse par l'IA (étapes 2 et 5).
-Chaque seconde du film reçoit une note qui combine :
-- la densité des dialogues (mots par seconde) ;
-- le volume sonore, comparé au volume habituel du film ;
-- les répliques exclamatives ou interrogatives, signe d'une scène tendue ou émotive.
-On cherche ensuite les fenêtres de 1 à 2 minutes qui ont la meilleure note moyenne,
-sans chevauchement, et on cale leurs bornes sur des changements de plan.
+Chaque fenêtre de 1 à 2 minutes reçoit une note qui combine :
+- la popularité en ligne : citations de Wikiquote retrouvées dans les dialogues et gardées par l'utilisateur ;
+- des indices calculés en local, seconde par seconde : densité des dialogues, volume sonore
+  comparé au volume habituel du film, répliques exclamatives ou interrogatives.
+Sans recherche en ligne (pas de connexion, pas de page Wikiquote), seuls les indices locaux comptent.
+On garde les meilleures fenêtres sans chevauchement, et on cale leurs bornes sur des changements de plan.
 """
 
 import re
@@ -26,6 +25,10 @@ POIDS_PAROLE = 0.45
 POIDS_VOLUME = 0.35
 POIDS_EMOTION = 0.20
 
+# Quand des citations cultes ont été retrouvées, elles pèsent plus que les indices locaux.
+POIDS_CULTE = 0.60
+POIDS_LOCAL = 0.40
+
 
 @dataclass
 class Extrait:
@@ -36,6 +39,7 @@ class Extrait:
     titre: str
     raison: str
     repliques: list[str] = field(default_factory=list)
+    sources: list[dict] = field(default_factory=list)
 
     @property
     def duree(self) -> float:
@@ -115,27 +119,47 @@ def _raison(notes: dict, cumul: dict, debut: float, fin: float, nb_emotion: int)
     return ", ".join(raisons).capitalize() if raisons else "Scène dialoguée"
 
 
+def _court(texte: str, longueur: int = 90) -> str:
+    return texte if len(texte) <= longueur else texte[:longueur].rsplit(" ", 1)[0] + "…"
+
+
+def _references_dans(debut: float, fin: float, references: list[dict]) -> list[dict]:
+    """Citations cultes dont la position trouvée tombe dans la fenêtre."""
+    return [r for r in references if debut <= (r["position"]["debut"] + r["position"]["fin"]) / 2 <= fin]
+
+
 def proposer_extraits(
     segments: list[Segment],
     plans: list[float],
     volume: list[float],
     duree_film: float,
     nombre: int = 10,
+    references: list[dict] | None = None,
 ) -> list[Extrait]:
-    """Renvoie les `nombre` meilleurs extraits, triés du meilleur au moins bon."""
+    """Renvoie les `nombre` meilleurs extraits, triés du meilleur au moins bon.
+
+    `references` : citations trouvées en ligne et placées dans le film (avec « position »).
+    Celles que l'utilisateur a écartées (« retenue » à faux) ne comptent pas.
+    """
     segments = sorted(segments, key=lambda s: s.debut)
     if not segments:
         return []
+    references = [r for r in (references or []) if r.get("position") and r.get("retenue", True)]
+    avec_recherche = bool(references)
     duree = int(duree_film) + 1
     notes = _notes_par_seconde(segments, volume, duree)
     cumul = {nom: _sommes_cumulees(valeurs) for nom, valeurs in notes.items()}
 
     def note(debut: float, fin: float) -> float:
-        return (
+        locale = (
             POIDS_PAROLE * _moyenne(cumul["parole"], debut, fin)
             + POIDS_VOLUME * _moyenne(cumul["volume"], debut, fin)
             + POIDS_EMOTION * _moyenne(cumul["emotion"], debut, fin)
         )
+        if not avec_recherche:
+            return locale
+        culte = min(1.0, sum(r["popularite"] / 5 for r in _references_dans(debut, fin, references)))
+        return POIDS_CULTE * culte + POIDS_LOCAL * locale
 
     # Candidats : commencer au début d'une réplique et finir à la fin d'une réplique,
     # pour ne jamais couper une phrase. On garde la meilleure fin pour chaque début.
@@ -167,14 +191,27 @@ def proposer_extraits(
     for numero, (n, debut, fin) in enumerate(retenus, start=1):
         dedans = [s for s in segments if s.debut >= debut and s.fin <= fin]
         nb_emotion = sum(1 for s in dedans if "!" in s.texte or "?" in s.texte)
+        titre, raisons, sources = _titre(dedans), [], []
+
+        cultes = sorted(_references_dans(debut, fin, references), key=lambda r: -r["popularite"])
+        for r in cultes:
+            raisons.append(f"Citation culte ({r['source']}) : « {_court(r['titre'])} »")
+            source = {"nom": r["source"], "url": r.get("source_url") or ""}
+            if source not in sources:
+                sources.append(source)
+        raisons.append(_raison(notes, cumul, debut, fin, nb_emotion))
+        if cultes:
+            titre = _court(cultes[0]["titre"])
+
         extraits.append(Extrait(
             numero=numero,
             debut=round(_caler_debut(debut, plans, segments), 2),
             fin=round(_caler_fin(fin, plans, segments, duree_film), 2),
             score=round(n * 100, 1),
-            titre=_titre(dedans),
-            raison=_raison(notes, cumul, debut, fin, nb_emotion),
+            titre=titre,
+            raison=" · ".join(raisons),
             repliques=[s.texte for s in dedans],
+            sources=sources,
         ))
     return extraits
 

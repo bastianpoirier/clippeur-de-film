@@ -1,7 +1,7 @@
 # Cahier des charges — Clippeur de film
 
-> Version 0.3 — brouillon à valider
-> Dernière mise à jour : 2026-10-07
+> Version 0.4 — brouillon à valider
+> Dernière mise à jour : 2026-10-07 — application **entièrement gratuite** : pas d'IA payante.
 
 ---
 
@@ -11,9 +11,9 @@
 **Clippeur de film** est une application locale (exécutée sur le PC de l'utilisateur) qui, à partir d'un fichier vidéo de film :
 
 1. identifie le film ;
-2. recherche en ligne ses moments les plus marquants : citations célèbres, scènes cultes, extraits déjà publiés ;
-3. retrouve ces moments dans le fichier vidéo ;
-4. complète si besoin avec sa propre analyse du film ;
+2. recherche en ligne ses citations célèbres (Wikiquote) ;
+3. retrouve ces citations dans le fichier vidéo ;
+4. complète avec sa propre analyse locale du film (dialogues, son, changements de plan) ;
 5. découpe les meilleurs moments en **extraits de 1 à 2 minutes**, au format d'origine du film. Ils seront publiés plus tard sur les réseaux sociaux.
 
 ### 1.2 Périmètre de la V1
@@ -23,8 +23,10 @@
 - **Films en français uniquement**, fournis par l'utilisateur.
 - **Connexion Internet obligatoire** pendant l'utilisation.
 - Un film traité à la fois, un seul utilisateur.
+- **Gratuit** : aucun service payant. Les services en ligne utilisés (Wikiquote, TMDb) sont gratuits.
 
 ### 1.3 Hors périmètre de la V1
+- Services payants, dont l'analyse par une IA en ligne (décidé le 2026-10-07).
 - Publication automatique sur les réseaux sociaux.
 - Films dans d'autres langues que le français.
 - Fonctionnement hors connexion.
@@ -48,7 +50,7 @@
 |---|---|
 | 1. Import | Sur la page web locale, l'utilisateur sélectionne le fichier du film. |
 | 2. Identification | L'application déduit le titre et l'année du film à partir du nom du fichier. L'utilisateur confirme ou corrige. |
-| 3. Recherche en ligne | Le bot collecte les citations célèbres, les scènes cultes et les extraits populaires déjà publiés. |
+| 3. Recherche en ligne | L'application collecte les citations célèbres sur Wikiquote ; l'utilisateur choisit celles qui comptent. |
 | 4. Analyse du film | Transcription des dialogues avec horodatage, détection des changements de plan et des pics d'intensité sonore. |
 | 5. Sélection | Mise en correspondance des résultats de la recherche avec la transcription, puis calcul d'un score pour chaque moment candidat. |
 | 6. Validation | L'utilisateur voit la liste des clips proposés et peut en retirer avant l'export. |
@@ -65,24 +67,24 @@
 
 ### 3.2 Identification du film
 - **F4** — Proposition automatique du titre et de l'année à partir du nom du fichier.
-- **F5** — Récupération des métadonnées en français : synopsis, personnages, acteurs (via une base de films comme TMDb).
+- **F5** — Récupération des métadonnées en français : synopsis, personnages, acteurs (via TMDb, gratuit). La clé TMDb se saisit directement dans l'application.
 - **F6** — Possibilité pour l'utilisateur de corriger l'identification.
 
 ### 3.3 Recherche en ligne
-- **F7** — Recherche des **citations célèbres** du film en français (ex. Wikiquote FR, sites de répliques cultes).
-- **F8** — Recherche des **scènes cultes ou populaires** : articles, classements, titres des extraits YouTube les plus vus.
-- **F9** — Pour chaque résultat, conservation de la source, du texte de la citation ou de la description de la scène, et d'un indicateur de popularité si disponible.
+- **F7** — Recherche des **citations célèbres** du film sur Wikiquote, dans la langue des dialogues. L'utilisateur peut choisir une autre page Wikiquote si la première n'est pas la bonne, et cocher les citations qui doivent compter.
+- ~~**F8** — Recherche des scènes cultes ou populaires sur le web.~~ → **Retiré le 2026-10-07** : nécessitait une IA payante.
+- **F9** — Pour chaque résultat, conservation de la source et du texte de la citation.
 - **F10** — Seules les **informations** sont récupérées (texte, titres, descriptions). Aucune vidéo n'est téléchargée : les clips sont toujours découpés dans le fichier local de l'utilisateur.
 
 ### 3.4 Analyse du film
 - **F11** — Transcription des dialogues en français avec horodatage : sous-titres existants en priorité, sinon reconnaissance vocale.
 - **F12** — Détection des changements de plan, pour couper sur des transitions naturelles.
 - **F13** — Détection des pics audio : musique, cris, explosions, rires.
-- **F14** — Analyse par l'IA de la transcription pour repérer les moments forts non trouvés en ligne : répliques marquantes, rebondissements, scènes émotionnelles.
+- ~~**F14** — Analyse de la transcription par une IA en ligne.~~ → **Retiré le 2026-10-07** : service payant. Les moments non cités sur Wikiquote sont repérés par les indices locaux (densité des dialogues, volume sonore, répliques exclamatives).
 
 ### 3.5 Sélection des moments
 - **F15** — Mise en correspondance de chaque citation trouvée en ligne avec la transcription, de façon tolérante aux petites variantes de formulation.
-- **F16** — Score de chaque moment candidat, combinant : popularité en ligne, analyse IA et intensité audio et visuelle.
+- **F16** — Score de chaque moment candidat, combinant : citations cultes cochées par l'utilisateur et indices locaux (dialogues, intensité sonore).
 - **F17** — Calcul des bornes du clip : **durée entre 60 et 120 secondes**, coupe sur un changement de plan, sans couper au milieu d'une phrase.
 - **F18** — Pas de chevauchement entre deux clips.
 - **F19** — **10 clips** proposés par défaut, nombre réglable.
@@ -109,8 +111,8 @@
 | NF3 | **Performance** : un film de 2 h avec sous-titres est traité en moins de 15 min. Sans sous-titres, la transcription allonge le traitement (voir section 8). |
 | NF4 | **Suivi** : barre de progression et étape en cours visibles sur la page. |
 | NF5 | **Reprise** : les résultats intermédiaires (transcription, recherche) sont mis en cache pour ne pas tout refaire. |
-| NF6 | **Coût** : les appels à l'IA sont limités et leur coût est affiché après chaque film. |
-| NF7 | **Configuration** : les clés d'API sont stockées dans un fichier `.env` exclu de Git. |
+| NF6 | **Coût** : l'application est gratuite ; elle n'utilise aucun service payant. |
+| NF7 | **Configuration** : la clé TMDb est stockée dans un fichier `.env` exclu de Git. |
 | NF8 | **Qualité du code** : code structuré en modules, tests automatisés sur la logique de sélection, documentation dans le README. |
 
 ---
@@ -131,16 +133,11 @@
 | Interface | Page web locale minimale en Python (Flask ou Gradio) | Import du film, suivi, liste des clips, export |
 | Découpe vidéo | FFmpeg | Lecture, découpe et export |
 | Transcription | Sous-titres `.srt` en priorité, sinon reconnaissance vocale (voir section 8) | Dialogues horodatés |
-| Changements de plan | PySceneDetect | Détection des transitions |
-| Métadonnées du film | API TMDb | Titre, année, synopsis, casting |
-| Recherche web | API de recherche + Wikiquote FR | Citations et scènes cultes |
-| IA (agents) | API Claude (Anthropic) | Recherche, analyse de la transcription, choix et justification des moments |
+| Changements de plan | FFmpeg (filtre de détection de scène) | Détection des transitions |
+| Métadonnées du film | API TMDb (gratuite) | Titre, année, synopsis, casting |
+| Recherche en ligne | API de Wikiquote (gratuite) | Citations cultes |
+| Correspondance | RapidFuzz | Retrouver les citations dans les dialogues malgré les variantes |
 | Stockage | Fichiers JSON | Cache et résultats |
-
-### Agents IA envisagés
-1. **Agent chercheur** : interroge le web et collecte les citations et scènes cultes avec leurs sources.
-2. **Agent analyste** : lit la transcription et repère les moments forts.
-3. **Agent monteur** : fusionne les résultats, calcule les scores et propose les bornes des clips.
 
 ---
 
@@ -151,16 +148,15 @@
 - [x] VS Code avec les extensions Python et GitHub
 - [x] Python 3.12 (3.12.10)
 - [x] FFmpeg (9.0.2)
-- [ ] Compte GitHub connecté à `gh`
-- [ ] Clé API Anthropic (payante, à l'usage)
-- [ ] Clé API TMDb (gratuite)
+- [x] Compte GitHub connecté à `gh`
+- [ ] Clé API TMDb (gratuite, facultative)
 
 ---
 
 ## 8. Questions ouvertes
 
 1. ~~**Transcription sans sous-titres**~~ → **décidé le 2026-10-07 : transcription locale** avec Whisper (`faster-whisper`, sur le processeur). Gratuite mais lente : de 30 min à plus d'une heure pour un film de 2 h.
-2. **Budget d'IA** : quel coût maximum par film accepter ? Ce coût est estimé à moins de 1 € par film et sera mesuré lors des premiers tests.
+2. ~~**Budget d'IA**~~ → **décidé le 2026-10-07 : aucun.** L'application reste entièrement gratuite.
 
 ---
 
@@ -170,9 +166,9 @@
 |---|---|
 | 0 | Cahier des charges validé, environnement installé, dépôt GitHub créé |
 | 1 | Import du film et transcription horodatée |
-| 2 | Identification du film et recherche en ligne (agent chercheur) |
+| 2 | Identification du film et recherche des citations sur Wikiquote |
 | 3 | Correspondance entre citations et transcription, puis scoring |
 | 4 | Découpe et export des clips (FFmpeg) |
-| 5 | Analyse IA des moments forts (agent analyste) |
+| ~~5~~ | ~~Analyse IA des moments forts~~ (retiré : payant) |
 | 6 | Page web locale : import, suivi, liste des clips |
 | 7 | Finitions : cache, tests, documentation |

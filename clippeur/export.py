@@ -10,6 +10,10 @@ from clippeur.transcription import Suivi
 
 DOSSIER_SORTIE = Path(__file__).resolve().parent.parent / "output"
 
+# Les films ont des dialogues mixés bas (souvent -25 à -30 LUFS) : on remonte le volume au niveau
+# visé par TikTok, Instagram et YouTube (-14 LUFS), sans dépasser -1,5 dB en crête.
+NORMALISATION_SON = ["-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000"]
+
 
 def dossier_de_sortie(film: Path) -> Path:
     return DOSSIER_SORTIE / nom_de_fichier(film.stem, longueur_max=60)
@@ -24,6 +28,26 @@ def creer_miniature(film: Path, instant: float, destination: Path) -> None:
     )
 
 
+def creer_apercu(film: Path, extrait: dict, destination: Path) -> None:
+    """Version légère d'un extrait (360p) pour le regarder dans la page avant de l'exporter.
+
+    Le navigateur ne sait pas lire tous les formats de film (HEVC 10 bits, MKV...) :
+    on réencode en H.264, le plus vite possible, en sacrifiant la qualité.
+    """
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporaire = destination.with_suffix(".tmp.mp4")
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-y",
+         "-ss", str(extrait["debut"]), "-i", str(film), "-t", str(extrait["fin"] - extrait["debut"]),
+         "-map", "0:v:0", "-map", "0:a:0", "-sn", "-vf", "scale=-2:360",
+         "-c:v", "libx264", "-preset", "ultrafast", "-crf", "28", "-pix_fmt", "yuv420p",
+         *NORMALISATION_SON, "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", str(temporaire)],
+        capture_output=True, check=True,
+    )
+    # Renommage à la fin seulement : un aperçu interrompu ne passe jamais pour un aperçu complet.
+    temporaire.replace(destination)
+
+
 def exporter_extrait(film: Path, extrait: dict, destination: Path, suivi_clip=None) -> None:
     """Découpe un extrait et le réencode en H.264 + AAC (lisible partout, y compris les réseaux sociaux).
 
@@ -36,7 +60,7 @@ def exporter_extrait(film: Path, extrait: dict, destination: Path, suivi_clip=No
          "-ss", str(extrait["debut"]), "-i", str(film), "-t", str(duree),
          "-map", "0:v:0", "-map", "0:a:0", "-sn",
          "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
-         "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
+         *NORMALISATION_SON, "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
          "-progress", "pipe:1", str(destination)],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, errors="replace",
     )
