@@ -143,14 +143,63 @@ def test_devine_un_film():
     assert devine["type"] == "film" and devine["annee"] == 1998
 
 
-def test_sans_cle_tmdb_l_identification_reste_utilisable(monkeypatch, tmp_path):
+def test_sans_cle_tmdb_la_fiche_vient_de_wikipedia(monkeypatch, tmp_path):
     film = tmp_path / "Le.Diner.de.Cons.1998.mkv"
     film.write_bytes(b"")
     monkeypatch.setattr(identification.config, "cle_tmdb", lambda: None)
     monkeypatch.setattr(identification.cache, "DOSSIER_CACHE", tmp_path / "cache")
+    appels = []
+    monkeypatch.setattr(identification.wikipedia, "chercher_candidats",
+                        lambda titre, annee, type_: [{"ref": "Le Dîner de cons (film)", "titre": "Le Dîner de cons (film)",
+                                                      "type": type_, "annee": None, "source": "Wikipédia"}])
+    monkeypatch.setattr(identification.wikipedia, "fiche",
+                        lambda ref, type_, s, e: appels.append(ref) or {"ref": ref, "titre": "Le Dîner de cons",
+                                                                          "source": "Wikipédia"})
+    resultat = identification.identifier(film)
+    assert appels == ["Le Dîner de cons (film)"]
+    assert resultat["fiche"]["titre"] == "Le Dîner de cons"
+    assert resultat["avertissement"] is None
+
+
+def test_sans_connexion_l_identification_reste_utilisable(monkeypatch, tmp_path):
+    film = tmp_path / "Le.Diner.de.Cons.1998.mkv"
+    film.write_bytes(b"")
+    monkeypatch.setattr(identification.config, "cle_tmdb", lambda: None)
+    monkeypatch.setattr(identification.cache, "DOSSIER_CACHE", tmp_path / "cache")
+
+    def pas_de_connexion(*args):
+        raise identification.requests.ConnectionError()
+    monkeypatch.setattr(identification.wikipedia, "chercher_candidats", pas_de_connexion)
     resultat = identification.identifier(film)
     assert resultat["fiche"]["titre"] == "Le Diner de Cons"
-    assert "TMDb" in resultat["avertissement"]
+    assert "Wikipédia injoignable" in resultat["avertissement"]
+
+
+def test_fiche_wikipedia(monkeypatch):
+    reponses = [
+        {"query": {"pages": [{"title": "Le Dîner de cons (film)", "extract": "Le Dîner de cons est un film comique.",
+                              "thumbnail": {"source": "https://upload.wikimedia.org/a.png"},
+                              "pageprops": {"wikibase_item": "Q1"}}]}},
+        {"entities": {"Q1": {"claims": {
+            "P577": [{"mainsnak": {"datavalue": {"value": {"time": "+1998-04-15T00:00:00Z"}}}}],
+            "P57": [{"mainsnak": {"datavalue": {"value": {"id": "Q10"}}}}],
+            "P161": [{"mainsnak": {"datavalue": {"value": {"id": "Q20"}}}},
+                     {"mainsnak": {"datavalue": {"value": {"id": "Q21"}}},
+                      "qualifiers": {"P453": [{"datavalue": {"value": {"id": "Q30"}}}]}}],
+        }}}},
+        {"entities": {"Q21": {"labels": {"fr": {"value": "Jacques Villeret"}}},
+                      "Q20": {"labels": {"en": {"value": "Thierry Lhermitte"}}},
+                      "Q30": {"labels": {"fr": {"value": "François Pignon"}}},
+                      "Q10": {"labels": {"fr": {"value": "Francis Veber"}}}}},
+    ]
+    monkeypatch.setattr(identification.wikipedia, "_api", lambda url, **p: reponses.pop(0))
+    fiche = identification.wikipedia.fiche("Le Dîner de cons (film)", "film")
+    assert fiche["titre"] == "Le Dîner de cons"
+    assert fiche["annee"] == 1998
+    assert fiche["realisation"] == "Francis Veber"
+    assert fiche["acteurs"] == [{"nom": "Thierry Lhermitte", "personnage": ""},
+                                {"nom": "Jacques Villeret", "personnage": "François Pignon"}]
+    assert fiche["affiche"] == "https://upload.wikimedia.org/a.png"
 
 
 def test_fiche_tmdb_d_un_film(monkeypatch):

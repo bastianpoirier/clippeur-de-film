@@ -13,3 +13,8 @@ __pycache__/
 *.mov
 output/
 cache/
+a_traiter/
+
+# Banque de musiques : les morceaux restent sur le PC (droits d'auteur, taille)
+musiques/*
+!musiques/LISEZ-MOI.txt

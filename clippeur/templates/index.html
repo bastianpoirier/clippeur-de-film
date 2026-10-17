@@ -62,6 +62,18 @@
   .extrait { border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
   .extrait.ecarte { opacity: var(--ecarte); }
   .extrait img, .extrait video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #000; }
+  .extrait video { object-fit: contain; }
+  /* Aperçu vertical : cadre 9:16 pour le voir en grand, comme sur un téléphone. */
+  .vignette.verticale video { aspect-ratio: 9 / 16; max-height: 75vh; margin: 0 auto; }
+  .montage { border: 1px solid var(--bord); border-radius: 10px; padding: 4px 14px 10px; margin-top: 14px; }
+  .montage h3 { margin-top: 10px; }
+  input[type=range] { accent-color: var(--accent); vertical-align: middle; }
+  .bornes { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+  .ligne-borne { display: flex; align-items: center; gap: 4px; }
+  .nom-borne { width: 38px; color: var(--discret); }
+  .ligne-borne .heure { min-width: 66px; text-align: center; }
+  button.petit { padding: 2px 7px; font-size: 12px; font-weight: 500; border-radius: 6px; }
+  button.lien-bouton { align-self: flex-start; border: none; background: none; color: var(--accent); padding: 2px 0; }
   .vignette { position: relative; cursor: pointer; }
   .vignette.en-lecture { cursor: auto; }
   .vignette .lecture {
@@ -83,6 +95,7 @@
   .extrait .garder { margin-top: auto; padding-top: 6px; color: var(--texte); }
   .extrait .fichier { font-size: 12px; color: var(--discret); word-break: break-all; }
   h3 { font-size: 14px; margin: 18px 0 8px; }
+  a { color: var(--accent); }
   code { font-size: 13px; background: var(--piste); padding: 1px 5px; border-radius: 4px; }
   .fiche { display: flex; gap: 16px; margin-top: 16px; align-items: flex-start; }
   .fiche img { width: 92px; border-radius: 6px; flex: none; }
@@ -109,6 +122,23 @@
   label.reference { display: block; cursor: pointer; color: var(--texte); }
   label.reference input { accent-color: var(--accent); }
   .extrait .sources a { color: var(--accent); font-size: 12px; margin-right: 8px; }
+  .tendances { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
+  .serie { border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  .serie img { width: 100%; height: 120px; object-fit: cover; background: var(--piste); }
+  .serie .sans-image { height: 120px; background: var(--piste); display: grid; place-items: center; color: var(--discret); font-size: 32px; }
+  .serie .corps { padding: 10px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+  .serie .rang { color: var(--accent); font-weight: 700; }
+  .serie .nom { font-weight: 600; font-size: 14px; }
+  .serie .resume-serie { color: var(--discret); }
+  .file { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .element-file { border: 1px solid var(--bord); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+  .element-file .entete { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .element-file .statut { font-size: 12px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--bord); color: var(--discret); }
+  .element-file .statut.en-cours { border-color: var(--accent); color: var(--accent); }
+  .element-file .statut.erreur { border-color: var(--erreur); color: var(--erreur); }
+  .element-file .barre { margin: 8px 0 4px; height: 6px; }
+  .element-file ul, .lot ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+  .lot { border: 1px solid var(--accent); border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 14px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -116,6 +146,41 @@
 <main>
   <h1>Clippeur de film</h1>
   <p class="sous-titre">Identification, transcription, citations cultes, choix des meilleurs moments et export des extraits.</p>
+
+  <section class="carte">
+    <h2>Séries du moment</h2>
+    <div class="ligne">
+      <button id="voir-tendances">Afficher les séries du moment</button>
+      <span class="note" id="source-tendances"></span>
+    </div>
+    <p class="erreur" id="erreur-tendances" hidden></p>
+    <div class="tendances" id="tendances"></div>
+  </section>
+
+  <section class="carte">
+    <h2>Traitement automatique</h2>
+    <p class="note" style="margin-top:0">
+      Les épisodes déposés dans le dossier « à traiter », ou toute une saison choisie d'un coup, sont traités tout seuls
+      et l'un après l'autre : identification, transcription, citations, sons, puis export des meilleurs extraits avec
+      les réglages ci-dessous. Utilisez des fichiers que vous avez le droit d'utiliser (achat, DVD ou Blu-ray possédé,
+      enregistrement).
+    </p>
+    <div class="ligne">
+      <label><input type="checkbox" id="auto-surveillance"> Surveiller le dossier « à traiter »</label>
+      <button id="ouvrir-a-traiter">Ouvrir le dossier « à traiter »</button>
+      <button class="principal" id="ajouter-saison">Traiter une saison entière…</button>
+    </div>
+    <div class="ligne" style="margin-top:12px">
+      <label>Extraits par épisode <input type="number" id="auto-nombre" min="1" max="30"></label>
+      <label>Format <select id="auto-format"></select></label>
+      <label>Musique <select id="auto-musique"></select></label>
+      <label>Volume <input type="range" id="auto-volume" min="0" max="100" step="5"> <span id="auto-valeur-volume"></span></label>
+      <label><input type="checkbox" id="auto-sons"> Reconnaître les sons</label>
+    </div>
+    <p class="note" id="auto-enregistre" hidden>Réglages enregistrés.</p>
+    <div id="lots"></div>
+    <div class="file" id="file"></div>
+  </section>
 
   <section class="carte">
     <h2>1. Film</h2>
@@ -133,18 +198,22 @@
           <p id="fiche-synopsis"></p>
           <p class="note" id="fiche-acteurs"></p>
           <p class="avertissement" id="fiche-avertissement" hidden></p>
-          <button id="corriger">Ce n'est pas le bon ? Corriger</button>
+          <div class="ligne">
+            <button id="corriger">Ce n'est pas le bon ? Corriger</button>
+            <button id="montrer-cle" hidden>Utiliser TMDb à la place (facultatif)</button>
+          </div>
         </div>
       </div>
       <form id="form-cle" class="correction" hidden>
-        <span>Pour la fiche complète (synopsis, acteurs, affiche), collez une clé TMDb gratuite —
-          <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">l'obtenir</a> :</span>
+        <span>La fiche vient de Wikipédia, sans clé. TMDb donne en plus les personnages et l'affiche, mais
+          demande un compte gratuit —
+          <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer">obtenir une clé</a> :</span>
         <input type="text" id="cle-tmdb" placeholder="Clé d'API TMDb" autocomplete="off" required>
         <button class="principal" type="submit">Enregistrer</button>
         <span class="avertissement" id="erreur-cle" hidden></span>
       </form>
       <form id="correction" class="correction" hidden>
-        <label id="ligne-candidats">Résultats TMDb <select id="candidats"></select></label>
+        <label id="ligne-candidats"><span id="source-candidats">Résultats</span> <select id="candidats"></select></label>
         <label>Titre <input type="text" id="c-titre" required></label>
         <label>Année <input type="number" id="c-annee" min="1890" max="2100"></label>
         <label>Type
@@ -162,6 +231,7 @@
     <div class="ligne">
       <label>Langue
         <select id="langue">
+          <option value="auto">Automatique (piste audio)</option>
           <option value="fr">Français</option>
           <option value="en">Anglais</option>
         </select>
@@ -177,7 +247,11 @@
       <label><input type="checkbox" id="forcer"> Refaire même si déjà en cache</label>
       <button class="principal" id="lancer" disabled>Lancer la transcription</button>
     </div>
-    <p class="note">Le modèle ne sert que si le film n'a pas de sous-titres dans la langue choisie.</p>
+    <p class="note">
+      Dès qu'un film est choisi, tout s'enchaîne : transcription, citations Wikiquote et proposition des extraits.
+      Ce bouton sert à refaire la transcription seule (autre langue, autre modèle). Le modèle Whisper ne sert que
+      si le film n'a pas de sous-titres dans la langue des dialogues.
+    </p>
   </section>
 
   <section class="carte" id="suivi" hidden>
@@ -217,14 +291,30 @@
     <h2>4. Extraits</h2>
     <div class="ligne">
       <label>Nombre d'extraits <input type="number" id="nombre" min="1" max="30" value="10"></label>
+      <label><input type="checkbox" id="avec-sons" checked> Reconnaître les rires, cris, explosions et musique</label>
       <button class="principal" id="proposer">Proposer des extraits</button>
     </div>
     <p class="note">
-      Le choix combine les citations cultes cochées ci-dessus et des indices locaux (dialogues, volume sonore).
-      Sans citation cochée, seuls les indices locaux comptent.
-      La première fois, l'analyse de l'image prend environ 2 minutes par heure de film.
+      Le choix combine les citations cultes cochées ci-dessus, les sons reconnus et des indices locaux
+      (dialogues, volume sonore). La première fois, l'analyse prend du temps : environ 2 minutes par heure de film
+      pour l'image, et 4 à 12 minutes par heure pour les sons (plus lent sur batterie). Ensuite, tout est gardé en mémoire.
     </p>
     <div id="liste-extraits" hidden>
+      <div class="montage">
+        <h3>Montage des extraits</h3>
+        <div class="ligne">
+          <label>Format <select id="format"></select></label>
+          <label>Musique <select id="musique"></select></label>
+          <label id="ligne-volume">Volume <input type="range" id="volume" min="0" max="100" step="5">
+            <span id="valeur-volume"></span></label>
+          <button id="ouvrir-musiques" type="button">Ouvrir la banque de musiques</button>
+        </div>
+        <p class="note" id="aide-musiques" hidden>
+          La banque est vide : déposez des MP3 ou WAV dans le dossier « musiques » du projet (bouton ci-dessus),
+          puis rouvrez cette liste. Préférez des musiques libres de droits pour éviter les blocages sur les réseaux.
+        </p>
+        <p class="note">Les aperçus (▶) et l'export utilisent ces réglages. Ajustez aussi le début et la fin de chaque extrait.</p>
+      </div>
       <div class="grille" id="grille"></div>
       <div class="ligne" style="margin-top:16px">
         <button class="principal" id="exporter">Exporter</button>
@@ -246,6 +336,7 @@
   let repliques = [];
   let etatCourant = {};
   const ecartes = new Set();  // numéros des extraits décochés
+  const NOMS_LANGUES = { fr: "français", en: "anglais" };
 
   $("modele").value = "{{ modele_par_defaut }}";
 
@@ -275,7 +366,10 @@
       const r = await (await fetch("/api/choisir", { method: "POST" })).json();
       if (r.chemin) {
         afficherFilm(r.chemin);
-        demarrer("/api/identifier", { chemin: r.chemin });  // F4 et F5 : identification automatique
+        // Tout s'enchaîne : identification, transcription, citations Wikiquote, extraits.
+        $("langue").value = "auto";
+        ecartes.clear();
+        demarrer("/api/analyser", { ...reglages(), nombre: Number($("nombre").value) || 10 });
       }
     } finally {
       $("choisir").disabled = false;
@@ -295,17 +389,59 @@
     suivre();
   }
 
-  const reglages = () => ({ chemin: cheminFilm, langue: $("langue").value, modele: $("modele").value });
+  const reglages = () => ({
+    chemin: cheminFilm, langue: $("langue").value, modele: $("modele").value, avec_sons: $("avec-sons").checked,
+  });
 
   $("lancer").onclick = () => demarrer("/api/transcrire", { ...reglages(), forcer: $("forcer").checked });
   $("proposer").onclick = () => {
     ecartes.clear();
+    bornes.clear();
     demarrer("/api/extraits/proposer", { ...reglages(), nombre: Number($("nombre").value) || 10 });
   };
   $("exporter").onclick = () => {
     const numeros = etatCourant.proposition.extraits.map(e => e.numero).filter(n => !ecartes.has(n));
-    demarrer("/api/extraits/exporter", { numeros });
+    demarrer("/api/extraits/exporter", { numeros, montage: montage(), bornes: Object.fromEntries(bornes) });
   };
+
+  // --- Montage : format vertical (F24) et musique de fond ---
+  const bornes = new Map();  // numéro d'extrait → [début, fin] ajustés par l'utilisateur (F22)
+  const montage = () => ({
+    format: $("format").value, musique: $("musique").value || null, volume_musique: Number($("volume").value),
+  });
+
+  async function chargerMontage() {
+    const options = await (await fetch("/api/montage")).json();
+    const formatChoisi = $("format").value, musiqueChoisie = $("musique").value;
+    $("format").replaceChildren(...Object.entries(options.formats).map(([valeur, nom]) =>
+      Object.assign(element("option", null, nom.charAt(0).toUpperCase() + nom.slice(1)), { value: valeur })));
+    $("musique").replaceChildren(Object.assign(element("option", null, "Aucune"), { value: "" }),
+      ...options.musiques.map(m => Object.assign(element("option", null, m), { value: m })));
+    if (formatChoisi) $("format").value = formatChoisi;
+    if (options.musiques.includes(musiqueChoisie)) $("musique").value = musiqueChoisie;
+    if (!$("volume").dataset.initialise) {
+      $("volume").value = options.volume_musique;
+      $("volume").dataset.initialise = "1";
+    }
+    $("aide-musiques").hidden = options.musiques.length > 0;
+    majVolume();
+  }
+  function majVolume() {
+    $("valeur-volume").textContent = `${$("volume").value} %`;
+    $("ligne-volume").hidden = !$("musique").value;
+  }
+  $("volume").oninput = majVolume;
+  // La liste est relue à chaque ouverture : une musique ajoutée au dossier apparaît sans recharger la page.
+  $("musique").onfocus = chargerMontage;
+  for (const id of ["format", "musique", "volume"]) {
+    $(id).onchange = () => { majVolume(); remettreLesMiniatures(); };
+  }
+  $("ouvrir-musiques").onclick = () => fetch("/api/ouvrir_musiques", { method: "POST" });
+
+  // Un réglage a changé : les aperçus déjà lus ne correspondent plus, on remet les miniatures.
+  function remettreLesMiniatures() {
+    if (etatCourant.proposition && !etatCourant.exports) afficherExtraits(etatCourant.proposition, null);
+  }
   $("ouvrir").onclick = () => fetch("/api/ouvrir_dossier", { method: "POST" });
   $("rechercher").onclick = () => demarrer("/api/rechercher", { chemin: cheminFilm });
 
@@ -328,7 +464,7 @@
       episode: $("c-type").value === "serie" ? ($("c-episode").value || null) : null,
     };
     // Si l'utilisateur a choisi un résultat TMDb sans retoucher le titre, on prend directement cette fiche.
-    if (c && c.titre === correction.titre) correction.tmdb_id = c.tmdb_id;
+    if (c && c.titre === correction.titre) correction.ref = c.ref;
     $("correction").hidden = true;
     demarrer("/api/identifier", { chemin: cheminFilm, correction });
   };
@@ -342,7 +478,8 @@
     if (f.annee) nom += ` (${f.annee})`;
     if (f.type === "serie" && f.saison) nom += ` — saison ${f.saison}, épisode ${f.episode}` + (f.titre_episode ? ` « ${f.titre_episode} »` : "");
     $("fiche-titre").textContent = nom;
-    $("fiche-source").textContent = `${f.type === "serie" ? "Série" : "Film"} · identifié d'après : ${f.source}`;
+    $("fiche-source").replaceChildren(`${f.type === "serie" ? "Série" : "Film"} · identifié d'après : `,
+                                      f.url ? lien(f.source, f.url) : f.source);
     $("fiche-synopsis").textContent = f.synopsis_episode || f.synopsis || "";
     $("fiche-acteurs").textContent = (f.acteurs || []).length
       ? "Avec " + f.acteurs.map(a => a.personnage ? `${a.nom} (${a.personnage})` : a.nom).join(", ") : "";
@@ -353,10 +490,11 @@
 
     const candidats = ident.candidats || [];
     $("ligne-candidats").hidden = !candidats.length;
+    $("source-candidats").textContent = candidats.length ? `Résultats ${candidats[0].source}` : "Résultats";
     $("candidats").replaceChildren(...candidats.map((c, i) => {
       const o = element("option", null, `${c.titre}${c.annee ? ` (${c.annee})` : ""}${c.titre_original && c.titre_original !== c.titre ? ` — ${c.titre_original}` : ""}`);
       o.value = i;
-      o.selected = c.tmdb_id === f.tmdb_id;
+      o.selected = c.ref === f.ref;
       return o;
     }));
     $("c-titre").value = f.titre || ident.devine.titre;
@@ -370,8 +508,10 @@
   // --- Clé TMDb gratuite, saisie dans la page ---
   async function afficherCles() {
     const cles = await (await fetch("/api/cles")).json();
-    $("form-cle").hidden = cles.tmdb || !cheminFilm;
+    $("montrer-cle").hidden = cles.tmdb || !cheminFilm;
+    if (cles.tmdb) $("form-cle").hidden = true;
   }
+  $("montrer-cle").onclick = () => { $("form-cle").hidden = !$("form-cle").hidden; };
   $("form-cle").onsubmit = async evenement => {
     evenement.preventDefault();
     const reponse = await fetch("/api/cles", {
@@ -499,8 +639,11 @@
 
     const signature = JSON.stringify([etat.proposition, etat.exports]);
     if (signature !== JSON.stringify([derniereProposition, derniersExports])) {
+      // Nouvelle proposition (autre film, ou extraits reproposés) : les ajustements précédents ne valent plus.
+      if (JSON.stringify(etat.proposition) !== JSON.stringify(derniereProposition)) bornes.clear();
       derniereProposition = etat.proposition;
       derniersExports = etat.exports;
+      if (etat.proposition) await chargerMontage();
       afficherExtraits(etat.proposition, etat.exports);
     }
 
@@ -510,8 +653,7 @@
   function afficherTranscription(resultat) {
     repliques = resultat.segments;
     const duree = repliques.length ? heure(repliques[repliques.length - 1].fin) : "00:00:00";
-    $("resume").textContent = `${resultat.film} · ${repliques.length} réplique${repliques.length > 1 ? "s" : ""} · source : ${resultat.source} · dernière réplique à ${duree}`;
-    if (resultat.langue) $("langue").value = resultat.langue;
+    $("resume").textContent = `${resultat.film} · ${repliques.length} réplique${repliques.length > 1 ? "s" : ""} · ${NOMS_LANGUES[resultat.langue] || ""} · source : ${resultat.source} · dernière réplique à ${duree}`;
     $("filtre").value = "";
     afficherRepliques();
   }
@@ -535,11 +677,14 @@
     const fichiers = new Map((exports || []).map(f => [f.numero, f.fichier]));
     const grille = document.createDocumentFragment();
 
-    for (const e of proposition.extraits) {
+    const exportes = new Map((exports || []).map(f => [f.numero, f]));
+    for (const proposeIci of proposition.extraits) {
       const carte = element("article", "extrait");
-      const fichier = fichiers.get(e.numero);
+      const fichier = fichiers.get(proposeIci.numero);
+      // Bornes affichées : celles de l'export s'il a eu lieu, sinon celles ajustées, sinon celles proposées.
+      const e = exportes.get(proposeIci.numero) || { ...proposeIci, ...bornesDe(proposeIci) };
       carte.classList.toggle("ecarte", exports ? !fichier : ecartes.has(e.numero));
-      const miniature = `/media/miniature/${e.numero}?v=${encodeURIComponent(e.debut)}`;
+      const miniature = `/media/miniature/${e.numero}?v=${encodeURIComponent(proposeIci.debut)}`;
 
       if (fichier) {
         const video = element("video");
@@ -556,9 +701,10 @@
       const entete = element("div", "entete");
       entete.append(
         element("span", "heure", `#${e.numero} · ${heure(e.debut)} → ${heure(e.fin)}`),
-        element("span", null, `${Math.round(e.duree)} s`),
+        element("span", null, `${Math.round(e.fin - e.debut)} s`),
       );
       corps.append(entete, element("div", "titre", `« ${e.titre} »`), element("div", "raison", e.raison));
+      if (!exports) corps.append(reglageDesBornes(proposeIci, proposition.duree, carte, miniature, entete));
       if ((e.sources || []).length) {
         const sources = element("div", "sources");
         for (const s of e.sources) sources.append(lien(s.nom, s.url));
@@ -594,6 +740,47 @@
     majBoutonExport(proposition);
   }
 
+  // --- Ajustement du début et de la fin d'un extrait (F22) ---
+  const DUREE_MIN = 5, DUREE_MAX = 300;
+  function bornesDe(e) {
+    const [debut, fin] = bornes.get(e.numero) || [e.debut, e.fin];
+    return { debut, fin };
+  }
+
+  function reglageDesBornes(e, dureeFilm, carte, miniature, entete) {
+    const bloc = element("div", "bornes");
+    const majAffichage = () => {
+      const { debut, fin } = bornesDe(e);
+      entete.firstChild.textContent = `#${e.numero} · ${heure(debut)} → ${heure(fin)}`;
+      entete.lastChild.textContent = `${Math.round(fin - debut)} s`;
+      for (const [quelle, valeur] of [["debut", debut], ["fin", fin]]) bloc.querySelector(`[data-borne=${quelle}]`).textContent = heure(valeur);
+      // L'aperçu déjà préparé ne correspond plus : retour à la miniature.
+      carte.querySelector(".vignette").replaceWith(vignette({ ...e, debut, fin }, miniature));
+    };
+    const decaler = (quelle, secondes) => {
+      let { debut, fin } = bornesDe(e);
+      if (quelle === "debut") debut = Math.min(Math.max(0, debut + secondes), fin - DUREE_MIN);
+      else fin = Math.max(Math.min(dureeFilm, fin + secondes), debut + DUREE_MIN);
+      if (fin - debut > DUREE_MAX) return;
+      bornes.set(e.numero, [Math.round(debut * 10) / 10, Math.round(fin * 10) / 10]);
+      majAffichage();
+    };
+    for (const [quelle, nom] of [["debut", "Début"], ["fin", "Fin"]]) {
+      const ligne = element("div", "ligne-borne");
+      ligne.append(element("span", "nom-borne", nom));
+      for (const s of [-5, -1]) ligne.append(Object.assign(element("button", "petit", `${s} s`), { type: "button", onclick: () => decaler(quelle, s) }));
+      const valeur = element("span", "heure", heure(bornesDe(e)[quelle]));
+      valeur.dataset.borne = quelle;
+      ligne.append(valeur);
+      for (const s of [1, 5]) ligne.append(Object.assign(element("button", "petit", `+${s} s`), { type: "button", onclick: () => decaler(quelle, s) }));
+      bloc.append(ligne);
+    }
+    const remettre = Object.assign(element("button", "petit lien-bouton", "Bornes d'origine"), { type: "button" });
+    remettre.onclick = () => { bornes.delete(e.numero); majAffichage(); };
+    bloc.append(remettre);
+    return bloc;
+  }
+
   // Miniature cliquable : au clic, le serveur prépare un aperçu léger de l'extrait, puis on le lit.
   function vignette(e, miniature) {
     const conteneur = element("div", "vignette");
@@ -611,9 +798,14 @@
       const attente = element("span", "attente", "Préparation de l'aperçu… (quelques secondes)");
       video.addEventListener("loadeddata", () => attente.remove());
       video.addEventListener("error", () => { attente.textContent = "Impossible de préparer l'aperçu."; });
-      video.src = `/media/apercu/${e.numero}?v=${encodeURIComponent(e.debut)}`;
+      const m = montage();
+      const parametres = new URLSearchParams({
+        debut: e.debut, fin: e.fin, format: m.format, musique: m.musique || "", volume: m.volume_musique,
+      });
+      video.src = `/media/apercu/${e.numero}?${parametres}`;
       conteneur.onclick = null;
       conteneur.classList.add("en-lecture");
+      conteneur.classList.toggle("verticale", m.format !== "original");
       conteneur.replaceChildren(video, attente);
     };
     return conteneur;
@@ -624,6 +816,156 @@
     $("exporter").textContent = `Exporter ${n} extrait${n > 1 ? "s" : ""}`;
     $("exporter").disabled = n === 0 || etatCourant.en_cours;
   }
+
+  // --- Séries du moment ---
+  $("voir-tendances").onclick = async () => {
+    $("voir-tendances").disabled = true;
+    $("erreur-tendances").hidden = true;
+    $("source-tendances").textContent = "Calcul en cours… (environ une minute la première fois de la journée)";
+    try {
+      const reponse = await fetch("/api/tendances");
+      const r = await reponse.json();
+      if (!reponse.ok) throw new Error(r.erreur);
+      $("source-tendances").textContent = `Source : ${r.source}, le ${r.date}.`;
+      $("tendances").replaceChildren(...r.series.map((s, i) => {
+        const carte = element("article", "serie");
+        if (s.image) carte.append(Object.assign(element("img"), { src: s.image, alt: "", loading: "lazy" }));
+        else carte.append(element("div", "sans-image", "▶"));
+        const corps = element("div", "corps");
+        const nom = element("div", "nom");
+        nom.append(element("span", "rang", `${i + 1}. `), lien(s.titre, s.url));
+        corps.append(nom);
+        if (s.vues) corps.append(element("div", "note", `${s.vues.toLocaleString("fr-FR")} consultations en 7 jours`));
+        if (s.resume) corps.append(element("div", "resume-serie", s.resume.length > 180 ? s.resume.slice(0, 180) + "…" : s.resume));
+        carte.append(corps);
+        return carte;
+      }));
+    } catch (erreur) {
+      $("source-tendances").textContent = "";
+      $("erreur-tendances").hidden = false;
+      $("erreur-tendances").textContent = erreur.message;
+    } finally {
+      $("voir-tendances").disabled = false;
+    }
+  };
+
+  // --- Traitement automatique ---
+  let reglagesAuto = null;
+
+  async function chargerOptionsAuto() {
+    const options = await (await fetch("/api/montage")).json();
+    const musique = $("auto-musique").value || reglagesAuto?.montage.musique || "";
+    $("auto-format").replaceChildren(...Object.entries(options.formats).map(([v, n]) =>
+      Object.assign(element("option", null, n.charAt(0).toUpperCase() + n.slice(1)), { value: v })));
+    $("auto-musique").replaceChildren(Object.assign(element("option", null, "Aucune"), { value: "" }),
+      ...options.musiques.map(m => Object.assign(element("option", null, m), { value: m })));
+    if (options.musiques.includes(musique)) $("auto-musique").value = musique;
+  }
+
+  function afficherReglagesAuto(r) {
+    reglagesAuto = r;
+    $("auto-surveillance").checked = r.surveillance;
+    $("auto-nombre").value = r.nombre;
+    $("auto-sons").checked = r.avec_sons;
+    $("auto-format").value = r.montage.format;
+    $("auto-musique").value = r.montage.musique || "";
+    $("auto-volume").value = r.montage.volume_musique;
+    $("auto-valeur-volume").textContent = `${r.montage.volume_musique} %`;
+  }
+
+  async function enregistrerReglagesAuto() {
+    const reponse = await fetch("/api/file/reglages", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        surveillance: $("auto-surveillance").checked, nombre: Number($("auto-nombre").value) || 5,
+        avec_sons: $("auto-sons").checked,
+        montage: { format: $("auto-format").value, musique: $("auto-musique").value || null,
+                   volume_musique: Number($("auto-volume").value) },
+      }),
+    });
+    if (reponse.ok) {
+      afficherReglagesAuto(await reponse.json());
+      $("auto-enregistre").hidden = false;
+      setTimeout(() => { $("auto-enregistre").hidden = true; }, 1500);
+    }
+  }
+  for (const id of ["auto-surveillance", "auto-nombre", "auto-sons", "auto-format", "auto-musique", "auto-volume"]) {
+    $(id).onchange = enregistrerReglagesAuto;
+  }
+  $("auto-volume").oninput = () => { $("auto-valeur-volume").textContent = `${$("auto-volume").value} %`; };
+  $("auto-musique").onfocus = chargerOptionsAuto;
+  $("ouvrir-a-traiter").onclick = () => fetch("/api/file/ouvrir", { method: "POST" });
+  $("ajouter-saison").onclick = async () => {
+    $("ajouter-saison").disabled = true;
+    try {
+      const reponse = await fetch("/api/file/saison", { method: "POST" });
+      if (!reponse.ok) alert((await reponse.json()).erreur);
+      suivreFile();
+    } finally {
+      $("ajouter-saison").disabled = false;
+    }
+  };
+
+  const NOMS_STATUTS = { "en attente": "en attente", "en cours": "en cours", "terminé": "terminé", "erreur": "erreur" };
+
+  function listeExtraits(extraits) {
+    const liste = element("ul");
+    for (const x of extraits) {
+      const li = element("li");
+      li.append(lien(`${x.titre}`, "/media/sortie/" + x.lien.split("/").map(encodeURIComponent).join("/")),
+                ` · ${Math.round(x.duree)} s` + (x.episode ? ` · ${x.episode}` : ""));
+      liste.append(li);
+    }
+    return liste;
+  }
+
+  let derniereFile = null;
+  async function suivreFile() {
+    const etat = await (await fetch("/api/file")).json();
+    if (!reglagesAuto) { await chargerOptionsAuto(); afficherReglagesAuto(etat.reglages); }
+    const signature = JSON.stringify([etat.elements, etat.lots]);
+    if (signature !== derniereFile) {
+      derniereFile = signature;
+      $("lots").replaceChildren(...etat.lots.map(lot => {
+        const bloc = element("div", "lot");
+        const faits = etat.elements.filter(e => e.lot === lot.id && ["terminé", "erreur"].includes(e.statut)).length;
+        bloc.append(element("strong", null, `Saison « ${lot.nom} » : ${faits} / ${lot.nb} épisodes traités`));
+        if (lot.termine) {
+          bloc.append(element("div", "note", `Les ${lot.meilleurs.length} meilleurs extraits de la saison :`), listeExtraits(
+            lot.meilleurs.map(m => ({ ...m, lien: m.lien }))));
+        }
+        return bloc;
+      }));
+      // Les plus récents en haut.
+      $("file").replaceChildren(...[...etat.elements].reverse().map(e => {
+        const bloc = element("div", "element-file");
+        const entete = element("div", "entete");
+        const statut = element("span", "statut " + e.statut.replace(" ", "-"), NOMS_STATUTS[e.statut] || e.statut);
+        entete.append(element("span", null, e.titre ? `${e.titre} — ${e.fichier}` : e.fichier), statut);
+        bloc.append(entete);
+        if (e.statut === "en cours") {
+          const barre = element("div", "barre" + (e.pourcentage == null ? " indeterminee" : ""));
+          const remplissage = element("div");
+          if (e.pourcentage != null) remplissage.style.width = e.pourcentage + "%";
+          barre.append(remplissage);
+          bloc.append(barre, element("div", "note", e.message));
+        } else if (e.statut === "erreur") {
+          bloc.append(element("div", "erreur", e.erreur));
+        } else if (e.statut === "en attente") {
+          const retirer = element("button", "petit", "Retirer");
+          retirer.onclick = () => fetch("/api/file/retirer", {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: e.id }),
+          }).then(suivreFile);
+          bloc.append(retirer);
+        } else if (e.extraits.length) {
+          bloc.append(element("div", "note", e.message), listeExtraits(e.extraits));
+        }
+        return bloc;
+      }));
+    }
+  }
+  setInterval(suivreFile, 3000);
+  suivreFile();
 
   // Au chargement (ou après un rechargement de la page), on reprend l'état du serveur.
   suivre();

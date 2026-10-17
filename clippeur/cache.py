@@ -27,6 +27,21 @@ def lire(film: Path, nom: str) -> dict | None:
     return json.loads(chemin.read_text(encoding="utf-8"))
 
 
+def lire_global(nom: str) -> dict | None:
+    """Données qui ne dépendent d'aucun film (réglages, tendances du jour...)."""
+    chemin = DOSSIER_CACHE / f"{nom}.json"
+    if not chemin.is_file():
+        return None
+    return json.loads(chemin.read_text(encoding="utf-8"))
+
+
+def ecrire_global(nom: str, donnees: dict) -> Path:
+    DOSSIER_CACHE.mkdir(parents=True, exist_ok=True)
+    chemin = DOSSIER_CACHE / f"{nom}.json"
+    chemin.write_text(json.dumps(donnees, ensure_ascii=False, indent=2), encoding="utf-8")
+    return chemin
+
+
 def ecrire(film: Path, nom: str, donnees: dict) -> Path:
     dossier = dossier_du_film(film)
     dossier.mkdir(parents=True, exist_ok=True)

@@ -13,11 +13,11 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-### Clé TMDb (gratuite, facultative)
+### Aucune clé nécessaire
 
-L'application est entièrement gratuite. Une clé [TMDb](https://www.themoviedb.org/settings/api) (gratuite) permet d'avoir la fiche complète du film en français : synopsis, acteurs, affiche. Elle se colle directement dans la page, qui la vérifie puis l'enregistre dans le fichier `.env` (exclu de Git). On peut aussi copier `.env.exemple` en `.env` et l'y écrire.
+L'application est entièrement gratuite et ne demande aucun compte. La fiche du film (résumé, réalisation, acteurs, image) vient de Wikipédia et Wikidata, les citations de Wikiquote.
 
-Sans clé, le film est identifié d'après le nom du fichier, et tout le reste fonctionne.
+Facultatif : avec une clé [TMDb](https://www.themoviedb.org/settings/api) (gratuite, mais il faut créer un compte), la fiche vient de TMDb à la place, avec l'affiche et plus de personnages. La clé se colle dans la page (« Utiliser TMDb à la place »), qui la vérifie puis l'enregistre dans `.env` (exclu de Git).
 
 ## Utilisation
 
@@ -31,7 +31,7 @@ Double-cliquer sur `lancer.bat`, ou :
 
 La page s'ouvre dans le navigateur (http://127.0.0.1:5000).
 
-1. **Film** : « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; le film est lu là où il est, sans être copié. Il est identifié automatiquement (titre, année, saison et épisode pour une série), et on peut corriger si ce n'est pas le bon.
+1. **Film** : « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; le film est lu là où il est, sans être copié. Il est identifié automatiquement (titre, année, saison et épisode pour une série, fiche Wikipédia), et on peut corriger si ce n'est pas le bon. Ensuite tout s'enchaîne : la langue des dialogues est détectée d'après la piste audio, puis viennent la transcription, les citations et la proposition des extraits.
 2. **Transcription** des dialogues avec leurs horaires.
 3. **Citations cultes** : les citations célèbres de l'œuvre sont cherchées sur Wikiquote, puis retrouvées dans les dialogues du film. On coche celles qui doivent compter pour le choix des extraits, et on peut choisir une autre page Wikiquote si la première n'est pas la bonne.
 4. **Extraits** : chaque extrait proposé s'affiche avec une miniature, la raison de son choix et ses sources ; ▶ prépare un aperçu en quelques secondes. On décoche ceux qu'on ne veut pas, puis on exporte. Les extraits sont enregistrés dans `output/<film>/`, avec un récapitulatif `extraits.json`, le son remis au niveau des réseaux sociaux.

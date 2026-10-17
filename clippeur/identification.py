@@ -1,11 +1,15 @@
-"""Identification du film : titre deviné depuis le nom du fichier (F4), fiche TMDb en français (F5),
-correction par l'utilisateur (F6)."""
+"""Identification du film : titre deviné depuis le nom du fichier (F4), fiche en français (F5),
+correction par l'utilisateur (F6).
+
+La fiche vient de Wikipédia et Wikidata (gratuit, sans clé). Si l'utilisateur a ajouté une clé TMDb
+(gratuite, mais elle demande de créer un compte), TMDb est utilisé à la place.
+"""
 
 from pathlib import Path
 
 import requests
 
-from clippeur import cache, config
+from clippeur import cache, config, wikipedia
 
 URL_TMDB = "https://api.themoviedb.org/3"
 URL_AFFICHES = "https://image.tmdb.org/t/p/w185"
@@ -47,8 +51,7 @@ def verifier_cle_tmdb(cle: str) -> bool:
 def _appel_tmdb(chemin: str, cle: str | None = None, **parametres) -> dict:
     cle = cle or config.cle_tmdb()
     if not cle:
-        raise ErreurTMDb("Pas de clé TMDb : saisissez-la dans la section « Recherche en ligne » pour avoir "
-                         "la fiche complète du film (gratuit).")
+        raise ErreurTMDb("Pas de clé TMDb : collez-la ci-dessous pour avoir la fiche complète du film (gratuit).")
     entetes = {}
     # Le « jeton d'accès en lecture » (v4) est long et commence par « eyJ » ; la clé v3 est courte.
     if cle.startswith("eyJ"):
@@ -58,7 +61,7 @@ def _appel_tmdb(chemin: str, cle: str | None = None, **parametres) -> dict:
     reponse = requests.get(f"{URL_TMDB}{chemin}", params={"language": LANGUE_TMDB, **parametres},
                            headers=entetes, timeout=20)
     if reponse.status_code == 401:
-        raise ErreurTMDb("Clé TMDb refusée : vérifiez-la dans la section « Recherche en ligne ».")
+        raise ErreurTMDb("Clé TMDb refusée : collez-en une valide ci-dessous.")
     reponse.raise_for_status()
     return reponse.json()
 
@@ -76,6 +79,8 @@ def chercher_candidats(titre: str, annee: int | None, type_: str) -> list[dict]:
     candidats = []
     for r in resultats.get("results", [])[:6]:
         candidats.append({
+            "ref": r["id"],
+            "source": "TMDb",
             "tmdb_id": r["id"],
             "type": type_,
             "titre": r.get("title") or r.get("name"),
@@ -121,7 +126,7 @@ def fiche_tmdb(tmdb_id: int, type_: str, saison: int | None = None, episode: int
         }
     affiche = d.get("poster_path")
     return fiche | {
-        "tmdb_id": tmdb_id, "type": type_, "saison": saison, "episode": episode,
+        "ref": tmdb_id, "tmdb_id": tmdb_id, "type": type_, "saison": saison, "episode": episode,
         "affiche": f"{URL_AFFICHES}{affiche}" if affiche else None,
         "source": "TMDb",
     }
@@ -130,8 +135,9 @@ def fiche_tmdb(tmdb_id: int, type_: str, saison: int | None = None, episode: int
 def identifier(film: Path, correction: dict | None = None, forcer: bool = False) -> dict:
     """Renvoie {devine, candidats, fiche, avertissement}.
 
+    La fiche vient de Wikipédia (gratuit, sans clé), ou de TMDb si une clé TMDb a été ajoutée.
     `correction` (F6) contient ce que l'utilisateur a saisi ou choisi :
-    titre, annee, type, saison, episode, et éventuellement tmdb_id.
+    titre, annee, type, saison, episode, et éventuellement « ref » (l'article ou l'œuvre choisie).
     """
     if not forcer and not correction:
         en_cache = cache.lire(film, "identification")
@@ -140,27 +146,31 @@ def identifier(film: Path, correction: dict | None = None, forcer: bool = False)
 
     devine = deviner(film)
     recherche = devine | {k: v for k, v in (correction or {}).items() if v not in (None, "")}
-    for cle in ("annee", "saison", "episode", "tmdb_id"):
+    for cle in ("annee", "saison", "episode"):
         if recherche.get(cle) is not None:
             recherche[cle] = int(recherche[cle])
 
-    # Sans TMDb, la fiche se limite à ce qu'on a deviné ou saisi : l'application reste utilisable.
+    # Si rien n'est trouvé, la fiche se limite à ce qu'on a deviné ou saisi : l'application reste utilisable.
     fiche = {k: recherche.get(k) for k in ("titre", "annee", "type", "saison", "episode")} | {
         "source": "nom du fichier" if not correction else "saisie", "synopsis": "", "acteurs": []}
+    avec_tmdb = config.cle_tmdb() is not None
+    source = "TMDb" if avec_tmdb else "Wikipédia"
     candidats, avertissement = [], None
     try:
-        candidats = chercher_candidats(recherche["titre"], recherche.get("annee"), recherche["type"])
+        chercher = chercher_candidats if avec_tmdb else wikipedia.chercher_candidats
+        candidats = chercher(recherche["titre"], recherche.get("annee"), recherche["type"])
         if not candidats and recherche.get("annee"):  # l'année du fichier est parfois fausse
-            candidats = chercher_candidats(recherche["titre"], None, recherche["type"])
-        tmdb_id = recherche.get("tmdb_id") or (candidats[0]["tmdb_id"] if candidats else None)
-        if tmdb_id:
-            fiche = fiche_tmdb(tmdb_id, recherche["type"], recherche.get("saison"), recherche.get("episode"))
+            candidats = chercher(recherche["titre"], None, recherche["type"])
+        ref = recherche.get("ref") or (candidats[0]["ref"] if candidats else None)
+        if ref is not None:
+            obtenir = (lambda r, *a: fiche_tmdb(int(r), *a)) if avec_tmdb else wikipedia.fiche
+            fiche = obtenir(ref, recherche["type"], recherche.get("saison"), recherche.get("episode"))
         else:
-            avertissement = f"Aucun résultat TMDb pour « {recherche['titre']} ». Corrigez le titre si besoin."
+            avertissement = f"Rien trouvé sur {source} pour « {recherche['titre']} ». Corrigez le titre si besoin."
     except ErreurTMDb as e:
         avertissement = str(e)
     except requests.RequestException as e:
-        avertissement = f"TMDb injoignable ({e.__class__.__name__}) : vérifiez la connexion Internet."
+        avertissement = f"{source} injoignable ({e.__class__.__name__}) : vérifiez la connexion Internet."
 
     resultat = {"devine": devine, "candidats": candidats, "fiche": fiche, "avertissement": avertissement}
     cache.ecrire(film, "identification", resultat)

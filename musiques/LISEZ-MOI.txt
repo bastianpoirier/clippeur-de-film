@@ -1,0 +1,12 @@
+Banque de musiques du Clippeur de film
+======================================
+
+Déposez dans ce dossier les morceaux à ajouter en fond sonore des extraits
+(formats acceptés : MP3, WAV, M4A, AAC, OGG, FLAC, OPUS).
+Ils apparaissent ensuite dans la liste « Musique » de la page, sans redémarrer l'application.
+
+Ces fichiers restent sur votre PC : ils ne sont jamais envoyés sur GitHub.
+
+Attention aux droits d'auteur : une musique protégée peut faire bloquer ou démonétiser
+un clip sur TikTok, Instagram ou YouTube. Préférez des musiques libres de droits,
+par exemple la bibliothèque audio de YouTube (studio.youtube.com, rubrique « Bibliothèque audio »).

@@ -17,6 +17,17 @@ LANGUES = {
 _CODECS_TEXTE = {"subrip", "srt", "ass", "ssa", "mov_text", "webvtt", "text"}
 
 
+def langue_audio(film: Path) -> str | None:
+    """Langue de la première piste audio (« fr » ou « en »), d'après les informations du fichier."""
+    resultat = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream_tags=language",
+         "-of", "csv=p=0", str(film)],
+        capture_output=True, text=True, errors="replace",
+    )
+    code = resultat.stdout.strip().lower()
+    return next((langue for langue, infos in LANGUES.items() if code in infos["codes"]), None)
+
+
 def trouver_srt_adjacent(film: Path, langue: str = "fr") -> Path | None:
     """Cherche film.srt, film.fr.srt (ou film.en.srt...) dans le même dossier que le film."""
     for suffixe in LANGUES[langue]["suffixes"]:

@@ -32,20 +32,22 @@ def detecter_plans(film: Path, suivi: Suivi) -> list[float]:
         return en_cache["plans"]
 
     duree = duree_video(film)
-    with tempfile.TemporaryDirectory() as dossier:
+    with tempfile.TemporaryDirectory() as dossier, open(Path(dossier) / "erreurs.txt", "w+", errors="replace") as erreurs:
         # FFmpeg n'accepte pas les « : » de « C:\ » dans les options de filtre : on passe un nom relatif.
+        # Ses messages d'erreur vont dans un fichier : un tuyau non lu pourrait se remplir et bloquer FFmpeg.
         processus = subprocess.Popen(
             ["ffmpeg", "-v", "error", "-nostats", "-i", str(film), "-an", "-sn",
              "-vf", f"scale=192:-2,select='gt(scene,{SEUIL_CHANGEMENT_PLAN})',metadata=print:file=plans.txt",
              "-progress", "pipe:1", "-f", "null", "-"],
-            cwd=dossier, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, errors="replace",
+            cwd=dossier, stdout=subprocess.PIPE, stderr=erreurs, text=True, errors="replace",
         )
         for ligne in processus.stdout:
             if ligne.startswith("out_time_us=") and ligne.strip() != "out_time_us=N/A":
                 secondes = int(ligne.split("=")[1]) / 1_000_000
                 suivi("Détection des changements de plan", min(99.9, secondes / duree * 100))
         if processus.wait() != 0:
-            raise subprocess.CalledProcessError(processus.returncode, processus.args, stderr=processus.stderr.read())
+            erreurs.seek(0)
+            raise subprocess.CalledProcessError(processus.returncode, processus.args, stderr=erreurs.read()[-2000:])
         texte = (Path(dossier) / "plans.txt").read_text(errors="replace") if (Path(dossier) / "plans.txt").exists() else ""
     suivi("Détection des changements de plan", 100)
 
