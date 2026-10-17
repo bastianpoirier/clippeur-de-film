@@ -1,7 +1,7 @@
 # Cahier des charges — Clippeur de film
 
 > Version 0.4 — brouillon à valider
-> Dernière mise à jour : 2026-10-07 — application **entièrement gratuite** : pas d'IA payante.
+> Application **entièrement gratuite** : pas d'IA payante.
 
 ---
 
@@ -26,7 +26,7 @@
 - **Gratuit** : aucun service payant. Les services en ligne utilisés (Wikiquote, TMDb) sont gratuits.
 
 ### 1.3 Hors périmètre de la V1
-- Services payants, dont l'analyse par une IA en ligne (décidé le 2026-10-07).
+- Services payants, dont l'analyse par une IA en ligne.
 - Publication automatique sur les réseaux sociaux.
 - Films dans d'autres langues que le français.
 - Fonctionnement hors connexion.
@@ -67,12 +67,12 @@
 
 ### 3.2 Identification du film
 - **F4** — Proposition automatique du titre et de l'année à partir du nom du fichier.
-- **F5** — Récupération des métadonnées en français : synopsis, personnages, acteurs (via TMDb, gratuit). La clé TMDb se saisit directement dans l'application.
+- **F5** — Récupération des métadonnées en français : résumé, réalisation, acteurs et personnages, via Wikipédia et Wikidata (gratuit, sans clé ni compte). Facultatif : TMDb à la place, si l'utilisateur saisit une clé TMDb dans l'application.
 - **F6** — Possibilité pour l'utilisateur de corriger l'identification.
 
 ### 3.3 Recherche en ligne
 - **F7** — Recherche des **citations célèbres** du film sur Wikiquote, dans la langue des dialogues. L'utilisateur peut choisir une autre page Wikiquote si la première n'est pas la bonne, et cocher les citations qui doivent compter.
-- ~~**F8** — Recherche des scènes cultes ou populaires sur le web.~~ → **Retiré le 2026-10-07** : nécessitait une IA payante.
+- ~~**F8** — Recherche des scènes cultes ou populaires sur le web.~~ → **Retiré** : nécessitait une IA payante.
 - **F9** — Pour chaque résultat, conservation de la source et du texte de la citation.
 - **F10** — Seules les **informations** sont récupérées (texte, titres, descriptions). Aucune vidéo n'est téléchargée : les clips sont toujours découpés dans le fichier local de l'utilisateur.
 
@@ -80,7 +80,7 @@
 - **F11** — Transcription des dialogues en français avec horodatage : sous-titres existants en priorité, sinon reconnaissance vocale.
 - **F12** — Détection des changements de plan, pour couper sur des transitions naturelles.
 - **F13** — Détection des pics audio : musique, cris, explosions, rires.
-- ~~**F14** — Analyse de la transcription par une IA en ligne.~~ → **Retiré le 2026-10-07** : service payant. Les moments non cités sur Wikiquote sont repérés par les indices locaux (densité des dialogues, volume sonore, répliques exclamatives).
+- ~~**F14** — Analyse de la transcription par une IA en ligne.~~ → **Retiré** : service payant. Les moments non cités sur Wikiquote sont repérés par les indices locaux (densité des dialogues, volume sonore, répliques exclamatives).
 
 ### 3.5 Sélection des moments
 - **F15** — Mise en correspondance de chaque citation trouvée en ligne avec la transcription, de façon tolérante aux petites variantes de formulation.
@@ -134,7 +134,7 @@
 | Découpe vidéo | FFmpeg | Lecture, découpe et export |
 | Transcription | Sous-titres `.srt` en priorité, sinon reconnaissance vocale (voir section 8) | Dialogues horodatés |
 | Changements de plan | FFmpeg (filtre de détection de scène) | Détection des transitions |
-| Métadonnées du film | API TMDb (gratuite) | Titre, année, synopsis, casting |
+| Métadonnées du film | Wikipédia et Wikidata (sans clé) ; TMDb en option | Titre, année, résumé, casting |
 | Recherche en ligne | API de Wikiquote (gratuite) | Citations cultes |
 | Correspondance | RapidFuzz | Retrouver les citations dans les dialogues malgré les variantes |
 | Stockage | Fichiers JSON | Cache et résultats |
@@ -144,19 +144,19 @@
 ## 7. Prérequis sur le poste
 
 - [x] Git
-- [x] GitHub CLI (`gh`), installé le 2026-10-07
+- [x] GitHub CLI (`gh`)
 - [x] VS Code avec les extensions Python et GitHub
 - [x] Python 3.12 (3.12.10)
 - [x] FFmpeg (9.0.2)
 - [x] Compte GitHub connecté à `gh`
-- [ ] Clé API TMDb (gratuite, facultative)
+- [ ] Clé API TMDb (facultative depuis le passage à Wikipédia)
 
 ---
 
 ## 8. Questions ouvertes
 
-1. ~~**Transcription sans sous-titres**~~ → **décidé le 2026-10-07 : transcription locale** avec Whisper (`faster-whisper`, sur le processeur). Gratuite mais lente : de 30 min à plus d'une heure pour un film de 2 h.
-2. ~~**Budget d'IA**~~ → **décidé le 2026-10-07 : aucun.** L'application reste entièrement gratuite.
+1. ~~**Transcription sans sous-titres**~~ → **décidé : transcription locale** avec Whisper (`faster-whisper`, sur le processeur). Gratuite mais lente : de 30 min à plus d'une heure pour un film de 2 h.
+2. ~~**Budget d'IA**~~ → **décidé : aucun.** L'application reste entièrement gratuite.
 
 ---
 
