@@ -37,7 +37,6 @@ main > h1, main > .sous-titre { display: none; }  /* remplacés par l'introducti
 #resultats { order: 6; }
 .intertitre-demo { order: 7; font: 500 26px/1.2 var(--serif); margin: 56px 0 0; padding-top: 24px; border-top: 2px solid var(--texte); }
 #carte-auto { order: 8; }
-#carte-tendances { order: 9; }
 
 /* --- Sections : un filet au-dessus plutôt qu'une boîte --- */
 .carte { background: none; border: none; border-top: 1px solid var(--filet); border-radius: 0; padding: 26px 0 30px; margin: 0; scroll-margin-top: 12px; }
@@ -117,14 +116,11 @@ label.reference:hover { background: var(--fond-encart); }
 .replique { border-bottom-color: var(--filet); font-size: 14.5px; }
 .replique .heure { color: var(--texte-legende); font-weight: 400; }
 
-/* --- Outils annexes --- */
+/* --- Traitement automatique --- */
 .element-file, .lot { border: none; border-bottom: 1px solid var(--filet); border-radius: 0; padding: 12px 2px; background: none; }
 .lot { border-left: 3px solid var(--accent); padding-left: 12px; }
 .element-file .statut { font: 11.5px/1.6 var(--mono); border-radius: 2px; }
 .element-file .statut.en-cours { color: var(--accent); border-color: var(--accent); }
-.serie { border: 1px solid var(--filet); border-radius: 3px; background: var(--fond); }
-.serie .rang { color: var(--accent); font-family: var(--mono); }
-.serie .nom { font: 500 16px/1.3 var(--serif); }
 
 /* --- Aperçu lu depuis la copie publique du film --- */
 .vignette .note-apercu { position: absolute; left: 8px; right: 8px; top: 8px; padding: 6px 9px; border-radius: 3px;

@@ -22,8 +22,6 @@ from clippeur.identification import identifier, verifier_cle_tmdb
 from clippeur.recherche import choisir_citations, recherche_en_cache, rechercher
 from clippeur.export import DOSSIER_SORTIE
 from clippeur.file_attente import DOSSIER_A_TRAITER, file_attente
-from clippeur.identification import ErreurTMDb
-from clippeur.tendances import ErreurTendances, series_du_moment
 from clippeur.traitement import analyser_film, choisir_langue
 from clippeur.transcription import LANGUE_PAR_DEFAUT, MODELE_PAR_DEFAUT, FilmIllisible, transcrire
 
@@ -364,19 +362,6 @@ def ouvrir_musiques():
 def etat():
     with _verrou:
         return jsonify(_etat)
-
-
-# --- Séries du moment ---
-
-@app.get("/api/tendances")
-def tendances_du_moment():
-    """Calculées une fois par jour (environ une minute), puis lues depuis le cache."""
-    try:
-        return jsonify(series_du_moment(forcer=request.args.get("forcer") == "1"))
-    except (ErreurTendances, ErreurTMDb) as e:
-        return jsonify(erreur=str(e)), 503
-    except requests.RequestException as e:
-        return jsonify(erreur=f"Source injoignable ({e.__class__.__name__}) : vérifiez la connexion Internet."), 503
 
 
 # --- Traitement automatique : dossier « à traiter » et saisons entières ---

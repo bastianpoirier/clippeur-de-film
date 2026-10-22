@@ -28,7 +28,7 @@ def lire(film: Path, nom: str) -> dict | None:
 
 
 def lire_global(nom: str) -> dict | None:
-    """Données qui ne dépendent d'aucun film (réglages, tendances du jour...)."""
+    """Données qui ne dépendent d'aucun film (réglages du traitement automatique...)."""
     chemin = DOSSIER_CACHE / f"{nom}.json"
     if not chemin.is_file():
         return None

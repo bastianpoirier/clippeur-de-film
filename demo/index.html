@@ -122,14 +122,6 @@
   label.reference { display: block; cursor: pointer; color: var(--texte); }
   label.reference input { accent-color: var(--accent); }
   .extrait .sources a { color: var(--accent); font-size: 12px; margin-right: 8px; }
-  .tendances { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
-  .serie { border: 1px solid var(--bord); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-  .serie img { width: 100%; height: 120px; object-fit: cover; background: var(--piste); }
-  .serie .sans-image { height: 120px; background: var(--piste); display: grid; place-items: center; color: var(--discret); font-size: 32px; }
-  .serie .corps { padding: 10px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
-  .serie .rang { color: var(--accent); font-weight: 700; }
-  .serie .nom { font-weight: 600; font-size: 14px; }
-  .serie .resume-serie { color: var(--discret); }
   .file { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
   .element-file { border: 1px solid var(--bord); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
   .element-file .entete { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
@@ -144,8 +136,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../assets/tokens.css">
-<link rel="stylesheet" href="demo.css">
+<link rel="stylesheet" href="../assets/tokens.css?v=0e62a00a">
+<link rel="stylesheet" href="demo.css?v=188c361d">
 </head>
 <body>
 
@@ -169,16 +161,6 @@
   <p class="intertitre-demo">Les autres outils de l'application</p>
   <h1>Clippeur de film</h1>
   <p class="sous-titre">Identification, transcription, citations cultes, choix des meilleurs moments et export des extraits.</p>
-
-  <section class="carte" id="carte-tendances">
-    <h2>Séries du moment</h2>
-    <div class="ligne">
-      <button id="voir-tendances">Afficher les séries du moment</button>
-      <span class="note" id="source-tendances"></span>
-    </div>
-    <p class="erreur" id="erreur-tendances" hidden></p>
-    <div class="tendances" id="tendances"></div>
-  </section>
 
   <section class="carte" id="carte-auto">
     <h2>Traitement automatique</h2>
@@ -360,8 +342,8 @@
     films de leurs copies sur archive.org.</p>
 </footer>
 
-<script src="donnees.js"></script>
-<script src="simulation.js"></script>
+<script src="donnees.js?v=44a4ae5c"></script>
+<script src="simulation.js?v=4ffb4d4c"></script>
 <script>
   const $ = id => document.getElementById(id);
   let cheminFilm = null;
@@ -848,38 +830,6 @@
     $("exporter").textContent = `Exporter ${n} extrait${n > 1 ? "s" : ""}`;
     $("exporter").disabled = n === 0 || etatCourant.en_cours;
   }
-
-  // --- Séries du moment ---
-  $("voir-tendances").onclick = async () => {
-    $("voir-tendances").disabled = true;
-    $("erreur-tendances").hidden = true;
-    $("source-tendances").textContent = "Calcul en cours… (environ une minute la première fois de la journée)";
-    try {
-      const reponse = await fetch("/api/tendances");
-      const r = await reponse.json();
-      if (!reponse.ok) throw new Error(r.erreur);
-      $("source-tendances").textContent = `Source : ${r.source}, le ${r.date}.`;
-      $("tendances").replaceChildren(...r.series.map((s, i) => {
-        const carte = element("article", "serie");
-        if (s.image) carte.append(Object.assign(element("img"), { src: s.image, alt: "", loading: "lazy" }));
-        else carte.append(element("div", "sans-image", "▶"));
-        const corps = element("div", "corps");
-        const nom = element("div", "nom");
-        nom.append(element("span", "rang", `${i + 1}. `), lien(s.titre, s.url));
-        corps.append(nom);
-        if (s.vues) corps.append(element("div", "note", `${s.vues.toLocaleString("fr-FR")} consultations en 7 jours`));
-        if (s.resume) corps.append(element("div", "resume-serie", s.resume.length > 180 ? s.resume.slice(0, 180) + "…" : s.resume));
-        carte.append(corps);
-        return carte;
-      }));
-    } catch (erreur) {
-      $("source-tendances").textContent = "";
-      $("erreur-tendances").hidden = false;
-      $("erreur-tendances").textContent = erreur.message;
-    } finally {
-      $("voir-tendances").disabled = false;
-    }
-  };
 
   // --- Traitement automatique ---
   let reglagesAuto = null;

@@ -24,7 +24,7 @@
 - Films et séries fournis par l'utilisateur, traités **un par un** : à la main, ou automatiquement par une file d'attente (dossier surveillé, saison entière).
 - **Connexion Internet obligatoire** pendant l'utilisation.
 - Un seul utilisateur.
-- **Gratuit** : aucun service payant. Les services en ligne utilisés (Wikipédia, Wikidata, Wikiquote, statistiques Wikimedia, TMDb en option) sont gratuits.
+- **Gratuit** : aucun service payant. Les services en ligne utilisés (Wikipédia, Wikidata, Wikiquote, TMDb en option) sont gratuits.
 
 ### 1.3 Hors périmètre de la V1
 - Services payants, dont l'analyse par une IA en ligne.
@@ -111,9 +111,6 @@ Toutes les exigences ci-dessous sont réalisées, sauf mention contraire.
 - **F31** — Ajout d'une saison entière (un dossier et ses sous-dossiers). À la fin, un récapitulatif `output/saisons/<saison>.json` rassemble les 10 meilleurs extraits de tous les épisodes.
 - **F32** — Réglages du traitement automatique (extraits par épisode, format, musique, reconnaissance des sons) enregistrés d'une session à l'autre.
 
-### 3.9 Séries du moment
-- **F33** — Liste des séries les plus consultées sur Wikipédia en français ces 7 derniers jours (statistiques publiques Wikimedia, reconnues comme séries grâce à Wikidata), ou tendances de la semaine de TMDb si une clé est enregistrée. Calculée une fois par jour.
-
 ---
 
 ## 4. Exigences non fonctionnelles
@@ -151,7 +148,6 @@ Toutes les exigences ci-dessous sont réalisées, sauf mention contraire.
 | Reconnaissance des sons | Modèle AST (AudioSet) au format ONNX, avec `onnxruntime` | Rires, cris, explosions, musique |
 | Identification | `guessit` (nom du fichier), Wikipédia et Wikidata (sans clé) ; TMDb en option | Titre, année, saison, épisode, résumé, casting |
 | Recherche en ligne | API de Wikiquote (gratuite) | Citations cultes |
-| Séries du moment | Statistiques de consultation Wikimedia et Wikidata ; TMDb en option | Tendances de la semaine |
 | Correspondance | RapidFuzz | Retrouver les citations dans les dialogues malgré les variantes |
 | Stockage | Fichiers JSON | Cache, réglages et résultats |
 
@@ -191,7 +187,7 @@ Les modèles Whisper (environ 500 Mo) et AST (environ 90 Mo) sont téléchargés
 | ~~5~~ | ~~Analyse IA des moments forts~~ (retiré : payant) | — |
 | 6 | Page web locale : import, suivi, liste des clips | Fait |
 | 7 | Finitions : cache, tests, documentation | Fait |
-| 8 | Extensions : reconnaissance des sons, format vertical, musique, file d'attente et saisons, séries du moment | Fait |
+| 8 | Extensions : reconnaissance des sons, format vertical, musique, file d'attente et saisons | Fait |
 
 ### Pistes pour la suite
 - Mesurer le temps de traitement d'un film de 2 h (NF3).

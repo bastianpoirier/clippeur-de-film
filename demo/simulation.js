@@ -193,11 +193,6 @@
     "POST /api/cles": () => reponse({ erreur: "Démo en ligne : aucune clé n'est enregistrée ici. Dans l'application, "
                                              + "la clé est vérifiée auprès de TMDb puis gardée dans le fichier .env." }, 400),
 
-    "GET /api/tendances": async () => {
-      await pause(1200 * VITESSE);
-      return D.tendances ? reponse(D.tendances) : reponse({ erreur: "Pas de séries du moment dans la démo." }, 503);
-    },
-
     "POST /api/ouvrir_dossier": () => info("ouvre le dossier des extraits dans l'Explorateur Windows"),
     "POST /api/ouvrir_musiques": () => info("ouvre la banque de musiques, où l'on dépose ses morceaux"),
     "POST /api/file/ouvrir": () => info("ouvre le dossier « à traiter » : toute vidéo déposée y est traitée seule"),

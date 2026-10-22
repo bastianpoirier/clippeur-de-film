@@ -7,11 +7,16 @@ Les films utilisés sont ceux de la Blender Foundation, sous licence Creative Co
 montrer leurs vraies images (miniatures copiées dans demo/images) et lire les extraits depuis les copies
 publiques des films. Les noms de fichiers sont nettoyés (pas de chemin du PC).
 
+À relancer aussi après toute modification de demo/simulation.js, demo/demo.css ou assets/ : les liens vers
+ces fichiers portent un numéro de version tiré de leur contenu, pour que les navigateurs reprennent la nouvelle.
+
     .venv\\Scripts\\python.exe outils\\construire_demo.py "C:\\films\\Tears of Steel (2012).mov" ...
 """
 
 import argparse
+import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -100,8 +105,6 @@ REMPLACEMENTS = [
     ('<section class="carte">\n    <h2>1. Film</h2>', '<section class="carte" id="etape-film">\n    <h2>1. Film</h2>'),
     ('<section class="carte">\n    <h2>2. Transcription</h2>',
      '<section class="carte" id="carte-transcription">\n    <h2>2. Transcription</h2>'),
-    ('<section class="carte">\n    <h2>Séries du moment</h2>',
-     '<section class="carte" id="carte-tendances">\n    <h2>Séries du moment</h2>'),
     ('<section class="carte">\n    <h2>Traitement automatique</h2>',
      '<section class="carte" id="carte-auto">\n    <h2>Traitement automatique</h2>'),
     ("<script>\n  const $", "<script src=\"donnees.js\"></script>\n<script src=\"simulation.js\"></script>\n<script>\n  const $"),
@@ -192,13 +195,30 @@ def anonymiser(donnees: dict, film: Path) -> dict:
     return json.loads(texte)
 
 
+def versionner(page: str, dossier: Path, chemins: list[str]) -> str:
+    """Ajoute à chaque fichier lié une empreinte de son contenu (« demo.css?v=1a2b3c4d ») : GitHub Pages laisse
+    les navigateurs garder les fichiers 10 minutes, et sans cela une page neuve pourrait tourner avec d'anciens scripts."""
+    for chemin in chemins:
+        empreinte = hashlib.sha1((dossier / chemin).read_bytes()).hexdigest()[:8]
+        page, n = re.subn(rf'(["\']){re.escape(chemin)}(\?v=\w+)?\1', rf'\g<1>{chemin}?v={empreinte}\g<1>', page)
+        if not n:
+            sys.exit(f"Lien introuvable dans la page : {chemin}")
+    return page
+
+
 def construire_page() -> None:
     page = GABARIT.read_text(encoding="utf-8")
     for avant, apres in REMPLACEMENTS:
         if page.count(avant) != 1:
             sys.exit(f"Texte introuvable (ou en double) dans la page : {avant!r}")
         page = page.replace(avant, apres)
+    page = versionner(page, DOSSIER_DEMO, ["donnees.js", "simulation.js", "demo.css", "../assets/tokens.css"])
     (DOSSIER_DEMO / "index.html").write_text(page, encoding="utf-8")
+
+    # La page de présentation lit aussi des fichiers régénérés ici : même traitement.
+    presentation = RACINE / "index.html"
+    texte = versionner(presentation.read_text(encoding="utf-8"), RACINE, ["assets/tokens.css", "assets/frise.js"])
+    presentation.write_text(texte, encoding="utf-8")
 
 
 def main() -> None:
@@ -224,11 +244,9 @@ def main() -> None:
         films.append(anonymiser(resultat, film) | {"nom": film.name, "chemin": f"{DOSSIER_FICTIF}\\{film.name}",
                                                     "credit": SOURCES.get(titre, {}).get("credit")})
 
-    tendances = next(iter(sorted(cache.DOSSIER_CACHE.glob("tendances_*.json"), reverse=True)), None)
     donnees = {
         "episodes": films,
         "dossier_saison": f"{DOSSIER_FICTIF}\\Blender Open Movies",
-        "tendances": json.loads(tendances.read_text(encoding="utf-8")) if tendances else None,
         "montage": {"formats": FORMATS, "musiques": MUSIQUES_EXEMPLE, "volume_musique": VOLUME_MUSIQUE_DEFAUT},
         "reglages_auto": REGLAGES_PAR_DEFAUT,
     }

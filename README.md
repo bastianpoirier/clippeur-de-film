@@ -57,8 +57,7 @@ La page s'ouvre sur http://127.0.0.1:5000. « Choisir un film » ouvre la fenêt
 La page propose aussi :
 
 - un traitement automatique : toute vidéo déposée dans `a_traiter/` (si la surveillance est activée), ou toute une saison choisie d'un coup, est traitée seule jusqu'à l'export. Pour une saison, `output/saisons/<saison>.json` rassemble les 10 meilleurs extraits ;
-- une banque de musiques de fond : les morceaux se déposent dans `musiques/` et restent sur le PC ;
-- les séries du moment : les séries les plus consultées sur Wikipédia en français ces 7 derniers jours.
+- une banque de musiques de fond : les morceaux se déposent dans `musiques/` et restent sur le PC.
 
 ### Ligne de commande
 
