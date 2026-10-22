@@ -1,0 +1,29 @@
+/* Ajouts propres à la démo en ligne, par-dessus le style de la vraie page. */
+.bandeau-demo {
+  background: var(--carte); border: 1px solid var(--accent); border-left-width: 4px; border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 20px; font-size: 14px; line-height: 1.55;
+}
+.bandeau-demo a { margin-left: 6px; font-weight: 600; white-space: nowrap; }
+
+.choix-demo {
+  border: 1px solid var(--bord); border-radius: 12px; padding: 22px; width: min(480px, calc(100vw - 32px));
+  background: var(--carte); color: var(--texte); box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+.choix-demo::backdrop { background: rgba(0, 0, 0, .45); }
+.choix-demo h2 { margin: 0 0 6px; font-size: 18px; }
+.choix-demo p { color: var(--discret); font-size: 14px; margin: 0 0 14px; }
+.liste-demo { display: flex; flex-direction: column; gap: 8px; }
+.liste-demo button { text-align: left; font-weight: 500; }
+.liste-demo button:hover { border-color: var(--accent); background: var(--survol); }
+.annuler-demo { margin-top: 14px; float: right; }
+
+.bulle-demo {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
+  max-width: min(520px, calc(100vw - 32px)); padding: 12px 16px; border-radius: 10px;
+  background: var(--texte); color: var(--fond); font-size: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  transition: opacity .3s, transform .3s; z-index: 10;
+}
+.bulle-demo.visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* L'aperçu masqué : le message prend la place de la vidéo. */
+.vignette.en-lecture .attente { top: auto; bottom: 8px; line-height: 1.45; }
