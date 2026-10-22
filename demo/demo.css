@@ -1,29 +1,152 @@
-/* Ajouts propres à la démo en ligne, par-dessus le style de la vraie page. */
-.bandeau-demo {
-  background: var(--carte); border: 1px solid var(--accent); border-left-width: 4px; border-radius: 10px;
-  padding: 12px 16px; margin-bottom: 20px; font-size: 14px; line-height: 1.55;
-}
-.bandeau-demo a { margin-left: 6px; font-weight: 600; white-space: nowrap; }
+/* Habillage de la démo en ligne : la page de l'application, avec la typographie et les couleurs
+   de la page de présentation (../assets/tokens.css). Les règles d'origine restent en dessous. */
 
-.choix-demo {
-  border: 1px solid var(--bord); border-radius: 12px; padding: 22px; width: min(480px, calc(100vw - 32px));
-  background: var(--carte); color: var(--texte); box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+/* Les variables de la page d'origine pointent vers celles de la présentation. */
+:root {
+  --carte: var(--fond); --discret: var(--texte-second); --bord: var(--filet); --accent-texte: var(--fond);
+  --erreur: var(--accent); --piste: var(--filet); --survol: var(--fond-encart); --ecarte: .4;
 }
-.choix-demo::backdrop { background: rgba(0, 0, 0, .45); }
-.choix-demo h2 { margin: 0 0 6px; font-size: 18px; }
-.choix-demo p { color: var(--discret); font-size: 14px; margin: 0 0 14px; }
-.liste-demo { display: flex; flex-direction: column; gap: 8px; }
-.liste-demo button { text-align: left; font-weight: 500; }
-.liste-demo button:hover { border-color: var(--accent); background: var(--survol); }
-.annuler-demo { margin-top: 14px; float: right; }
 
-.bulle-demo {
-  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0;
-  max-width: min(520px, calc(100vw - 32px)); padding: 12px 16px; border-radius: 10px;
-  background: var(--texte); color: var(--fond); font-size: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
-  transition: opacity .3s, transform .3s; z-index: 10;
+body { background: var(--fond); color: var(--texte); font: 15px/1.55 var(--sans); }
+a { color: var(--lien); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::selection { background: var(--accent-fond); }
+
+/* --- En-tête et introduction, comme sur la présentation --- */
+.haut-demo { border-bottom: 1px solid var(--filet); }
+.haut-dedans { max-width: 62rem; margin: 0 auto; padding: 14px 20px; display: flex; justify-content: space-between;
+  align-items: baseline; gap: 16px; font: 15px/1.4 var(--sans); }
+.haut-dedans a { color: var(--texte); text-decoration: none; }
+.haut-dedans a:hover { text-decoration: underline; }
+.haut-dedans nav { display: flex; gap: 20px; }
+
+main { max-width: 62rem; padding: 0 20px 80px; display: flex; flex-direction: column; }
+main > h1, main > .sous-titre { display: none; }  /* remplacés par l'introduction */
+
+.intro-demo { order: -1; padding: 48px 0 28px; max-width: 40rem; }
+.titre-demo { font: 500 clamp(38px, 6vw, 54px)/1.02 var(--serif); letter-spacing: -.02em; margin: 0 0 16px; }
+.intro-demo p { font: 19px/1.55 var(--serif); color: var(--texte-second); margin: 0 0 12px; }
+.intro-demo .consigne { color: var(--texte); }
+
+/* Le parcours d'abord, puis les outils annexes sous un intertitre. */
+#etape-film { order: 1; }
+#carte-transcription { order: 2; }
+#suivi { order: 3; }
+#carte-recherche { order: 4; }
+#carte-extraits { order: 5; }
+#resultats { order: 6; }
+.intertitre-demo { order: 7; font: 500 26px/1.2 var(--serif); margin: 56px 0 0; padding-top: 24px; border-top: 2px solid var(--texte); }
+#carte-auto { order: 8; }
+#carte-tendances { order: 9; }
+
+/* --- Sections : un filet au-dessus plutôt qu'une boîte --- */
+.carte { background: none; border: none; border-top: 1px solid var(--filet); border-radius: 0; padding: 26px 0 30px; margin: 0; scroll-margin-top: 12px; }
+.carte h2 { font: 500 24px/1.25 var(--serif); letter-spacing: -.01em; text-transform: none; color: var(--texte); margin: 0 0 16px; }
+h3 { font: 600 15px/1.3 var(--sans); margin: 18px 0 8px; }
+.note { color: var(--texte-legende); font-size: 14px; line-height: 1.55; max-width: 44rem; }
+label { color: var(--texte-second); font-size: 14px; }
+
+/* --- Boutons et champs --- */
+button { font: 500 14px/1 var(--sans); border-radius: 3px; padding: 9px 14px; background: none; color: var(--texte);
+  border: 1px solid var(--filet-fort); cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+button:hover:not(:disabled) { border-color: var(--texte); }
+button.principal { background: var(--texte); border-color: var(--texte); color: var(--fond); }
+button.principal:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+button:disabled { opacity: .4; }
+button.petit { padding: 4px 5px; font: 11.5px/1 var(--mono); border-radius: 3px; white-space: nowrap; }
+.ligne-borne { gap: 3px; }
+.ligne-borne .heure { min-width: 64px; font-size: 12.5px; }
+button.lien-bouton { border: none; padding: 2px 0; color: var(--lien); font: 13px var(--sans); }
+select, input[type=search], input[type=number], input[type=text], .correction input, .correction select {
+  font: 14px var(--sans); padding: 7px 9px; border-radius: 3px; border: 1px solid var(--filet-fort);
+  background: var(--fond); color: var(--texte); }
+select:focus, input:focus { outline: none; border-color: var(--texte); }
+input[type=checkbox], input[type=range] { accent-color: var(--accent); }
+code { background: var(--fond-encart); }
+.chemin { font: 13px/1.5 var(--mono); color: var(--texte-legende); }
+.chemin strong { font: 600 15px var(--sans); color: var(--texte); }
+
+/* --- Fiche du film --- */
+.fiche { margin-top: 20px; gap: 18px; }
+.fiche img { width: 80px; border-radius: 2px; background: #fff; padding: 4px; border: 1px solid var(--filet); }
+.fiche-titre { font: 500 21px/1.25 var(--serif); }
+.fiche p { color: var(--texte-second); font-size: 14.5px; max-width: 44rem; }
+.correction { border-top-color: var(--filet); }
+
+/* --- Avancement --- */
+#suivi h2::after { content: ""; }
+.barre { height: 3px; border-radius: 0; background: var(--filet); }
+.barre > div { background: var(--accent); }
+.message { font: 13px/1.5 var(--mono); color: var(--texte); }
+.journal { list-style: none; padding: 0; margin: 12px 0 0; font: 13px/1.7 var(--sans); color: var(--texte-second); }
+.journal li::before { content: "✓"; color: var(--accent); margin-right: 8px; font-weight: 600; }
+
+/* --- Citations : une liste à filets --- */
+.liste-references { gap: 0; border-top: 1px solid var(--filet); max-height: 460px; }
+.reference { border: none; border-bottom: 1px solid var(--filet); border-radius: 0; padding: 12px 2px; background: none; }
+label.reference:hover { background: var(--fond-encart); }
+.reference .titre { font: 500 15px/1.45 var(--sans); }
+.reference .meta { font: 12px var(--mono); color: var(--texte-legende); }
+.reference .repl { font: italic 15px/1.5 var(--serif); color: var(--texte-second);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.resume { color: var(--texte-second); }
+
+/* --- Extraits --- */
+.montage { border: 1px solid var(--filet); border-radius: 3px; background: var(--fond-encart); padding: 4px 16px 12px; }
+.montage h3 { margin-top: 12px; }
+.grille { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
+.extrait { border: 1px solid var(--filet); border-radius: 3px; background: var(--fond); }
+.extrait.ecarte { opacity: var(--ecarte); }
+.extrait img, .extrait video { background: #2b2a28; }
+.vignette .lecture { width: 44px; height: 44px; font-size: 16px; background: rgba(20, 19, 18, .7); }
+.vignette:hover .lecture { background: var(--accent); }
+.vignette .attente { top: auto; bottom: 8px; background: rgba(20, 19, 18, .85); font-size: 12.5px; line-height: 1.45; border-radius: 3px; }
+.extrait .corps { padding: 14px; gap: 7px; }
+.extrait .entete { font-size: 13px; color: var(--texte-legende); }
+.heure, .extrait .entete .heure { font: 500 13px var(--mono); color: var(--accent); }
+.extrait .titre { font: 500 17px/1.35 var(--serif); }
+.extrait .raison { font-size: 13.5px; line-height: 1.5; color: var(--texte-second); }
+.extrait .sources a { font-size: 12.5px; }
+.bornes { border-top: 1px solid var(--filet); padding-top: 8px; }
+.ligne-borne .heure { color: var(--texte); }
+.extrait .fichier { font: 12px/1.5 var(--mono); color: var(--texte-second); }
+.extrait details summary { cursor: pointer; color: var(--texte-second); }
+
+/* --- Répliques --- */
+.repliques { border-top-color: var(--filet); }
+.replique { border-bottom-color: var(--filet); font-size: 14.5px; }
+.replique .heure { color: var(--texte-legende); font-weight: 400; }
+
+/* --- Outils annexes --- */
+.element-file, .lot { border: none; border-bottom: 1px solid var(--filet); border-radius: 0; padding: 12px 2px; background: none; }
+.lot { border-left: 3px solid var(--accent); padding-left: 12px; }
+.element-file .statut { font: 11.5px/1.6 var(--mono); border-radius: 2px; }
+.element-file .statut.en-cours { color: var(--accent); border-color: var(--accent); }
+.serie { border: 1px solid var(--filet); border-radius: 3px; background: var(--fond); }
+.serie .rang { color: var(--accent); font-family: var(--mono); }
+.serie .nom { font: 500 16px/1.3 var(--serif); }
+
+/* --- Fenêtre de choix d'un épisode --- */
+.choix-demo { border: 1px solid var(--filet-fort); border-radius: 4px; padding: 22px; width: min(460px, calc(100vw - 32px));
+  background: var(--fond); color: var(--texte); box-shadow: 0 20px 50px rgba(0, 0, 0, .25); }
+.choix-demo::backdrop { background: rgba(20, 19, 18, .45); }
+.choix-demo h2 { font: 500 22px/1.2 var(--serif); margin: 0 0 6px; }
+.choix-demo p { color: var(--texte-second); font-size: 14px; margin: 0 0 14px; }
+.liste-demo { display: flex; flex-direction: column; border-top: 1px solid var(--filet); }
+.liste-demo button { text-align: left; border: none; border-bottom: 1px solid var(--filet); border-radius: 0; padding: 12px 4px;
+  font: 500 15px/1.35 var(--sans); }
+.liste-demo button:hover { background: var(--fond-encart); }
+.liste-demo small { display: block; font: 12.5px var(--mono); color: var(--texte-legende); margin-top: 3px; }
+.annuler-demo { margin-top: 16px; float: right; }
+
+/* --- Bulle d'information --- */
+.bulle-demo { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); opacity: 0; z-index: 10;
+  max-width: min(480px, calc(100vw - 32px)); padding: 10px 14px; border-radius: 3px;
+  background: var(--texte); color: var(--fond); font-size: 14px; transition: opacity .2s; }
+.bulle-demo.visible { opacity: 1; }
+
+@media (max-width: 600px) {
+  .intro-demo { padding-top: 32px; }
+  .intro-demo p { font-size: 17.5px; }
 }
-.bulle-demo.visible { opacity: 1; transform: translate(-50%, 0); }
-
-/* L'aperçu masqué : le message prend la place de la vidéo. */
-.vignette.en-lecture .attente { top: auto; bottom: 8px; line-height: 1.45; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

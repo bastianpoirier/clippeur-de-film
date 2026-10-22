@@ -141,21 +141,34 @@
   .lot { border: 1px solid var(--accent); border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-size: 14px; }
   [hidden] { display: none !important; }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
 <link rel="stylesheet" href="demo.css">
 </head>
 <body>
+
+<header class="haut-demo">
+  <div class="haut-dedans">
+    <a href="../">Clippeur de film</a>
+    <nav><a href="../">Présentation</a><a href="https://github.com/bastianpoirier/clippeur-de-film">Code</a></nav>
+  </div>
+</header>
 <main>
 
-<div class="bandeau-demo">
-  <strong>Démo en ligne</strong> — la vraie interface, avec des résultats calculés à l'avance par l'application
-  sur trois épisodes de <em>Breaking Bad</em>. Images et vidéos masquées (droits d'auteur).
-  Pour commencer : <a href="#etape-film">1. Film → « Choisir un film… »</a>, ou « Traiter une saison entière… ».
-  <a href="../">Retour à la présentation</a>
-</div>
+  <div class="intro-demo">
+    <h1 class="titre-demo">Démo</h1>
+    <p>C'est l'interface de l'application, telle qu'elle tourne sur un PC. Ici, aucun film n'est analysé : la page
+      rejoue des résultats que l'application a calculés à l'avance sur trois épisodes de <i>Breaking Bad</i>, en
+      accéléré. Les images et les vidéos sont masquées, et seules quelques répliques sont affichées.</p>
+    <p class="consigne">Pour commencer, choisissez un épisode à l'étape <a href="#etape-film">1. Film</a>.</p>
+  </div>
+  <p class="intertitre-demo">Les autres outils de l'application</p>
   <h1>Clippeur de film</h1>
   <p class="sous-titre">Identification, transcription, citations cultes, choix des meilleurs moments et export des extraits.</p>
 
-  <section class="carte">
+  <section class="carte" id="carte-tendances">
     <h2>Séries du moment</h2>
     <div class="ligne">
       <button id="voir-tendances">Afficher les séries du moment</button>
@@ -165,7 +178,7 @@
     <div class="tendances" id="tendances"></div>
   </section>
 
-  <section class="carte">
+  <section class="carte" id="carte-auto">
     <h2>Traitement automatique</h2>
     <p class="note" style="margin-top:0">
       Les épisodes déposés dans le dossier « à traiter », ou toute une saison choisie d'un coup, sont traités tout seuls
@@ -234,7 +247,7 @@
     </div>
   </section>
 
-  <section class="carte">
+  <section class="carte" id="carte-transcription">
     <h2>2. Transcription</h2>
     <div class="ligne">
       <label>Langue

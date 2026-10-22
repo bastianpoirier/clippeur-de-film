@@ -4,446 +4,360 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Clippeur de film</title>
-<meta name="description" content="Application locale et gratuite qui repère les meilleures scènes d'un film ou d'une série et les exporte en clips courts pour les réseaux sociaux.">
+<meta name="description" content="Un programme qui analyse un film ou un épisode de série et propose les passages à découper pour les réseaux sociaux. Python, FFmpeg, Whisper, Wikiquote.">
+<meta name="author" content="Bastian Poirier">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Clippeur de film">
-<meta property="og:description" content="Les meilleures scènes d'un film, trouvées et découpées automatiquement. Python, FFmpeg, Whisper, Wikiquote.">
+<meta property="og:description" content="Un programme qui analyse un film et propose les passages à découper pour les réseaux sociaux. Sur un portable, sans service payant.">
+<meta property="og:image" content="https://bastianpoirier.github.io/clippeur-de-film/assets/apercu.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23b4321f'/><rect x='6' y='9' width='4' height='14' fill='%23f7f5f0'/><rect x='12' y='13' width='7' height='10' fill='%23f7f5f0'/><rect x='21' y='6' width='5' height='17' fill='%23f7f5f0'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23c2410c'/><path d='M12 9l11 7-11 7z' fill='white'/></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
 <style>
-  :root {
-    --fond: #f6f5f2; --fond-2: #efede8; --carte: #ffffff; --texte: #1d1c1a; --discret: #63605a;
-    --bord: #e2dfd8; --accent: #c2410c; --accent-doux: #fbe7dc; --accent-texte: #ffffff;
-    --piste: #e9e6df; --ombre: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
-    --c1: #c2410c; --c2: #d97706; --c3: #0f766e; --c4: #4f46e5; --c5: #be185d;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --fond: #141312; --fond-2: #1a1918; --carte: #1f1e1c; --texte: #ecebe8; --discret: #a3a099;
-      --bord: #33312d; --accent: #f97316; --accent-doux: #3a2216; --accent-texte: #1a0d04;
-      --piste: #2c2a27; --ombre: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
-      --c1: #f97316; --c2: #fbbf24; --c3: #2dd4bf; --c4: #818cf8; --c5: #f472b6;
-    }
-  }
-  :root[data-theme="dark"] {
-    --fond: #141312; --fond-2: #1a1918; --carte: #1f1e1c; --texte: #ecebe8; --discret: #a3a099;
-    --bord: #33312d; --accent: #f97316; --accent-doux: #3a2216; --accent-texte: #1a0d04;
-    --piste: #2c2a27; --ombre: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
-    --c1: #f97316; --c2: #fbbf24; --c3: #2dd4bf; --c4: #818cf8; --c5: #f472b6;
-  }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0; background: var(--fond); color: var(--texte);
-    font: 16px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
+    font: 400 19px/1.6 var(--serif); font-optical-sizing: auto;
   }
-  a { color: var(--accent); }
-  .page { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
-  h1, h2, h3 { font-family: Fraunces, Georgia, serif; line-height: 1.15; letter-spacing: -.01em; }
-  h2 { font-size: clamp(26px, 4vw, 36px); margin: 0 0 12px; }
-  h3 { font-size: 19px; margin: 0 0 6px; }
-  .surtitre { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px; }
-  .intro { color: var(--discret); max-width: 680px; margin: 0 0 32px; font-size: 17px; }
-  section { padding: 72px 0; border-top: 1px solid var(--bord); scroll-margin-top: 60px; }
+  ::selection { background: var(--accent-fond); }
+  a { color: var(--lien); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  /* En-tête */
-  header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--fond) 88%, transparent);
-    backdrop-filter: blur(10px); border-bottom: 1px solid var(--bord); }
-  header .page { display: flex; align-items: center; gap: 20px; height: 60px; }
-  .logo { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--texte); text-decoration: none; }
-  .logo svg { flex: none; }
-  nav { margin-left: auto; display: flex; gap: 20px; font-size: 14px; }
-  nav a { color: var(--discret); text-decoration: none; }
-  nav a:hover { color: var(--texte); }
-  @media (max-width: 720px) { nav a:not(.bouton-nav) { display: none; } }
-  .bouton-nav { color: var(--accent) !important; font-weight: 600; }
+  .colonne { max-width: 40rem; margin: 0 auto; padding: 0 20px; }
+  .large { max-width: 62rem; margin: 0 auto; padding: 0 20px; }
 
-  /* Ouverture */
-  .ouverture { padding-top: 72px; padding-bottom: 56px; }
-  .ouverture h1 { font-size: clamp(36px, 6.4vw, 64px); margin: 0 0 20px; max-width: 860px; }
-  .ouverture h1 em { font-style: normal; color: var(--accent); }
-  .ouverture .chapeau { font-size: clamp(17px, 2.2vw, 20px); color: var(--discret); max-width: 680px; margin: 0 0 32px; }
-  .actions { display: flex; gap: 12px; flex-wrap: wrap; }
-  .bouton { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 10px;
-    font-weight: 600; text-decoration: none; border: 1px solid var(--bord); color: var(--texte); background: var(--carte);
-    transition: transform .15s, box-shadow .15s; }
-  .bouton:hover { transform: translateY(-1px); box-shadow: var(--ombre); }
-  .bouton.principal { background: var(--accent); border-color: var(--accent); color: var(--accent-texte); }
-  .chiffres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--bord);
-    border: 1px solid var(--bord); border-radius: 14px; overflow: hidden; margin-top: 48px; }
-  .chiffre { background: var(--carte); padding: 18px 20px; }
-  .chiffre strong { display: block; font-family: Fraunces, Georgia, serif; font-size: 30px; line-height: 1.1; }
-  .chiffre span { color: var(--discret); font-size: 14px; }
-  @media (max-width: 720px) { .chiffres { grid-template-columns: repeat(2, 1fr); } }
+  header.haut { border-bottom: 1px solid var(--filet); }
+  header.haut .large { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 14px; padding-bottom: 14px;
+    font: 15px/1.4 var(--sans); }
+  header.haut a { color: var(--texte); text-decoration: none; }
+  header.haut a:hover { text-decoration: underline; }
+  header.haut nav { display: flex; gap: 20px; }
 
-  /* Frise du film : où tombent les extraits choisis */
-  .frise { margin-top: 40px; background: var(--carte); border: 1px solid var(--bord); border-radius: 14px; padding: 20px; box-shadow: var(--ombre); }
-  .frise-entete { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; margin-bottom: 14px; }
-  .frise-entete strong { font-weight: 600; }
-  .frise-entete span { color: var(--discret); }
-  .piste { position: relative; height: 56px; background: var(--piste); border-radius: 8px; overflow: hidden; }
-  .piste::before { content: ""; position: absolute; inset: 0;
-    background: repeating-linear-gradient(90deg, transparent 0 59px, color-mix(in srgb, var(--texte) 8%, transparent) 59px 60px); }
-  .clip { position: absolute; top: 6px; bottom: 6px; border-radius: 5px; background: var(--accent); cursor: default;
-    transition: transform .15s; }
-  .clip:hover { transform: scaleY(1.12); }
-  .graduations { display: flex; justify-content: space-between; color: var(--discret); font-size: 12px; margin-top: 6px; font-variant-numeric: tabular-nums; }
-  .legende-clip { margin-top: 12px; font-size: 14px; min-height: 48px; color: var(--discret); }
-  .legende-clip strong { color: var(--texte); }
+  .titre { padding-top: 64px; }
+  h1 { font-size: clamp(42px, 7vw, 64px); font-weight: 500; line-height: 1.02; letter-spacing: -.02em; margin: 0 0 18px; }
+  .chapo { font-size: 23px; line-height: 1.45; color: var(--texte-second); margin: 0 0 22px; }
+  .signature { font: 14px/1.6 var(--sans); color: var(--texte-legende); margin: 0 0 8px; }
+  .liens { font: 15px/1.6 var(--sans); margin: 0; }
+  .liens a { margin-right: 18px; }
 
-  /* Cartes */
-  .grille-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 820px) { .grille-3 { grid-template-columns: 1fr; } }
-  .carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 14px; padding: 24px; }
-  .carte p { margin: 0; color: var(--discret); }
-  .pastille-num { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px;
-    background: var(--accent-doux); color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+  h2 { font-size: 30px; font-weight: 500; letter-spacing: -.01em; line-height: 1.2; margin: 56px 0 14px; }
+  h3 { font-size: 21px; font-weight: 600; line-height: 1.3; margin: 34px 0 6px; }
+  p { margin: 0 0 18px; }
+  ul.limites { padding-left: 1.1em; margin: 0 0 18px; }
+  ul.limites li { margin-bottom: 8px; }
+  code { font: .82em var(--mono); background: var(--code-fond); padding: .1em .3em; border-radius: 3px; }
+  pre { font: 14px/1.6 var(--mono); background: var(--code-fond); border: 1px solid var(--filet); border-radius: 4px; padding: 14px 16px; overflow-x: auto; margin: 0 0 18px; }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  q { font-style: italic; quotes: "« " " »"; }
 
-  /* Chaîne de traitement */
-  .chaine { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: etape; }
-  .etape { display: grid; grid-template-columns: 56px 1fr; gap: 20px; position: relative; padding-bottom: 28px; }
-  .etape:last-child { padding-bottom: 0; }
-  .etape::before { counter-increment: etape; content: counter(etape); width: 44px; height: 44px; border-radius: 50%;
-    display: grid; place-items: center; font-weight: 700; color: var(--accent-texte); background: var(--accent);
-    position: relative; z-index: 1; margin-left: 6px; }
-  .etape::after { content: ""; position: absolute; left: 27px; top: 44px; bottom: 0; width: 2px; background: var(--bord); }
-  .etape:last-child::after { display: none; }
-  .etape-corps { background: var(--carte); border: 1px solid var(--bord); border-radius: 14px; padding: 18px 22px; }
-  .etape-corps p { margin: 0 0 10px; color: var(--discret); }
-  .puces { display: flex; flex-wrap: wrap; gap: 6px; }
-  .puce { font-size: 12.5px; padding: 3px 10px; border-radius: 99px; background: var(--fond-2); border: 1px solid var(--bord); color: var(--texte); }
+  pre.formule { font: 15px/1.7 var(--mono); background: none; border: none; border-left: 3px solid var(--accent); border-radius: 0; padding: 2px 0 2px 16px; }
 
-  /* Le score */
-  .score { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: start; }
-  @media (max-width: 820px) { .score { grid-template-columns: 1fr; } }
-  .barre-score { display: flex; height: 48px; border-radius: 10px; overflow: hidden; margin: 8px 0 14px; }
-  .barre-score div { display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 600; min-width: 0; }
-  .legende { display: grid; gap: 8px; font-size: 14px; }
-  .legende div { display: flex; gap: 10px; align-items: baseline; }
-  .legende i { width: 12px; height: 12px; border-radius: 3px; flex: none; transform: translateY(1px); }
-  .legende b { font-variant-numeric: tabular-nums; min-width: 42px; }
-  .legende span { color: var(--discret); }
-  .regles { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-  .regles li { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
-  .regles li strong { display: block; }
-  .regles li span { color: var(--discret); font-size: 14px; }
+  /* Figure 1 : les mesures du pilote */
+  figure.mesures { margin: 48px auto 8px; }
+  .pistes { position: relative; display: grid; grid-template-columns: 7.5rem 1fr; column-gap: 12px; row-gap: 3px; font: 12.5px/1 var(--sans); }
+  .pistes .nom { color: var(--texte-second); display: flex; align-items: center; justify-content: flex-end; text-align: right; }
+  .pistes .trace { height: 34px; position: relative; border-bottom: 1px solid var(--filet); }
+  .pistes .trace svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pistes .trace.numeros { height: 30px; border-bottom: none; }
+  .pistes .trace.extraits { height: 26px; border-bottom: none; }
+  .pistes .trace.citations { height: 22px; }
+  .citation { position: absolute; top: 4px; bottom: 4px; width: 2px; margin-left: -1px; background: var(--accent); }
+  .numero { position: absolute; transform: translateX(-50%); font: 500 12px/1 var(--mono); color: var(--texte-second);
+    background: none; border: none; padding: 2px 3px; cursor: pointer; }
+  .numero.haut { top: 0; }
+  .numero.bas { top: 15px; }
+  .extrait { position: absolute; top: 0; bottom: 0; min-width: 3px; padding: 0; border: none; cursor: pointer;
+    background: var(--texte-legende); opacity: .55; }
+  .extrait:hover, .extrait:focus-visible { opacity: .85; }
+  .extrait.choisi { background: var(--accent); opacity: 1; }
+  .numero.choisi { color: var(--accent); font-weight: 600; }
+  .regle { grid-column: 2; position: relative; height: 22px; color: var(--texte-legende); font: 12px var(--mono); white-space: nowrap; }
+  .regle span { position: absolute; top: 6px; transform: translateX(-50%); }
+  .regle span:first-child { transform: none; }
 
-  /* Exemples */
-  .exemples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 820px) { .exemples { grid-template-columns: 1fr; } }
-  .exemple { background: var(--carte); border: 1px solid var(--bord); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
-  .exemple-haut { padding: 16px 18px; background: linear-gradient(135deg, #2a1a12, #120c09); color: #fff; }
-  .exemple-haut .rang { font-family: Fraunces, Georgia, serif; font-size: 28px; font-weight: 700; }
-  .exemple-haut .temps { font-family: ui-monospace, monospace; color: #fdba74; font-size: 14px; }
-  .exemple-corps { padding: 16px 18px; display: grid; gap: 8px; }
-  .exemple-corps q { font-weight: 600; }
-  .exemple-corps p { margin: 0; font-size: 14px; color: var(--discret); }
-  .note-score { font-size: 13px; color: var(--discret); }
+  /* Tête de lecture : elle parcourt l'épisode et sélectionne l'extrait qu'elle traverse. */
+  .zone-lecture { position: absolute; inset: 0; grid-column: 2; pointer-events: none; }
+  .tete { position: absolute; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: var(--accent); }
+  .controles { display: flex; align-items: center; gap: 12px; margin: 14px 0 0; font: 13px var(--mono); color: var(--texte-legende); }
+  .controles button { font: 500 13px var(--sans); color: var(--texte); background: none; border: 1px solid var(--filet-fort);
+    border-radius: 3px; padding: 5px 10px; cursor: pointer; }
+  .controles button:hover { border-color: var(--texte); }
+  figcaption { font: 14.5px/1.55 var(--sans); color: var(--texte-second); margin-top: 18px; max-width: 40rem; }
+  figcaption b { color: var(--texte); font-weight: 600; }
+  .lecture-extrait { font: 14.5px/1.55 var(--sans); min-height: 3.2em; margin-top: 10px; color: var(--texte); }
+  .lecture-extrait .heure { font-family: var(--mono); font-size: 13px; color: var(--texte-legende); }
+  @media (max-width: 600px) {
+    .pistes { grid-template-columns: 5.2rem 1fr; font-size: 11.5px; }
+    .numero { font-size: 11px; padding: 2px 1px; }
+  }
 
-  /* Démo */
-  .demo { background: var(--carte); border: 1px solid var(--bord); border-radius: 18px; padding: clamp(24px, 5vw, 44px);
-    display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: center; box-shadow: var(--ombre); }
-  @media (max-width: 820px) { .demo { grid-template-columns: 1fr; } }
-  .demo ul { margin: 0; padding-left: 20px; color: var(--discret); }
-  .demo li { margin-bottom: 6px; }
-  .demo .avertissement { font-size: 13px; color: var(--discret); margin: 16px 0 0; }
+  /* Tableau des extraits */
+  .tableau { overflow-x: auto; margin: 0 0 18px; }
+  table { border-collapse: collapse; width: 100%; font: 15px/1.45 var(--sans); }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--tableau-filet); }
+  th { font-weight: 600; font-size: 13px; color: var(--texte-second); border-bottom-color: var(--filet-fort); }
+  th.nombre { text-align: right; }
+  td.nombre { text-align: right; font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
+  td.heure { font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
+  tr.choisi td { background: var(--accent-fond); }
 
-  /* Choix techniques */
-  .choix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  @media (max-width: 720px) { .choix { grid-template-columns: 1fr; } }
-  .choix .carte h3 { font-size: 17px; }
-  .choix code { font-size: 13px; background: var(--fond-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--bord); }
+  .demo-lien { display: inline-block; font: 600 16px/1 var(--sans); color: var(--fond); background: var(--texte); text-decoration: none;
+    padding: 14px 20px; border-radius: 4px; margin: 4px 0 26px; }
+  .demo-lien:hover { background: var(--accent); }
 
-  footer { border-top: 1px solid var(--bord); padding: 40px 0 56px; color: var(--discret); font-size: 14px; }
-  footer .page { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer { border-top: 1px solid var(--filet); margin-top: 72px; padding: 22px 0 48px; font: 14px/1.6 var(--sans); color: var(--texte-legende); }
+  footer a { color: var(--texte-second); }
+
+  @media (max-width: 600px) {
+    body { font-size: 18px; }
+    .chapo { font-size: 20px; }
+    .titre { padding-top: 40px; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="page">
-    <a class="logo" href="#">
-      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--accent)"/><path d="M12 9l11 7-11 7z" fill="#fff"/></svg>
-      Clippeur de film
-    </a>
-    <nav>
-      <a href="#pourquoi">Pourquoi</a>
-      <a href="#comment">Comment</a>
-      <a href="#resultats">Résultats</a>
-      <a href="https://github.com/bastianpoirier/clippeur-de-film">Code</a>
-      <a class="bouton-nav" href="demo/">Essayer la démo →</a>
-    </nav>
+<header class="haut">
+  <div class="large">
+    <a href="./">Clippeur de film</a>
+    <nav><a href="demo/">Démo</a><a href="https://github.com/bastianpoirier/clippeur-de-film">Code</a></nav>
   </div>
 </header>
 
 <main>
-  <div class="page ouverture">
-    <p class="surtitre">Projet personnel · Python</p>
-    <h1>Les meilleures scènes d'un film, <em>trouvées et découpées</em> automatiquement.</h1>
-    <p class="chapeau">
-      Clippeur de film analyse un film ou un épisode de série, retrouve ses répliques cultes,
-      écoute sa bande son et repère ses changements de plan, puis exporte les meilleurs moments
-      en clips de 1 à 2 minutes, prêts pour TikTok, Instagram ou YouTube.
-    </p>
-    <div class="actions">
-      <a class="bouton principal" href="demo/">▶ Essayer la démo</a>
-      <a class="bouton" href="https://github.com/bastianpoirier/clippeur-de-film">Voir le code sur GitHub</a>
-    </div>
-
-    <div class="frise" aria-label="Extraits choisis dans l'épisode pilote de Breaking Bad">
-      <div class="frise-entete">
-        <strong>Breaking Bad, épisode pilote : les 10 extraits choisis</strong>
-        <span>58 min · survolez un extrait</span>
-      </div>
-      <div class="piste" id="piste"></div>
-      <div class="graduations"><span>0:00</span><span>15:00</span><span>30:00</span><span>45:00</span><span>58:06</span></div>
-      <div class="legende-clip" id="legende-clip">Chaque bloc est un extrait proposé par l'application ; plus sa couleur est vive, meilleure est sa note.</div>
-    </div>
-
-    <div class="chiffres">
-      <div class="chiffre"><strong>0 €</strong><span>aucun service payant</span></div>
-      <div class="chiffre"><strong>100 %</strong><span>local, sans carte graphique</span></div>
-      <div class="chiffre"><strong>41</strong><span>tests automatisés</span></div>
-      <div class="chiffre"><strong>≈ 3 700</strong><span>lignes de Python et JavaScript</span></div>
-    </div>
+  <div class="colonne titre">
+    <h1>Clippeur de film</h1>
+    <p class="chapo">Un programme qui analyse un film ou un épisode de série et propose les passages à découper pour les réseaux sociaux. Il tourne sur un portable sans carte graphique, et n'utilise aucun service payant.</p>
+    <p class="signature">Bastian Poirier · projet personnel · Python, FFmpeg</p>
+    <p class="liens"><a href="demo/">Essayer la démo</a><a href="https://github.com/bastianpoirier/clippeur-de-film">Le code sur GitHub</a></p>
   </div>
 
-  <section id="pourquoi">
-    <div class="page">
-      <p class="surtitre">Pourquoi</p>
-      <h2>Des heures de montage, ramenées à quelques clics</h2>
-      <p class="intro">
-        Les extraits de films et de séries sont partout sur les réseaux sociaux. Les préparer à la main,
-        c'est regarder l'œuvre en entier, noter les répliques connues, couper au bon moment sans trancher
-        une phrase, puis recadrer en vertical. J'ai voulu automatiser toute cette chaîne.
-      </p>
-      <div class="grille-3">
-        <div class="carte">
-          <div class="pastille-num">1</div>
-          <h3>Le problème</h3>
-          <p>Repérer les scènes fortes d'un film de 2 h et les découper proprement prend des heures, et il faut recommencer pour chaque épisode d'une série.</p>
-        </div>
-        <div class="carte">
-          <div class="pastille-num">2</div>
-          <h3>L'objectif</h3>
-          <p>On donne un fichier vidéo, on récupère des clips de 60 à 120 s, avec pour chacun la raison de son choix. Une saison entière peut tourner pendant la nuit.</p>
-        </div>
-        <div class="carte">
-          <div class="pastille-num">3</div>
-          <h3>Les contraintes</h3>
-          <p>Entièrement gratuit, sans IA payante. Tourne sur un PC portable sans carte graphique. La vidéo ne quitte jamais l'ordinateur.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <figure class="mesures large" aria-labelledby="legende-fig1">
+    <div class="pistes" id="pistes"></div>
+    <div class="controles"><button type="button" id="lecture">Pause</button><span id="horloge">0:00</span></div>
+    <div class="lecture-extrait colonne" style="padding:0; margin-left:0" id="lecture-extrait" aria-live="polite"></div>
+    <figcaption id="legende-fig1"><b>Fig. 1.</b> Ce que le programme mesure sur le pilote de <i>Breaking Bad</i> (58 min). Chaque ligne est une mesure prise seconde par seconde ; les traits rouges marquent les répliques de Wikiquote retrouvées dans les sous-titres. En haut, les dix extraits retenus, numérotés du mieux noté au moins bien noté. Survolez ou touchez un numéro pour voir l'extrait.</figcaption>
+  </figure>
 
-  <section id="comment">
-    <div class="page">
-      <p class="surtitre">Comment</p>
-      <h2>Six étapes, du fichier vidéo aux clips</h2>
-      <p class="intro">Chaque étape est un module Python. Les résultats intermédiaires sont gardés en cache : une relance reprend là où elle s'était arrêtée.</p>
-      <ol class="chaine">
-        <li class="etape"><div class="etape-corps">
-          <h3>Identifier l'œuvre</h3>
-          <p>Le titre, l'année, la saison et l'épisode sont déduits du nom du fichier, puis la fiche (résumé, réalisation, acteurs) est récupérée sur Wikipédia et Wikidata, sans clé ni compte. L'utilisateur peut corriger.</p>
-          <div class="puces"><span class="puce">guessit</span><span class="puce">API Wikipédia</span><span class="puce">Wikidata</span><span class="puce">TMDb en option</span></div>
-        </div></li>
-        <li class="etape"><div class="etape-corps">
-          <h3>Transcrire les dialogues</h3>
-          <p>Les sous-titres sont utilisés s'ils existent (fichier à côté ou piste intégrée). Sinon, la reconnaissance vocale Whisper tourne en local sur le processeur. La langue est détectée d'après la piste audio.</p>
-          <div class="puces"><span class="puce">FFmpeg</span><span class="puce">faster-whisper (int8, CPU)</span><span class="puce">SRT</span></div>
-        </div></li>
-        <li class="etape"><div class="etape-corps">
-          <h3>Chercher les répliques cultes</h3>
-          <p>Les citations célèbres de l'œuvre sont récupérées sur Wikiquote, puis retrouvées dans la transcription malgré les petites différences de formulation entre la citation et les sous-titres.</p>
-          <div class="puces"><span class="puce">API Wikiquote</span><span class="puce">RapidFuzz (correspondance approchée)</span></div>
-        </div></li>
-        <li class="etape"><div class="etape-corps">
-          <h3>Analyser l'image et le son</h3>
-          <p>FFmpeg repère les changements de plan et mesure le volume seconde par seconde. Un réseau de neurones (AST, entraîné sur AudioSet) reconnaît les rires, cris, explosions et la musique, en local.</p>
-          <div class="puces"><span class="puce">détection de scène FFmpeg</span><span class="puce">AST · ONNX Runtime</span><span class="puce">NumPy</span></div>
-        </div></li>
-        <li class="etape"><div class="etape-corps">
-          <h3>Noter et choisir les moments</h3>
-          <p>Chaque fenêtre de 1 à 2 minutes reçoit une note (détail ci-dessous). Les meilleures sont gardées sans chevauchement, et leurs bornes sont calées sur des changements de plan.</p>
-          <div class="puces"><span class="puce">sommes cumulées</span><span class="puce">sélection gloutonne</span><span class="puce">tests pytest</span></div>
-        </div></li>
-        <li class="etape"><div class="etape-corps">
-          <h3>Monter et exporter</h3>
-          <p>Les clips sont exportés en MP4, au format d'origine ou en vertical 9:16 (recadré, ou sur fond flou), avec le son remis au niveau des réseaux sociaux et une musique de fond en option.</p>
-          <div class="puces"><span class="puce">H.264 + AAC</span><span class="puce">loudnorm −14 LUFS</span><span class="puce">1080×1920</span></div>
-        </div></li>
-      </ol>
-    </div>
-  </section>
+  <article class="colonne">
+    <h2>D'où vient le projet</h2>
+    <p>Je voulais publier des extraits de films et de séries sur TikTok et Instagram. Publier prend deux minutes. Trouver les bons passages, couper au bon endroit et recadrer en vertical prend beaucoup plus longtemps, et il faut recommencer à chaque épisode.</p>
+    <p>J'ai donc écrit un programme qui fait ce premier tri. On lui donne un fichier vidéo, il rend une dizaine d'extraits de 1 à 2 minutes, chacun avec la raison pour laquelle il a été choisi. Je me suis fixé deux règles : ne payer aucun service, donc pas d'API d'IA, et tout faire tourner sur mon ordinateur portable.</p>
 
-  <section>
-    <div class="page">
-      <p class="surtitre">Le choix des moments</p>
-      <h2>Une note explicable pour chaque extrait</h2>
-      <p class="intro">Pas de boîte noire : chaque extrait proposé affiche la raison de son choix (« citation culte trouvée sur Wikiquote », « rires », « dialogues denses »…).</p>
-      <div class="score">
-        <div>
-          <h3>Composition de la note</h3>
-          <p class="note-score">Quand des répliques cultes sont retrouvées dans le film :</p>
-          <div class="barre-score" role="img" aria-label="60 % popularité en ligne, 40 % indices locaux">
-            <div style="flex:60; background: var(--c1)">Popularité · 60 %</div>
-            <div style="flex:40; background: var(--c3)">Indices locaux · 40 %</div>
-          </div>
-          <p class="note-score">Détail des indices locaux, mesurés seconde par seconde :</p>
-          <div class="barre-score" role="img" aria-label="Parole 35 %, volume 25 %, sons 25 %, émotion 15 %">
-            <div style="flex:35; background: var(--c3)">Parole</div>
-            <div style="flex:25; background: var(--c2)">Volume</div>
-            <div style="flex:25; background: var(--c4)">Sons</div>
-            <div style="flex:15; background: var(--c5)">Émotion</div>
-          </div>
-          <div class="legende">
-            <div><i style="background: var(--c3)"></i><b>35 %</b><span>densité des dialogues</span></div>
-            <div><i style="background: var(--c2)"></i><b>25 %</b><span>volume sonore, comparé au volume habituel du film</span></div>
-            <div><i style="background: var(--c4)"></i><b>25 %</b><span>rires, cris, explosions et musique reconnus</span></div>
-            <div><i style="background: var(--c5)"></i><b>15 %</b><span>répliques exclamatives ou interrogatives</span></div>
-          </div>
-        </div>
-        <ul class="regles">
-          <li><strong>Entre 60 et 120 secondes</strong><span>la durée qui marche sur les formats courts.</span></li>
-          <li><strong>Jamais au milieu d'une phrase</strong><span>chaque extrait commence au début d'une réplique et finit à la fin d'une autre.</span></li>
-          <li><strong>Coupé sur un changement de plan</strong><span>les bornes sont ajustées sur la transition la plus proche.</span></li>
-          <li><strong>Aucun chevauchement</strong><span>deux extraits ne montrent jamais la même scène.</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
+    <h2>Ce que fait le programme</h2>
+    <p>Il commence par identifier l'œuvre à partir du nom du fichier (titre, saison, épisode) et récupère sa fiche sur Wikipédia et Wikidata.</p>
+    <p>Il lui faut ensuite les dialogues avec leurs horaires. Si le fichier contient des sous-titres, il les lit, et c'est presque instantané. Sinon il les transcrit avec Whisper, sur le processeur : compter de 30 minutes à plus d'une heure pour un film de 2 h.</p>
+    <p>Puis il cherche les répliques célèbres de l'œuvre sur Wikiquote et essaie de les retrouver dans ces dialogues. C'est ce qui pèse le plus dans le choix final. Une scène que les gens citent encore a de bonnes chances de fonctionner en extrait.</p>
+    <p>À côté, il mesure le film seconde par seconde. FFmpeg donne le volume sonore et les changements de plan. Un petit modèle de classification audio, exécuté en local, repère les rires, les cris, les explosions et la musique.</p>
+    <p>Il note enfin toutes les fenêtres possibles de 60 à 120 secondes et garde les meilleures, sans qu'elles se chevauchent. Chaque extrait commence et finit sur une réplique entière, puis ses bornes sont calées sur le changement de plan le plus proche. L'export se fait en MP4, au format d'origine ou en vertical 9:16.</p>
 
-  <section id="resultats">
-    <div class="page">
-      <p class="surtitre">Résultats réels</p>
-      <h2>Ce que l'application a trouvé dans le pilote de Breaking Bad</h2>
-      <p class="intro">6 citations de la page Wikiquote de la saison 1 ont été retrouvées dans les sous-titres de l'épisode. Voici les trois extraits les mieux notés, tels que l'application les présente.</p>
-      <div class="exemples">
-        <article class="exemple">
-          <div class="exemple-haut"><div class="rang">#1</div><div class="temps">41:22 → 43:17 · 114 s · note 72</div></div>
-          <div class="exemple-corps">
-            <q>Wow, this is a really great look for you.</q>
-            <p>Deux citations cultes (Wikiquote) dans la même scène, passages sonores intenses.</p>
-          </div>
-        </article>
-        <article class="exemple">
-          <div class="exemple-haut"><div class="rang">#2</div><div class="temps">32:41 → 33:54 · 73 s · note 63</div></div>
-          <div class="exemple-corps">
-            <q>Did you learn nothing from my chemistry class?</q>
-            <p>Citation culte, dialogues denses, 4 répliques exclamatives ou interrogatives, coups de feu.</p>
-          </div>
-        </article>
-        <article class="exemple">
-          <div class="exemple-haut"><div class="rang">#3</div><div class="temps">35:48 → 36:56 · 68 s · note 60</div></div>
-          <div class="exemple-corps">
-            <q>Dude, this isn't even seven grand, alright?</q>
-            <p>Citation culte, dialogues denses, 3 répliques exclamatives ou interrogatives.</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
+    <h3>La note</h3>
+    <p>Il n'y a pas de modèle caché derrière : la note d'un passage est une moyenne pondérée.</p>
+<pre class="formule">note  = 0,6 × citations + 0,4 × local
 
-  <section id="demo">
-    <div class="page">
-      <div class="demo">
-        <div>
-          <p class="surtitre">Démo</p>
-          <h2>Essayez l'interface vous-même</h2>
-          <p class="intro" style="margin-bottom:16px">
-            L'application tourne normalement sur le PC, avec une page web locale. La démo en ligne reprend
-            exactement cette page, alimentée par des résultats calculés à l'avance sur trois épisodes.
-          </p>
-          <ul>
-            <li>choisir un épisode et suivre l'analyse étape par étape ;</li>
-            <li>cocher ou décocher les citations cultes ;</li>
-            <li>ajuster le début et la fin des extraits, passer en vertical 9:16, exporter ;</li>
-            <li>lancer le traitement automatique d'une saison entière ;</li>
-            <li>voir les séries les plus consultées sur Wikipédia.</li>
-          </ul>
-          <p class="avertissement">Images et vidéos des épisodes masquées dans la démo, pour respecter les droits d'auteur.</p>
-        </div>
-        <div style="display:grid; gap:12px; justify-items:start">
-          <a class="bouton principal" href="demo/">▶ Ouvrir la démo</a>
-          <a class="bouton" href="https://github.com/bastianpoirier/clippeur-de-film#installation">Installer l'application</a>
-        </div>
-      </div>
-    </div>
-  </section>
+local = 0,35 × dialogues
+      + 0,25 × volume
+      + 0,25 × sons
+      + 0,15 × exclamations</pre>
+    <p>Chaque terme vaut entre 0 et 1 sur la fenêtre. Quand aucune citation n'est retrouvée, seul le terme local compte.</p>
 
-  <section>
-    <div class="page">
-      <p class="surtitre">Choix techniques</p>
-      <h2>Ce qui m'a demandé le plus de réflexion</h2>
-      <div class="choix">
-        <div class="carte">
-          <h3>Tout faire tourner sur un portable</h3>
-          <p>Whisper en <code>int8</code> sur le processeur, et un modèle de sons AST compressé (90 Mo) exécuté avec ONNX Runtime. J'ai réécrit en NumPy le calcul du spectrogramme attendu par le modèle, pour éviter d'installer PyTorch.</p>
-        </div>
-        <div class="carte">
-          <h3>Retrouver une citation dans des sous-titres</h3>
-          <p>Une citation de Wikiquote et le sous-titre correspondant ne sont presque jamais identiques. La correspondance approchée (RapidFuzz) compare la citation à des groupes de 1 à 4 sous-titres consécutifs, avec un seuil de ressemblance de 82 %, et ignore les répliques trop courtes qui se retrouveraient partout.</p>
-        </div>
-        <div class="carte">
-          <h3>Chercher vite le meilleur moment</h3>
-          <p>Les indices sont calculés seconde par seconde puis cumulés : la note moyenne de n'importe quelle fenêtre s'obtient en temps constant. Tous les candidats d'un film de 2 h sont notés en un instant.</p>
-        </div>
-        <div class="carte">
-          <h3>Ne jamais refaire un calcul long</h3>
-          <p>Chaque résultat (transcription, plans, sons, recherche) est mis en cache en JSON, avec une clé tirée du nom, de la taille et de la date du fichier. Une file d'attente traite les épisodes en arrière-plan, l'un après l'autre.</p>
-        </div>
-      </div>
+    <h2>Sur le pilote de Breaking Bad</h2>
+    <p>Six répliques de la page Wikiquote de la saison 1 ont été retrouvées dans les sous-titres de l'épisode. Les cinq extraits les mieux notés en contiennent toutes :</p>
+    <div class="tableau">
+      <table id="tableau">
+        <thead><tr><th class="nombre">N°</th><th>Début</th><th class="nombre">Durée</th><th class="nombre">Note</th><th>Pourquoi il a été retenu</th></tr></thead>
+        <tbody>
+          <tr data-debut="2482"><td class="nombre">1</td><td class="heure">41:22</td><td class="nombre">114 s</td><td class="nombre">72</td><td>Deux citations dans la même scène, son fort</td></tr>
+          <tr data-debut="1961"><td class="nombre">2</td><td class="heure">32:41</td><td class="nombre">73 s</td><td class="nombre">63</td><td><q>Did you learn nothing from my chemistry class?</q>, dialogues serrés, coups de feu</td></tr>
+          <tr data-debut="2148"><td class="nombre">3</td><td class="heure">35:48</td><td class="nombre">68 s</td><td class="nombre">60</td><td>Une citation, dialogues serrés</td></tr>
+          <tr data-debut="1680"><td class="nombre">4</td><td class="heure">28:00</td><td class="nombre">72 s</td><td class="nombre">58</td><td><q>Why are you here?</q>, sept répliques exclamatives ou interrogatives</td></tr>
+          <tr data-debut="125"><td class="nombre">5</td><td class="heure">2:05</td><td class="nombre">62 s</td><td class="nombre">57</td><td>La confession filmée de Walter au début de l'épisode</td></tr>
+        </tbody>
+      </table>
     </div>
-  </section>
+    <p>Les cinq suivants n'ont aucune citation et plafonnent entre 12 et 18 sur 100. Sans Wikiquote, le programme a beaucoup moins d'avis, et ça se voit.</p>
+
+    <h2>Trois points moins simples qu'ils n'en ont l'air</h2>
+    <h3>Retrouver une citation dans des sous-titres</h3>
+    <p>Wikiquote donne <q>Wow, this is a really great look for you.</q> Les sous-titres de l'épisode disent <q>Wow, this is... This is a good look for you.</q> Une comparaison exacte échoue. Le programme compare donc chaque citation à des groupes de 1 à 4 sous-titres consécutifs avec RapidFuzz (correspondance partielle, seuil de 82 sur 100). Il ignore les répliques de moins de quatre mots, qu'on retrouverait n'importe où.</p>
+    <h3>Reconnaître des sons sans carte graphique</h3>
+    <p>Le modèle (AST, entraîné sur AudioSet) tourne avec ONNX Runtime, dans une version compressée de 90 Mo. Il attend un spectrogramme calculé à la manière de Kaldi ; je l'ai réécrit en NumPy pour ne pas avoir à installer PyTorch. Il faut compter 4 à 12 minutes par heure de film.</p>
+    <h3>Noter des milliers de fenêtres</h3>
+    <p>Chaque indice est calculé une fois par seconde, puis cumulé. La moyenne de n'importe quelle fenêtre se lit alors avec une soustraction, quelle que soit sa longueur. Tous les candidats d'un film se notent en un instant.</p>
+
+    <h2>Ce qui ne va pas encore</h2>
+    <ul class="limites">
+      <li>Sans sous-titres dans le fichier, la transcription est lente : plus d'une heure pour certains films.</li>
+      <li>Un film peu cité sur Wikiquote donne des extraits moins sûrs, comme dans le tableau plus haut.</li>
+      <li>La note mesure l'intensité d'une scène (dialogues, bruit, réactions), pas son importance dans l'histoire. Un moment calme mais décisif peut passer à la trappe.</li>
+      <li>Seuls le français et l'anglais sont pris en charge.</li>
+    </ul>
+
+    <h2>Essayer</h2>
+    <p>La démo en ligne est la vraie interface de l'application. Un navigateur ne peut ni faire tourner Python ni lire un film de plusieurs Go, alors elle rejoue des résultats que l'application a calculés sur trois épisodes. Les images et les vidéos sont masquées, pour une question de droits.</p>
+    <a class="demo-lien" href="demo/">Ouvrir la démo</a>
+    <p>Pour l'installer (Windows, avec Python 3.12 et FFmpeg) :</p>
+<pre><code>git clone https://github.com/bastianpoirier/clippeur-de-film
+cd clippeur-de-film
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+lancer.bat</code></pre>
+    <p>Le reste (traitement automatique d'une saison, musique de fond, détails des options) est décrit dans le <a href="https://github.com/bastianpoirier/clippeur-de-film#readme">README</a> et le <a href="https://github.com/bastianpoirier/clippeur-de-film/blob/main/CAHIER_DES_CHARGES.md">cahier des charges</a>.</p>
+  </article>
 </main>
 
 <footer>
-  <div class="page">
-    <span>Bastian Poirier · projet personnel</span>
-    <span>
-      <a href="https://github.com/bastianpoirier/clippeur-de-film">Code source</a> ·
-      <a href="https://github.com/bastianpoirier/clippeur-de-film/blob/main/CAHIER_DES_CHARGES.md">Cahier des charges</a> ·
-      Pour un usage personnel, sur des films possédés légalement.
-    </span>
-  </div>
+  <div class="colonne">Bastian Poirier · <a href="https://github.com/bastianpoirier/clippeur-de-film">code source</a> · usage personnel, sur des films possédés légalement</div>
 </footer>
 
+<script src="assets/frise.js"></script>
 <script>
-  // Les 10 extraits réellement proposés pour l'épisode pilote (début, fin en secondes, note, réplique).
-  const DUREE = 3486;
-  const EXTRAITS = [
-    [125, 187, 56.8, "My name is Walter Hartwell White…"], [1680, 1752, 57.5, "Why are you here?"],
-    [1961, 2034, 63.0, "Did you learn nothing from my chemistry class?"],
-    [2148, 2216, 60.0, "Dude, this isn't even seven grand, alright?"],
-    [2482, 2597, 71.6, "Wow, this is a really great look for you."],
-    [671, 734, 18.4, "Shit, I seen one of those bounce off a windshield…"], [2643, 2714, 15.5, "Yeah. Booya! See, what'd I say?"],
-    [2310, 2371, 14.7, "You'd better go. Take it. Take your shot."], [744, 808, 12.6, "Hank, how much money is that?"],
-    [1345, 1411, 12.3, "Kind of, uh, I don't know what do you call that?"],
-  ];
-  const piste = document.getElementById("piste"), legende = document.getElementById("legende-clip");
-  const minutes = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
-  const notes = EXTRAITS.map(e => e[2]), min = Math.min(...notes), max = Math.max(...notes);
-  for (const [debut, fin, note, replique] of EXTRAITS) {
-    const bloc = document.createElement("div");
-    bloc.className = "clip";
-    bloc.style.left = `${debut / DUREE * 100}%`;
-    bloc.style.width = `${Math.max((fin - debut) / DUREE * 100, .8)}%`;
-    bloc.style.opacity = .45 + .55 * (note - min) / (max - min || 1);
-    bloc.tabIndex = 0;
-    const montrer = () => {
-      legende.innerHTML = "";
-      const titre = document.createElement("strong");
-      titre.textContent = `« ${replique} »`;
-      legende.append(titre, document.createElement("br"),
-        `${minutes(debut)} → ${minutes(fin)} · ${Math.round(fin - debut)} s · note ${Math.round(note)}`);
-    };
-    bloc.addEventListener("mouseenter", montrer);
-    bloc.addEventListener("focus", montrer);
-    piste.append(bloc);
+  // Figure 1, dessinée à partir des mesures réelles de l'application (assets/frise.js).
+  const F = window.FRISE;
+  const pistes = document.getElementById("pistes");
+  const lecture = document.getElementById("lecture-extrait");
+  const heure = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  const pc = s => `${(s / F.duree * 100).toFixed(3)}%`;
+
+  function ligne(nom, classe) {
+    const etiquette = document.createElement("div");
+    etiquette.className = "nom";
+    etiquette.textContent = nom;
+    const trace = document.createElement("div");
+    trace.className = "trace " + (classe || "");
+    pistes.append(etiquette, trace);
+    return trace;
   }
+
+  // Une courbe en escalier par mesure, de 0 (en bas) à 1 (en haut).
+  function courbe(trace, valeurs, couleur) {
+    const n = valeurs.length;
+    let d = "M0 100";
+    valeurs.forEach((v, i) => { const y = 100 - Math.min(v, 1) * 92; d += ` L${i} ${y} L${i + 1} ${y}`; });
+    d += ` L${n} 100 Z`;
+    trace.innerHTML = `<svg viewBox="0 0 ${n} 100" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="${couleur}"/></svg>`;
+  }
+
+  // Les extraits : un bloc par extrait, son numéro au-dessus. Les numéros alternent sur deux rangs,
+  // sinon ceux de deux extraits proches se chevauchent quand la figure est étroite.
+  const classement = [...F.extraits].sort((a, b) => b.score - a.score);
+  const zoneNumeros = ligne("", "numeros");
+  const zoneExtraits = ligne("Extraits retenus", "extraits");
+  const elements = [];
+
+  function choisir(e) {
+    const rang = classement.indexOf(e) + 1;
+    document.querySelectorAll(".choisi").forEach(x => x.classList.remove("choisi"));
+    for (const x of elements.find(x => x.e === e).noeuds) x.classList.add("choisi");
+    document.querySelector(`#tableau tr[data-debut="${e.debut}"]`)?.classList.add("choisi");
+    lecture.innerHTML = "";
+    const h = document.createElement("span");
+    h.className = "heure";
+    h.textContent = `n° ${rang} · ${heure(e.debut)} → ${heure(e.fin)} · note ${Math.round(e.score)}`;
+    const titre = e.titre.length > 80 ? e.titre.slice(0, 80).replace(/\s\S*$/, "") + "…" : e.titre;
+    lecture.append(h, document.createElement("br"), `« ${titre} »`);
+  }
+
+  [...F.extraits].sort((a, b) => a.debut - b.debut).forEach((e, i) => {
+    const rang = classement.indexOf(e) + 1;
+    const etiquette = `Extrait n° ${rang}, de ${heure(e.debut)} à ${heure(e.fin)}`;
+
+    const numero = document.createElement("button");
+    numero.type = "button";
+    numero.className = "numero " + (i % 2 ? "bas" : "haut");
+    numero.style.left = pc((e.debut + e.fin) / 2);
+    numero.textContent = rang;
+    numero.setAttribute("aria-label", etiquette);
+
+    const bloc = document.createElement("button");
+    bloc.type = "button";
+    bloc.className = "extrait";
+    bloc.style.left = pc(e.debut);
+    bloc.style.width = pc(e.fin - e.debut);
+    bloc.tabIndex = -1;  // le numéro suffit pour le clavier
+    bloc.setAttribute("aria-label", etiquette);
+
+    for (const x of [numero, bloc]) {
+      x.addEventListener("mouseenter", () => { survol = e; choisir(e); });
+      x.addEventListener("mouseleave", () => { survol = null; });
+      x.addEventListener("focus", () => choisir(e));
+      x.addEventListener("click", () => { allerA(e.debut); choisir(e); });
+    }
+    zoneNumeros.append(numero);
+    zoneExtraits.append(bloc);
+    elements.push({ e, noeuds: [numero, bloc] });
+  });
+
+  const zoneCitations = ligne("Citations", "citations");
+  for (const [debut] of F.citations) {
+    const trait = document.createElement("span");
+    trait.className = "citation";
+    trait.style.left = pc(debut);
+    zoneCitations.append(trait);
+  }
+
+  const sons = F.pistes.rires.map((_, i) => Math.max(F.pistes.rires[i], F.pistes.cris[i], F.pistes.explosions[i]));
+  courbe(ligne("Dialogues"), F.pistes.parole, "var(--piste-dialogues)");
+  // Le volume varie peu en absolu : on l'étale entre le passage le plus calme et le plus fort de l'épisode.
+  const [vMin, vMax] = [Math.min(...F.pistes.volume), Math.max(...F.pistes.volume)];
+  courbe(ligne("Volume"), F.pistes.volume.map(v => (v - vMin) / (vMax - vMin || 1)), "var(--piste-volume)");
+  courbe(ligne("Rires, cris, coups"), sons.map(v => v * 2), "var(--piste-sons)");
+  courbe(ligne("Musique"), F.pistes.musique, "var(--piste-musique)");
+  courbe(ligne("Changements de plan"), F.pistes.plans.map(v => v / 8), "var(--piste-plans)");
+
+  // Règle des minutes : chaque graduation à sa vraie place (l'épisode dure un peu plus de 58 min).
+  const regle = document.createElement("div");
+  regle.className = "regle";
+  for (const m of [0, 10, 20, 30, 40, 50]) {
+    const s = document.createElement("span");
+    s.textContent = m === 50 ? "50 min" : m;
+    s.style.left = pc(m * 60);
+    regle.append(s);
+  }
+  pistes.append(document.createElement("div"), regle);
+
+  // Tête de lecture : un tour de l'épisode en 30 secondes. L'extrait qu'elle traverse est sélectionné,
+  // sauf si la souris est sur un autre. Un clic sur un extrait y amène la tête.
+  const zone = document.createElement("div");
+  zone.className = "zone-lecture";
+  zone.style.gridRow = `1 / span ${pistes.querySelectorAll(".trace").length}`;
+  const tete = document.createElement("div");
+  tete.className = "tete";
+  zone.append(tete);
+  pistes.append(zone);
+
+  const bouton = document.getElementById("lecture"), horloge = document.getElementById("horloge");
+  const TOUR = 30000;
+  let position = 0, enLecture = !matchMedia("(prefers-reduced-motion: reduce)").matches, precedent = null, survol = null;
+
+  function allerA(secondes) { position = secondes / F.duree; dessiner(); }
+  function dessiner() {
+    const s = position * F.duree;
+    tete.style.left = `${position * 100}%`;
+    horloge.textContent = heure(s);
+    const dedans = F.extraits.find(e => s >= e.debut && s <= e.fin);
+    if (dedans && !survol && !document.querySelector(".extrait.choisi")?.isSameNode(elements.find(x => x.e === dedans).noeuds[1])) choisir(dedans);
+  }
+  function boucle(t) {
+    if (enLecture && precedent != null) position = (position + (t - precedent) / TOUR) % 1;
+    precedent = t;
+    dessiner();
+    requestAnimationFrame(boucle);
+  }
+  function majBouton() { bouton.textContent = enLecture ? "Pause" : "Lecture"; }
+  bouton.onclick = () => { enLecture = !enLecture; majBouton(); };
+  majBouton();
+
+  choisir(classement[0]);  // le mieux noté est affiché d'emblée
+  if (!enLecture) allerA(classement[0].debut);
+  requestAnimationFrame(boucle);
 </script>
 </body>
 </html>

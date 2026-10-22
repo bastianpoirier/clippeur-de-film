@@ -32,13 +32,30 @@ REPLIQUES_PAR_EXTRAIT = 4
 NB_EXTRAITS = 10
 MUSIQUES_EXEMPLE = ["piano-calme (exemple).mp3", "electro-rythmee (exemple).mp3"]
 
-BANDEAU = """
-<div class="bandeau-demo">
-  <strong>Démo en ligne</strong> — la vraie interface, avec des résultats calculés à l'avance par l'application
-  sur trois épisodes de <em>Breaking Bad</em>. Images et vidéos masquées (droits d'auteur).
-  Pour commencer : <a href="#etape-film">1. Film → « Choisir un film… »</a>, ou « Traiter une saison entière… ».
-  <a href="../">Retour à la présentation</a>
-</div>
+POLICES = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;'
+           '0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap">\n')
+
+# Même en-tête que la page de présentation, puis quelques lignes pour dire ce qu'est cette page.
+ENTETE = """
+<header class="haut-demo">
+  <div class="haut-dedans">
+    <a href="../">Clippeur de film</a>
+    <nav><a href="../">Présentation</a><a href="https://github.com/bastianpoirier/clippeur-de-film">Code</a></nav>
+  </div>
+</header>
+"""
+
+INTRO = """
+  <div class="intro-demo">
+    <h1 class="titre-demo">Démo</h1>
+    <p>C'est l'interface de l'application, telle qu'elle tourne sur un PC. Ici, aucun film n'est analysé : la page
+      rejoue des résultats que l'application a calculés à l'avance sur trois épisodes de <i>Breaking Bad</i>, en
+      accéléré. Les images et les vidéos sont masquées, et seules quelques répliques sont affichées.</p>
+    <p class="consigne">Pour commencer, choisissez un épisode à l'étape <a href="#etape-film">1. Film</a>.</p>
+  </div>
+  <p class="intertitre-demo">Les autres outils de l'application</p>
 """
 
 # Remplacements dans la page : ce qui demande le serveur (fichiers vidéo, images) est pris en charge
@@ -46,9 +63,16 @@ BANDEAU = """
 REMPLACEMENTS = [
     ('$("modele").value = "{{ modele_par_defaut }}";', f'$("modele").value = "{MODELE_PAR_DEFAUT}";'),
     ("<title>Clippeur de film</title>", "<title>Clippeur de film — démo</title>"),
-    ("</style>", "</style>\n<link rel=\"stylesheet\" href=\"demo.css\">"),
-    ("<main>\n", "<main>\n" + BANDEAU),
+    ("</style>", "</style>\n" + POLICES + '<link rel="stylesheet" href="../assets/tokens.css">\n'
+                 '<link rel="stylesheet" href="demo.css">'),
+    ("<body>\n<main>\n", "<body>\n" + ENTETE + "<main>\n" + INTRO),
     ('<section class="carte">\n    <h2>1. Film</h2>', '<section class="carte" id="etape-film">\n    <h2>1. Film</h2>'),
+    ('<section class="carte">\n    <h2>2. Transcription</h2>',
+     '<section class="carte" id="carte-transcription">\n    <h2>2. Transcription</h2>'),
+    ('<section class="carte">\n    <h2>Séries du moment</h2>',
+     '<section class="carte" id="carte-tendances">\n    <h2>Séries du moment</h2>'),
+    ('<section class="carte">\n    <h2>Traitement automatique</h2>',
+     '<section class="carte" id="carte-auto">\n    <h2>Traitement automatique</h2>'),
     ("<script>\n  const $", "<script src=\"donnees.js\"></script>\n<script src=\"simulation.js\"></script>\n<script>\n  const $"),
     ("const miniature = `/media/miniature/${e.numero}?v=${encodeURIComponent(proposeIci.debut)}`;",
      "const miniature = DEMO.miniature(e);"),
@@ -83,6 +107,45 @@ def analyser(film: Path) -> dict:
     # Les messages de pourcentage sont nombreux : on garde ceux du journal et quelques étapes de progression.
     deroule = [d for i, d in enumerate(deroule) if d.get("pourcentage") is None or i % 10 == 0]
     return {"deroule": deroule} | resultats
+
+
+def frise(film: Path, episode: dict, nb_cases: int = 160) -> dict:
+    """Résumé de l'analyse d'un épisode, pour la frise de la page de présentation : des valeurs
+    entre 0 et 1 par tranche de temps (aucun texte des dialogues), et la place des citations et des extraits."""
+    duree = episode["proposition"]["duree"]
+    pas = duree / nb_cases
+
+    def par_case(valeurs_par_seconde, agreger=max):
+        cases = []
+        for i in range(nb_cases):
+            tranche = valeurs_par_seconde[int(i * pas):max(int((i + 1) * pas), int(i * pas) + 1)]
+            cases.append(agreger(tranche) if tranche else 0.0)
+        return cases
+
+    parole = [0.0] * (int(duree) + 1)
+    for s in episode["transcription"]["segments"]:
+        for t in range(int(s["debut"]), min(int(s["fin"]) + 1, len(parole))):
+            parole[t] = 1.0
+    volume = [min(max((v + 55) / 40, 0.0), 1.0) for v in cache.lire(film, "volume")["volume"]]
+    sons = cache.lire(film, "sons") or {}
+    plans = [0.0] * (int(duree) + 1)
+    for t in cache.lire(film, "plans")["plans"]:
+        plans[min(int(t), len(plans) - 1)] = 1.0
+    moyenne = lambda tranche: sum(tranche) / len(tranche)
+    arrondir = lambda valeurs: [round(v, 2) for v in valeurs]
+    return {
+        "duree": round(duree, 1),
+        "pistes": {
+            "parole": arrondir(par_case(parole, moyenne)),
+            "volume": arrondir(par_case(volume, moyenne)),
+            **{f: arrondir(par_case(sons[f])) for f in ("rires", "cris", "explosions", "musique") if f in sons},
+            "plans": arrondir(par_case(plans, sum)),
+        },
+        "citations": [[round(r["position"]["debut"]), round(r["position"]["fin"])]
+                      for r in episode["recherche"]["resultats"] if r.get("position")],
+        "extraits": [{"debut": round(e["debut"]), "fin": round(e["fin"]), "score": e["score"], "titre": e["titre"].strip()}
+                     for e in episode["proposition"]["extraits"]],
+    }
 
 
 def alleger(episode: dict) -> dict:
@@ -128,7 +191,14 @@ def main() -> None:
         if not any(f"E{n:02d}" in propre for n in args.episodes):
             continue
         print(f"Analyse de {propre}...")
-        episode = alleger(analyser(film))
+        episode = analyser(film)
+        if not episodes:  # la frise de la présentation montre le premier épisode
+            (RACINE / "assets").mkdir(exist_ok=True)
+            (RACINE / "assets" / "frise.js").write_text(
+                "// Généré par outils/construire_demo.py : ne pas modifier à la main.\n"
+                f"window.FRISE = {json.dumps(frise(film, episode) | {'nom': propre}, ensure_ascii=False)};\n",
+                encoding="utf-8")
+        episode = alleger(episode)
         episodes.append(anonymiser(episode, film, propre) | {"nom": propre, "chemin": f"{DOSSIER_FICTIF}\\{propre}"})
 
     tendances = next(iter(sorted(cache.DOSSIER_CACHE.glob("tendances_*.json"), reverse=True)), None)

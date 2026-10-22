@@ -1,0 +1,71 @@
+/* Couleurs et typographie de la page de présentation et de l'image d'aperçu.
+   Primitives → rôles → composants. Papier clair par défaut, sombre si le système le demande. */
+
+:root {
+  /* Primitives */
+  --papier-50: #f7f5f0;
+  --papier-100: #efebe3;
+  --papier-200: #e2ddd2;
+  --papier-300: #d3cdc0;
+  --encre-900: #1c1b19;
+  --encre-700: #45423d;
+  --encre-600: #5a5650;
+  --encre-500: #6c675f;
+  --brique-600: #a8321f;
+  --brique-500: #b4321f;
+  --brique-100: #f3ddd5;
+  --nuit-950: #151413;
+  --nuit-900: #1d1c1a;
+  --nuit-800: #282623;
+  --nuit-700: #383530;
+  --lin-100: #ebe7df;
+  --lin-300: #b9b3a9;
+  --lin-400: #9c968c;
+  --corail-400: #e8806b;
+
+  --serif: Newsreader, "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Rôles */
+  --fond: var(--papier-50);
+  --fond-encart: var(--papier-100);
+  --filet: var(--papier-200);
+  --filet-fort: var(--papier-300);
+  --texte: var(--encre-900);
+  --texte-second: var(--encre-600);
+  --texte-legende: var(--encre-500);
+  --accent: var(--brique-500);
+  --accent-fond: var(--brique-100);
+
+  /* Pistes de la figure (encres mates, lisibles en clair comme en sombre) */
+  --piste-dialogues: #2f6f6a;
+  --piste-volume: #8a6a32;
+  --piste-sons: #6a5a96;
+  --piste-musique: #9b4f72;
+  --piste-plans: #8c877f;
+
+  /* Composants */
+  --lien: var(--accent);
+  --code-fond: var(--fond-encart);
+  --tableau-filet: var(--filet);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: var(--nuit-950);
+    --fond-encart: var(--nuit-900);
+    --filet: var(--nuit-800);
+    --filet-fort: var(--nuit-700);
+    --texte: var(--lin-100);
+    --texte-second: var(--lin-300);
+    --texte-legende: var(--lin-400);
+    --accent: var(--corail-400);
+    --accent-fond: #3a221c;
+    --piste-dialogues: #6fb5ad;
+    --piste-volume: #c9a35f;
+    --piste-sons: #a597d4;
+    --piste-musique: #d08aaa;
+    --piste-plans: #8c877f;
+  }
+}

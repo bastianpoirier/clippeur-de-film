@@ -304,7 +304,11 @@
       for (const episode of D.episodes) {
         const bouton = document.createElement("button");
         bouton.type = "button";
-        bouton.textContent = `🎬 ${episode.nom}`;
+        const fiche = episode.identification.fiche;
+        const duree = Math.round(episode.proposition.duree / 60);
+        bouton.append(episode.nom.replace(/\.\w+$/, ""), Object.assign(document.createElement("small"), {
+          textContent: `${fiche.titre} · saison ${fiche.saison}, épisode ${fiche.episode} · ${duree} min`,
+        }));
         bouton.onclick = () => { fenetre.close(); resoudre(episode.chemin); };
         liste.append(bouton);
       }
@@ -320,26 +324,17 @@
     });
   }
 
-  const echapper = t => String(t).replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
   const heure = s => [Math.floor(s / 3600), Math.floor(s % 3600 / 60), Math.floor(s % 60)]
     .map(n => String(n).padStart(2, "0")).join(":");
 
   window.DEMO = {
-    // À la place de l'image du film : une vignette dessinée, avec le numéro et les horaires de l'extrait.
+    // À la place de l'image du film : un cadre gris avec le numéro et les horaires de l'extrait.
     miniature(e) {
-      const teinte = (e.numero * 47 + 15) % 360;
-      const film = (etat.proposition?.film || "").replace(/\.\w+$/, "");
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
-        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="hsl(${teinte},45%,22%)"/><stop offset="1" stop-color="hsl(${(teinte + 40) % 360},55%,9%)"/>
-        </linearGradient></defs>
-        <rect width="640" height="360" fill="url(#g)"/>
-        <g fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2">
-          <circle cx="520" cy="80" r="140"/><circle cx="520" cy="80" r="90"/></g>
-        <text x="32" y="64" font-family="system-ui,sans-serif" font-size="22" fill="rgba(255,255,255,.7)">${echapper(film)}</text>
-        <text x="32" y="250" font-family="system-ui,sans-serif" font-weight="700" font-size="72" fill="#fff">#${e.numero}</text>
-        <text x="32" y="300" font-family="ui-monospace,monospace" font-size="26" fill="#fdba74">${heure(e.debut)} → ${heure(e.fin)}</text>
-        <text x="32" y="336" font-family="system-ui,sans-serif" font-size="17" fill="rgba(255,255,255,.55)">Image du film masquée dans la démo (droits d'auteur)</text>
+        <rect width="640" height="360" fill="#2b2a28"/>
+        <text x="28" y="62" font-family="system-ui,sans-serif" font-size="34" font-weight="600" fill="#e8e6e1">n° ${e.numero}</text>
+        <text x="28" y="98" font-family="ui-monospace,Consolas,monospace" font-size="20" fill="#b3afa8">${heure(e.debut)} – ${heure(e.fin)}</text>
+        <text x="28" y="334" font-family="system-ui,sans-serif" font-size="15" fill="#8a867f">image masquée dans la démo</text>
       </svg>`;
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     },

@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- Image d'aperçu des partages (1200×630), exportée en assets/apercu.png :
+     chrome --headless --window-size=1200,630 --screenshot=assets/apercu.png outils/apercu.html -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+  :root {
+    --fond: #f7f5f0; --texte: #1c1b19; --second: #5a5650; --filet: #e2ddd2; --accent: #b4321f;
+    --dialogues: #2f6f6a; --volume: #8a6a32; --musique: #9b4f72;
+  }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--fond); color: var(--texte); }
+  .cadre { position: absolute; inset: 0; padding: 72px 80px; display: flex; flex-direction: column; }
+  h1 { font: 500 92px/1 Newsreader, Georgia, serif; letter-spacing: -.02em; margin: 0 0 22px; }
+  p { font: 400 32px/1.35 Newsreader, Georgia, serif; color: var(--second); margin: 0; max-width: 900px; }
+  .figure { margin-top: auto; display: grid; gap: 6px; }
+  .piste { height: 30px; position: relative; border-bottom: 1px solid var(--filet); }
+  .piste svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .extraits { height: 34px; border: none; }
+  .extrait { position: absolute; top: 0; bottom: 0; border: 2px solid var(--texte); }
+  .bas { display: flex; justify-content: space-between; font: 20px "IBM Plex Mono", monospace; color: var(--second); margin-top: 22px; }
+</style>
+</head>
+<body>
+<div class="cadre">
+  <h1>Clippeur de film</h1>
+  <p>Analyse un film ou un épisode et propose les passages à découper pour les réseaux sociaux.</p>
+  <div class="figure" id="figure"></div>
+  <div class="bas"><span>Bastian Poirier · projet personnel</span><span>Python · FFmpeg · Whisper</span></div>
+</div>
+<script src="../assets/frise.js"></script>
+<script>
+  const F = window.FRISE, figure = document.getElementById("figure");
+  const pc = s => `${s / F.duree * 100}%`;
+  const extraits = document.createElement("div");
+  extraits.className = "piste extraits";
+  for (const e of F.extraits) {
+    const b = document.createElement("span");
+    b.className = "extrait";
+    b.style.left = pc(e.debut);
+    b.style.width = pc(e.fin - e.debut);
+    extraits.append(b);
+  }
+  figure.append(extraits);
+  const [vMin, vMax] = [Math.min(...F.pistes.volume), Math.max(...F.pistes.volume)];
+  for (const [valeurs, couleur] of [[F.pistes.parole, "var(--dialogues)"],
+                                    [F.pistes.volume.map(v => (v - vMin) / (vMax - vMin)), "var(--volume)"],
+                                    [F.pistes.musique, "var(--musique)"]]) {
+    const piste = document.createElement("div");
+    piste.className = "piste";
+    let d = "M0 100";
+    valeurs.forEach((v, i) => { const y = 100 - v * 92; d += ` L${i} ${y} L${i + 1} ${y}`; });
+    piste.innerHTML = `<svg viewBox="0 0 ${valeurs.length} 100" preserveAspectRatio="none"><path d="${d} L${valeurs.length} 100 Z" fill="${couleur}"/></svg>`;
+    figure.append(piste);
+  }
+</script>
+</body>
+</html>
