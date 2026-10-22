@@ -154,6 +154,7 @@
     </div>
     <div class="ligne" style="margin-top:12px">
       <label>Extraits par épisode <input type="number" id="auto-nombre" min="1" max="30"></label>
+      <label>Durée <select id="auto-duree"><option value="30">30 s</option><option value="45">45 s</option><option value="60" selected>1 min</option><option value="90">1 min 30</option><option value="120">2 min</option></select></label>
       <label>Format <select id="auto-format"></select></label>
       <label>Musique <select id="auto-musique"></select></label>
       <label>Volume <input type="range" id="auto-volume" min="0" max="100" step="5"> <span id="auto-valeur-volume"></span></label>
@@ -273,6 +274,7 @@
     <h2>4. Extraits</h2>
     <div class="ligne">
       <label>Nombre d'extraits <input type="number" id="nombre" min="1" max="30" value="10"></label>
+      <label>Durée de chaque extrait <select id="duree"><option value="30">30 s</option><option value="45">45 s</option><option value="60" selected>1 min</option><option value="90">1 min 30</option><option value="120">2 min</option></select></label>
       <label><input type="checkbox" id="avec-sons" checked> Reconnaître les rires, cris, explosions et musique</label>
       <button class="principal" id="proposer">Proposer des extraits</button>
     </div>
@@ -373,6 +375,7 @@
 
   const reglages = () => ({
     chemin: cheminFilm, langue: $("langue").value, modele: $("modele").value, avec_sons: $("avec-sons").checked,
+    duree_extraits: Number($("duree").value),
   });
 
   $("lancer").onclick = () => demarrer("/api/transcrire", { ...reglages(), forcer: $("forcer").checked });
@@ -816,6 +819,7 @@
     reglagesAuto = r;
     $("auto-surveillance").checked = r.surveillance;
     $("auto-nombre").value = r.nombre;
+    $("auto-duree").value = r.duree_extraits;
     $("auto-sons").checked = r.avec_sons;
     $("auto-format").value = r.montage.format;
     $("auto-musique").value = r.montage.musique || "";
@@ -828,6 +832,7 @@
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         surveillance: $("auto-surveillance").checked, nombre: Number($("auto-nombre").value) || 5,
+        duree_extraits: Number($("auto-duree").value),
         avec_sons: $("auto-sons").checked,
         montage: { format: $("auto-format").value, musique: $("auto-musique").value || null,
                    volume_musique: Number($("auto-volume").value) },
@@ -839,7 +844,7 @@
       setTimeout(() => { $("auto-enregistre").hidden = true; }, 1500);
     }
   }
-  for (const id of ["auto-surveillance", "auto-nombre", "auto-sons", "auto-format", "auto-musique", "auto-volume"]) {
+  for (const id of ["auto-surveillance", "auto-nombre", "auto-duree", "auto-sons", "auto-format", "auto-musique", "auto-volume"]) {
     $(id).onchange = enregistrerReglagesAuto;
   }
   $("auto-volume").oninput = () => { $("auto-valeur-volume").textContent = `${$("auto-volume").value} %`; };

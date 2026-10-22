@@ -16,7 +16,7 @@ from pathlib import Path
 
 from clippeur import cache
 from clippeur.export import DOSSIER_SORTIE, MONTAGE_PAR_DEFAUT, dossier_de_sortie, montage_valide
-from clippeur.selection import nom_de_fichier
+from clippeur.selection import DUREE_PAR_DEFAUT, duree_valide, nom_de_fichier
 from clippeur.traitement import traiter_film
 from clippeur.transcription import FilmIllisible
 
@@ -30,6 +30,7 @@ MEILLEURS_PAR_SAISON = 10
 REGLAGES_PAR_DEFAUT = {
     "surveillance": False,  # désactivée tant que l'utilisateur ne l'a pas activée
     "nombre": 5,  # extraits exportés par épisode
+    "duree_extraits": DUREE_PAR_DEFAUT,  # longueur visée pour chaque extrait, en secondes
     "avec_sons": True,
     "langue": "auto",
     "montage": MONTAGE_PAR_DEFAUT,
@@ -68,6 +69,7 @@ class FileAttente:
         reglages = self.reglages | {k: v for k, v in nouveaux.items() if k in REGLAGES_PAR_DEFAUT}
         reglages["montage"] = montage_valide(reglages.get("montage"))
         reglages["nombre"] = max(1, min(int(reglages["nombre"]), 30))
+        reglages["duree_extraits"] = duree_valide(reglages["duree_extraits"])
         reglages["surveillance"] = bool(reglages["surveillance"])
         with self._verrou:
             self.reglages = reglages

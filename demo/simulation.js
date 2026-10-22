@@ -62,18 +62,19 @@
   }
 
   // Extraits proposés : les mieux notés, dans l'ordre du film, comme dans l'application.
-  function proposition(episode, nombre) {
-    const p = clone(episode.proposition);
+  // `duree` : longueur choisie dans la page ; les extraits de chaque longueur ont été calculés à l'avance.
+  function proposition(episode, nombre, duree = 60) {
+    const p = clone(episode.propositions?.[duree] || episode.proposition);
     const gardes = new Set([...p.extraits].sort((a, b) => b.score - a.score).slice(0, nombre).map(e => e.numero));
     p.extraits = p.extraits.filter(e => gardes.has(e.numero));
     return p;
   }
 
   // Le déroulé enregistré lors du vrai traitement, rejoué en accéléré.
-  async function rejouer(episode, nombre, avecSons) {
+  async function rejouer(episode, nombre, avecSons, duree) {
     for (const pas of episode.deroule) {
       if (pas.etape) {
-        etat[pas.etape] = pas.etape === "proposition" ? proposition(episode, nombre) : clone(episode[pas.etape]);
+        etat[pas.etape] = pas.etape === "proposition" ? proposition(episode, nombre, duree) : clone(episode[pas.etape]);
         continue;
       }
       let message = pas.message;
@@ -90,7 +91,7 @@
         }
         continue;
       }
-      if (message.endsWith("extraits proposés.")) message = `${proposition(episode, nombre).extraits.length} extraits proposés.`;
+      if (message.endsWith("extraits proposés.")) message = `${proposition(episode, nombre, duree).extraits.length} extraits proposés.`;
       suivi(message, null);
       await pause(700 * VITESSE);
     }
@@ -107,7 +108,7 @@
 
     "POST /api/analyser": c => {
       const episode = episodeDe(c.chemin);
-      return lancerTache("analyse", c.chemin, () => rejouer(episode, Math.min(Number(c.nombre) || 10, 10), c.avec_sons !== false));
+      return lancerTache("analyse", c.chemin, () => rejouer(episode, Math.min(Number(c.nombre) || 10, 10), c.avec_sons !== false, c.duree_extraits));
     },
 
     "POST /api/transcrire": c => lancerTache("transcription", c.chemin, async () => {
@@ -159,7 +160,7 @@
       suivi("Choix des meilleurs moments...", null);
       await pause(600 * VITESSE);
       if (nombre > 10) suivi("Démo en ligne : 10 extraits au plus ont été calculés à l'avance.", null);
-      const p = proposition(episode, Math.min(nombre, 10));
+      const p = proposition(episode, Math.min(nombre, 10), c.duree_extraits);
       suivi(`${p.extraits.length} extraits proposés.`, null);
       return p;
     }),
@@ -246,7 +247,7 @@
           await pause(duree / 5 * VITESSE);
         }
       }
-      const p = proposition(episode, Math.min(file.reglages.nombre, 10));
+      const p = proposition(episode, Math.min(file.reglages.nombre, 10), file.reglages.duree_extraits);
       const suffixe = file.reglages.montage.format === "original" ? "" : "_vertical";
       const base = nomDeFichier(episode.nom.replace(/\.\w+$/, ""), 30);
       Object.assign(element, {

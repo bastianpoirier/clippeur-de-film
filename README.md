@@ -1,6 +1,6 @@
 # Clippeur de film
 
-Un programme qui analyse un film ou un épisode de série et propose les passages à découper en clips de 1 à 2 minutes pour les réseaux sociaux. Il tourne en local sur un PC Windows, sans carte graphique, et n'utilise aucun service payant.
+Un programme qui analyse un film ou un épisode de série et propose les passages à découper en clips pour les réseaux sociaux, d'une minute par défaut. Il tourne en local sur un PC Windows, sans carte graphique, et n'utilise aucun service payant.
 
 [Présentation du projet](https://bastianpoirier.github.io/clippeur-de-film/) · [Démo en ligne](https://bastianpoirier.github.io/clippeur-de-film/demo/) · [Cahier des charges](CAHIER_DES_CHARGES.md)
 
@@ -10,7 +10,7 @@ Un programme qui analyse un film ou un épisode de série et propose les passage
 
 On lui donne un fichier vidéo. Il identifie l'œuvre à partir du nom du fichier (fiche Wikipédia et Wikidata), lit les sous-titres ou transcrit les dialogues avec Whisper, cherche les répliques célèbres sur Wikiquote et les retrouve dans les dialogues. En parallèle, il mesure le volume, repère les changements de plan avec FFmpeg et reconnaît les rires, cris, explosions et la musique avec un petit modèle audio (AST) exécuté en local.
 
-Chaque fenêtre de 60 à 120 secondes reçoit ensuite une note :
+Chaque fenêtre de la longueur choisie (30 s, 45 s, 1 min, 1 min 30 ou 2 min ; 1 min par défaut) reçoit ensuite une note :
 
 ```
 note  = 0,6 × citations + 0,4 × local
@@ -52,7 +52,7 @@ Double-cliquer sur `lancer.bat`, ou :
 .\.venv\Scripts\python.exe -m clippeur interface
 ```
 
-La page s'ouvre sur http://127.0.0.1:5000. « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; la vidéo est lue là où elle est, sans être copiée. Ensuite tout s'enchaîne : identification, transcription, citations, puis proposition des extraits. On peut corriger l'identification, cocher les citations qui comptent, regarder un aperçu de chaque extrait, ajuster son début et sa fin, choisir le format et une musique de fond, puis exporter. Les fichiers arrivent dans `output/<film>/`, avec un récapitulatif `extraits.json`.
+La page s'ouvre sur http://127.0.0.1:5000. « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; la vidéo est lue là où elle est, sans être copiée. Ensuite tout s'enchaîne : identification, transcription, citations, puis proposition des extraits. On peut corriger l'identification, cocher les citations qui comptent, choisir la durée des extraits, regarder un aperçu de chaque extrait, ajuster son début et sa fin, choisir le format et une musique de fond, puis exporter. Les fichiers arrivent dans `output/<film>/`, avec un récapitulatif `extraits.json`.
 
 La page propose aussi :
 
@@ -71,7 +71,7 @@ La page propose aussi :
 |---|---|
 | `transcrire` | `--langue fr\|en` (fr par défaut), `--modele tiny\|base\|small\|medium` (small par défaut), `--forcer` pour refaire une transcription en cache |
 | `rechercher` | `--langue`, `--page` pour imposer une page Wikiquote |
-| `extraits` | `--langue`, `--nombre` (10 par défaut), `--exporter` pour écrire les MP4 |
+| `extraits` | `--langue`, `--nombre` (10 par défaut), `--duree 30\|45\|60\|90\|120` en secondes (60 par défaut), `--exporter` pour écrire les MP4 |
 | `interface` | `--port` (5000 par défaut), `--sans-navigateur` |
 
 Pour les dialogues, l'application prend dans l'ordre : un fichier de sous-titres placé à côté de la vidéo (`film.srt`, `film.en.srt`…), une piste de sous-titres intégrée au fichier, sinon la transcription Whisper sur le processeur. Les résultats intermédiaires sont gardés dans `cache/<film>/` : une relance les relit au lieu de tout refaire.

@@ -20,6 +20,7 @@ from clippeur.export import (DOSSIER_MUSIQUES, FORMATS, VERSION_APERCU, VOLUME_M
 from clippeur.extraits import proposer
 from clippeur.identification import identifier, verifier_cle_tmdb
 from clippeur.recherche import choisir_citations, recherche_en_cache, rechercher
+from clippeur.selection import DUREES, duree_valide
 from clippeur.export import DOSSIER_SORTIE
 from clippeur.file_attente import DOSSIER_A_TRAITER, file_attente
 from clippeur.traitement import analyser_film, choisir_langue
@@ -151,6 +152,7 @@ def lancer_analyse():
         # Chaque résultat est affiché dès qu'il est prêt, sans attendre la fin du parcours.
         analyser_film(film, _suivi, langue=donnees.get("langue"), modele=donnees.get("modele"),
                       nombre=donnees.get("nombre") or 10, avec_sons=donnees.get("avec_sons", True),
+                      duree_extraits=duree_valide(donnees.get("duree_extraits")),
                       etape=lambda nom, resultat: _mettre_a_jour(**{nom: resultat}))
 
     return _lancer_tache("analyse", film, travail)
@@ -245,6 +247,7 @@ def lancer_proposition():
         suivi=_suivi,
         modele=donnees.get("modele") or MODELE_PAR_DEFAUT,
         avec_sons=donnees.get("avec_sons", True),
+        duree_extraits=duree_valide(donnees.get("duree_extraits")),
     ))
 
 
@@ -263,7 +266,7 @@ def _avec_bornes(extrait: dict, debut, fin, duree_film: float) -> dict:
 @app.get("/api/montage")
 def options_de_montage():
     """Formats d'export (F24) et morceaux de la banque de musiques."""
-    return jsonify(formats=FORMATS, musiques=lister_musiques(), volume_musique=VOLUME_MUSIQUE_DEFAUT)
+    return jsonify(formats=FORMATS, musiques=lister_musiques(), volume_musique=VOLUME_MUSIQUE_DEFAUT, durees=DUREES)
 
 
 @app.post("/api/extraits/exporter")

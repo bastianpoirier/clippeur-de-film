@@ -9,6 +9,7 @@ from typing import Callable
 
 from clippeur.export import exporter
 from clippeur.extraits import proposer
+from clippeur.selection import DUREE_PAR_DEFAUT
 from clippeur.identification import identifier
 from clippeur.recherche import recherche_en_cache, rechercher
 from clippeur.sous_titres import LANGUES, langue_audio
@@ -32,6 +33,7 @@ def analyser_film(
     modele: str = MODELE_PAR_DEFAUT,
     nombre: int = 10,
     avec_sons: bool = True,
+    duree_extraits: int = DUREE_PAR_DEFAUT,
     etape: Callable[[str, dict], None] = lambda nom, resultat: None,
 ) -> dict:
     """Enchaîne toutes les étapes ; `etape(nom, résultat)` est appelé dès qu'un résultat est prêt."""
@@ -49,7 +51,7 @@ def analyser_film(
     etape("recherche", recherche)
 
     proposition = proposer(film, langue=langue, nombre=max(1, min(int(nombre), NOMBRE_MAX)), suivi=suivi,
-                           modele=modele or MODELE_PAR_DEFAUT, avec_sons=avec_sons)
+                           modele=modele or MODELE_PAR_DEFAUT, avec_sons=avec_sons, duree_extraits=duree_extraits)
     etape("proposition", proposition)
     return {"identification": identification, "transcription": transcription,
             "recherche": recherche, "proposition": proposition}
@@ -58,6 +60,7 @@ def analyser_film(
 def traiter_film(film: Path, reglages: dict, suivi: Suivi) -> dict:
     """Traitement automatique : analyse, puis export de tous les extraits proposés avec le montage choisi."""
     resultat = analyser_film(film, suivi, langue=reglages.get("langue"), nombre=reglages.get("nombre", 5),
+                             duree_extraits=reglages.get("duree_extraits", DUREE_PAR_DEFAUT),
                              avec_sons=reglages.get("avec_sons", True))
     extraits = resultat["proposition"]["extraits"]
     exports = exporter(film, extraits, reglages["montage"], suivi) if extraits else []

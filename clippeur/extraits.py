@@ -9,13 +9,15 @@ from clippeur.analyse import detecter_plans, duree_video, mesurer_volume
 from clippeur.export import creer_miniature
 from clippeur.recherche import recherche_en_cache
 from clippeur.segments import Segment
-from clippeur.selection import proposer_extraits
+from clippeur.selection import DUREE_PAR_DEFAUT, duree_valide, proposer_extraits
 from clippeur.sons import reconnaitre_sons
 from clippeur.transcription import Suivi, transcrire
 
 
 def proposer(film: Path, langue: str, nombre: int, suivi: Suivi, modele: str | None = None,
-             avec_sons: bool = True) -> dict:
+             avec_sons: bool = True, duree_extraits: int = DUREE_PAR_DEFAUT) -> dict:
+    """Les meilleurs extraits du film, d'environ `duree_extraits` secondes chacun."""
+    duree_cible = duree_valide(duree_extraits)
     options = {"langue": langue} | ({"modele": modele} if modele else {})
     transcription = transcrire(film, suivi=suivi, **options)
     segments = [Segment.depuis_dict(s) for s in transcription["segments"]]
@@ -43,7 +45,7 @@ def proposer(film: Path, langue: str, nombre: int, suivi: Suivi, modele: str | N
     suivi("Choix des meilleurs moments...", None)
     duree = duree_video(film)
     extraits = proposer_extraits(segments, plans, volume, duree, nombre,
-                                 references=recherche.get("resultats"), sons=sons)
+                                 references=recherche.get("resultats"), sons=sons, duree_cible=duree_cible)
 
     suivi("Création des miniatures...", None)
     dossier_miniatures = cache.dossier_du_film(film) / "miniatures"
@@ -54,4 +56,4 @@ def proposer(film: Path, langue: str, nombre: int, suivi: Suivi, modele: str | N
         resultat.append(e.vers_dict() | {"miniature": str(miniature)})
 
     suivi(f"{len(resultat)} extraits proposés.", None)
-    return {"film": film.name, "chemin": str(film), "duree": duree, "extraits": resultat}
+    return {"film": film.name, "chemin": str(film), "duree": duree, "duree_extraits": duree_cible, "extraits": resultat}

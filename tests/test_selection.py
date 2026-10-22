@@ -1,5 +1,5 @@
 from clippeur.segments import Segment
-from clippeur.selection import DUREE_MAX, DUREE_MIN, nom_de_fichier, proposer_extraits
+from clippeur.selection import DUREE_PAR_DEFAUT, DUREES, bornes_duree, duree_valide, nom_de_fichier, proposer_extraits
 
 
 def film_de_test(duree=1200):
@@ -28,8 +28,9 @@ def test_trouve_la_scene_agitee_en_premier():
 def test_duree_et_chevauchement():
     extraits = proposer_extraits(*film_de_test(), nombre=8)
     assert len(extraits) >= 3
+    duree_min, duree_max = bornes_duree(DUREE_PAR_DEFAUT)
     for e in extraits:
-        assert DUREE_MIN - 1 <= e.duree <= DUREE_MAX
+        assert duree_min - 1 <= e.duree <= duree_max
     bornes = sorted((e.debut, e.fin) for e in extraits)
     for (_, fin), (debut_suivant, _) in zip(bornes, bornes[1:]):
         assert fin <= debut_suivant
@@ -50,3 +51,18 @@ def test_film_sans_dialogue():
 def test_nom_de_fichier():
     assert nom_de_fichier("Oh, mon Dieu ! Ça alors…") == "oh-mon-dieu-ca-alors"
     assert nom_de_fichier("?!") == "extrait"
+
+
+def test_longueur_choisie():
+    for cible in DUREES:
+        extraits = proposer_extraits(*film_de_test(), nombre=4, duree_cible=cible)
+        assert extraits, f"aucun extrait de {cible} s"
+        duree_min, duree_max = bornes_duree(cible)
+        for e in extraits:
+            assert duree_min - 1 <= e.duree <= duree_max, f"{e.duree} s pour une cible de {cible} s"
+
+
+def test_duree_valide():
+    assert duree_valide(None) == DUREE_PAR_DEFAUT
+    assert duree_valide("45") == 45
+    assert duree_valide(70) == 60  # ramenée à la longueur proposée la plus proche

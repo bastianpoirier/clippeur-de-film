@@ -1,6 +1,6 @@
 """Choix des meilleurs moments du film (F16).
 
-Chaque fenêtre de 1 à 2 minutes reçoit une note qui combine :
+Chaque fenêtre de la durée choisie (une minute par défaut) reçoit une note qui combine :
 - la popularité en ligne : citations de Wikiquote retrouvées dans les dialogues et gardées par l'utilisateur ;
 - des indices calculés en local, seconde par seconde : densité des dialogues, volume sonore
   comparé au volume habituel du film, répliques exclamatives ou interrogatives.
@@ -15,11 +15,27 @@ from dataclasses import asdict, dataclass, field
 
 from clippeur.segments import Segment
 
-DUREE_MIN = 60.0
-DUREE_MAX = 120.0
+DUREES = [30, 45, 60, 90, 120]  # longueurs d'extrait proposées à l'utilisateur, en secondes
+DUREE_PAR_DEFAUT = 60
 # Le calage sur les changements de plan peut rallonger un extrait de quelques secondes :
-# on garde de la marge pour ne jamais dépasser DUREE_MAX.
+# on garde de la marge pour ne jamais dépasser la durée maximale.
 MARGE_CALAGE = 4.0
+
+
+def duree_valide(duree) -> int:
+    """La durée demandée, ramenée à l'une des longueurs proposées (la plus proche)."""
+    try:
+        duree = float(duree)
+    except (TypeError, ValueError):
+        return DUREE_PAR_DEFAUT
+    return min(DUREES, key=lambda d: abs(d - duree))
+
+
+def bornes_duree(cible: float) -> tuple[float, float]:
+    """Durées acceptées autour de la longueur choisie : un extrait commence et finit sur une réplique entière,
+    puis se cale sur un changement de plan, il ne peut donc pas tomber pile. Tolérance de ±15 %, au moins ±8 s."""
+    tolerance = max(8.0, cible * 0.15)
+    return cible - tolerance, cible + tolerance
 
 POIDS_PAROLE = 0.45
 POIDS_VOLUME = 0.35
@@ -161,8 +177,9 @@ def proposer_extraits(
     nombre: int = 10,
     references: list[dict] | None = None,
     sons: dict | None = None,
+    duree_cible: float = DUREE_PAR_DEFAUT,
 ) -> list[Extrait]:
-    """Renvoie les `nombre` meilleurs extraits, triés du meilleur au moins bon.
+    """Renvoie les `nombre` meilleurs extraits, triés du meilleur au moins bon, d'environ `duree_cible` secondes.
 
     `references` : citations trouvées en ligne et placées dans le film (avec « position »).
     Celles que l'utilisateur a écartées (« retenue » à faux) ne comptent pas.
@@ -187,20 +204,22 @@ def proposer_extraits(
         return POIDS_CULTE * culte + POIDS_LOCAL * locale
 
     # Candidats : commencer au début d'une réplique et finir à la fin d'une réplique,
-    # pour ne jamais couper une phrase. On garde la meilleure fin pour chaque début.
+    # pour ne jamais couper une phrase. Pour chaque début, on garde la fin qui donne la longueur la plus proche
+    # de celle demandée, en comptant les quelques secondes qu'ajoute ensuite le calage sur les plans.
+    duree_min, duree_max = bornes_duree(duree_cible)
+    longueur_visee = duree_cible - MARGE_CALAGE / 2
     candidats = []
     for i, premier in enumerate(segments):
-        meilleur = None
+        meilleure_fin = None
         for dernier in segments[i:]:
             longueur = dernier.fin - premier.debut
-            if longueur > DUREE_MAX - 2 * MARGE_CALAGE:
+            if longueur > duree_max - 2 * MARGE_CALAGE:
                 break
-            if longueur >= DUREE_MIN:
-                n = note(premier.debut, dernier.fin)
-                if meilleur is None or n > meilleur[0]:
-                    meilleur = (n, premier.debut, dernier.fin)
-        if meilleur:
-            candidats.append(meilleur)
+            if longueur >= duree_min and (meilleure_fin is None
+                                          or abs(longueur - longueur_visee) < abs(meilleure_fin - premier.debut - longueur_visee)):
+                meilleure_fin = dernier.fin
+        if meilleure_fin is not None:
+            candidats.append((note(premier.debut, meilleure_fin), premier.debut, meilleure_fin))
 
     # On prend les meilleurs candidats qui ne se chevauchent pas, avec un écart suffisant
     # pour que le calage sur les plans ne les fasse pas se chevaucher ensuite.

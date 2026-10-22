@@ -159,7 +159,7 @@
   <article class="colonne">
     <h2>D'où vient le projet</h2>
     <p>Je voulais publier des extraits de films et de séries sur TikTok et Instagram. Publier prend deux minutes. Trouver les bons passages, couper au bon endroit et recadrer en vertical prend beaucoup plus longtemps, et il faut recommencer à chaque épisode.</p>
-    <p>J'ai donc écrit un programme qui fait ce premier tri. On lui donne un fichier vidéo, il rend une dizaine d'extraits de 1 à 2 minutes, chacun avec la raison pour laquelle il a été choisi. Je me suis fixé deux règles : ne payer aucun service, donc pas d'API d'IA, et tout faire tourner sur mon ordinateur portable.</p>
+    <p>J'ai donc écrit un programme qui fait ce premier tri. On lui donne un fichier vidéo, il rend une dizaine d'extraits d'une minute (la longueur se règle, de 30 secondes à 2 minutes), chacun avec la raison pour laquelle il a été choisi. Je me suis fixé deux règles : ne payer aucun service, donc pas d'API d'IA, et tout faire tourner sur mon ordinateur portable.</p>
     <p>Quand j'ai commencé ce projet, les règles sur la reprise d'extraits de films étaient moins strictes qu'aujourd'hui. Je n'ai finalement jamais rien publié avec : sans les droits sur les films, ce n'était pas possible légalement. Le programme est resté un projet technique, et c'est pour la même raison que la démo utilise des films libres de droits.</p>
     <p>Il ne se limite d'ailleurs pas aux films : il prend n'importe quel fichier vidéo. Une vidéo YouTube sous licence Creative Commons, ou la rediffusion d'un live Twitch qu'on a le droit de réutiliser (le sien, ou celui d'un streamer qui l'autorise), fonctionne aussi. Faute de page Wikiquote, ce sont alors les dialogues, le volume et les réactions (rires, cris) qui décident des extraits.</p>
 
@@ -168,7 +168,7 @@
     <p>Il lui faut ensuite les dialogues avec leurs horaires. Si le fichier contient des sous-titres, il les lit, et c'est presque instantané. Sinon il les transcrit avec Whisper, sur le processeur : compter de 30 minutes à plus d'une heure pour un film de 2 h.</p>
     <p>Puis il cherche les répliques célèbres de l'œuvre sur Wikiquote et essaie de les retrouver dans ces dialogues. C'est ce qui pèse le plus dans le choix final. Une scène que les gens citent encore a de bonnes chances de fonctionner en extrait.</p>
     <p>À côté, il mesure le film seconde par seconde. FFmpeg donne le volume sonore et les changements de plan. Un petit modèle de classification audio, exécuté en local, repère les rires, les cris, les explosions et la musique.</p>
-    <p>Il note enfin toutes les fenêtres possibles de 60 à 120 secondes et garde les meilleures, sans qu'elles se chevauchent. Chaque extrait commence et finit sur une réplique entière, puis ses bornes sont calées sur le changement de plan le plus proche. L'export se fait en MP4, au format d'origine ou en vertical 9:16.</p>
+    <p>Il note enfin toutes les fenêtres possibles de la longueur choisie, une minute par défaut, et garde les meilleures, sans qu'elles se chevauchent. Chaque extrait commence et finit sur une réplique entière, puis ses bornes sont calées sur le changement de plan le plus proche. L'export se fait en MP4, au format d'origine ou en vertical 9:16.</p>
 
     <h3>La note</h3>
     <p>Il n'y a pas de modèle caché derrière : la note d'un passage est une moyenne pondérée.</p>
@@ -181,7 +181,7 @@ local = 0,35 × dialogues
     <p>Chaque terme vaut entre 0 et 1 sur la fenêtre. Quand aucune citation n'est retrouvée, seul le terme local compte.</p>
 
     <h2>Sur Tears of Steel</h2>
-    <p><i>Tears of Steel</i> n'a pas de page Wikiquote. La moitié de la formule ne sert donc à rien ici, et la note plafonne à 31 sur 100 : le programme ne s'appuie que sur ce qu'il entend. Il retient quatre passages :</p>
+    <p><i>Tears of Steel</i> n'a pas de page Wikiquote. La moitié de la formule ne sert donc à rien ici, et la note ne dépasse pas 32 sur 100 : le programme ne s'appuie que sur ce qu'il entend. Il retient quatre passages :</p>
     <div class="tableau">
       <table id="tableau">
         <thead><tr><th class="nombre">N°</th><th>Début</th><th class="nombre">Durée</th><th class="nombre">Note</th><th>Pourquoi il a été retenu</th></tr></thead>
@@ -223,7 +223,7 @@ lancer.bat</code></pre>
   <div class="colonne">Bastian Poirier · <a href="https://github.com/bastianpoirier/clippeur-de-film">code source</a> · usage personnel, sur des films possédés légalement</div>
 </footer>
 
-<script src="assets/frise.js?v=685fbfc0"></script>
+<script src="assets/frise.js?v=a20edf79"></script>
 <script>
   // Figure 1, dessinée à partir des mesures réelles de l'application (assets/frise.js).
   const F = window.FRISE;

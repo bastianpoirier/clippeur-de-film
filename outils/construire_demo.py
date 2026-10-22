@@ -28,7 +28,8 @@ sys.path.insert(0, str(RACINE))
 from clippeur import cache  # noqa: E402
 from clippeur.export import FORMATS, VOLUME_MUSIQUE_DEFAUT  # noqa: E402
 from clippeur.file_attente import REGLAGES_PAR_DEFAUT  # noqa: E402
-from clippeur.selection import nom_de_fichier  # noqa: E402
+from clippeur.extraits import proposer  # noqa: E402
+from clippeur.selection import DUREE_PAR_DEFAUT, DUREES, nom_de_fichier  # noqa: E402
 from clippeur.traitement import analyser_film  # noqa: E402
 from clippeur.transcription import MODELE_PAR_DEFAUT  # noqa: E402
 
@@ -172,14 +173,14 @@ def frise(film: Path, resultat: dict, nb_cases: int = 160) -> dict:
     }
 
 
-def illustrer(film: Path, resultat: dict, titre: str) -> None:
+def illustrer(film: Path, proposition: dict, titre: str) -> None:
     """Extrait du film une vraie image par extrait (640 px, au même instant que la miniature de l'application),
     et ajoute à chaque extrait l'adresse de son aperçu."""
     DOSSIER_IMAGES.mkdir(parents=True, exist_ok=True)
     source = SOURCES.get(titre, {})
-    for extrait in resultat["proposition"]["extraits"]:
+    for extrait in proposition["extraits"]:
         extrait.pop("miniature", None)
-        nom = f"{nom_de_fichier(titre)}-{extrait['numero']:02d}.jpg"
+        nom = f"{nom_de_fichier(titre)}-{proposition['duree_extraits']}s-{extrait['numero']:02d}.jpg"
         instant = extrait["debut"] + min((extrait["fin"] - extrait["debut"]) / 2, 10)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{instant:.2f}", "-i", str(film), "-frames:v", "1",
                         "-vf", "scale=640:-2:flags=lanczos", "-q:v", "4", str(DOSSIER_IMAGES / nom)], check=True)
@@ -234,7 +235,14 @@ def main() -> None:
         titre = film.stem.split(" (")[0]
         print(f"Analyse de {film.name}...")
         resultat = analyser(film, args.langue)
-        illustrer(film, resultat, titre)
+        # Les extraits pour chacune des longueurs proposées, pour que le choix de la durée marche dans la démo.
+        propositions = {}
+        for duree in DUREES:
+            proposition = resultat["proposition"] if duree == DUREE_PAR_DEFAUT else proposer(
+                film, args.langue, NB_EXTRAITS, lambda message, pourcentage: None, duree_extraits=duree)
+            illustrer(film, proposition, titre)
+            propositions[str(duree)] = proposition
+        resultat["propositions"] = propositions
         if not films:  # la figure de la présentation montre le premier film
             (RACINE / "assets").mkdir(exist_ok=True)
             (RACINE / "assets" / "frise.js").write_text(

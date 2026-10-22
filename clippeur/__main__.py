@@ -6,6 +6,7 @@ from pathlib import Path
 
 from clippeur import cache
 from clippeur.segments import format_horodatage
+from clippeur.selection import DUREE_PAR_DEFAUT, DUREES
 from clippeur.transcription import LANGUE_PAR_DEFAUT, MODELE_PAR_DEFAUT, FilmIllisible, transcrire
 
 
@@ -40,7 +41,7 @@ def commande_extraits(args: argparse.Namespace) -> int:
         print(f"Fichier introuvable : {film}", file=sys.stderr)
         return 1
     try:
-        proposition = proposer(film, args.langue, args.nombre, afficher_dans_terminal)
+        proposition = proposer(film, args.langue, args.nombre, afficher_dans_terminal, duree_extraits=args.duree)
     except FilmIllisible as e:
         print(e, file=sys.stderr)
         return 1
@@ -111,6 +112,8 @@ def main() -> int:
     p.add_argument("film", help="chemin du fichier vidéo")
     p.add_argument("--langue", choices=["fr", "en"], default=LANGUE_PAR_DEFAUT, help="langue des dialogues (fr par défaut)")
     p.add_argument("--nombre", type=int, default=10, help="nombre d'extraits (10 par défaut)")
+    p.add_argument("--duree", type=int, choices=DUREES, default=DUREE_PAR_DEFAUT,
+                   help="longueur de chaque extrait, en secondes (60 par défaut)")
     p.add_argument("--exporter", action="store_true", help="découpe et enregistre les extraits en MP4")
     p.set_defaults(fonction=commande_extraits)
 

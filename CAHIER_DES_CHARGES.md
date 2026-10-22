@@ -14,7 +14,7 @@
 2. recherche en ligne ses citations célèbres (Wikiquote) ;
 3. retrouve ces citations dans le fichier vidéo ;
 4. complète avec sa propre analyse locale (dialogues, sons, changements de plan) ;
-5. découpe les meilleurs moments en **extraits de 1 à 2 minutes**, au format d'origine ou en vertical 9:16, prêts à être publiés sur les réseaux sociaux.
+5. découpe les meilleurs moments en **extraits d'une durée choisie (1 min par défaut)**, au format d'origine ou en vertical 9:16, prêts à être publiés sur les réseaux sociaux.
 
 ### 1.2 Périmètre de la V1
 - Application **locale et personnelle** : elle tourne sur le PC, avec une **page web ouverte dans le navigateur**.
@@ -88,7 +88,7 @@ Toutes les exigences ci-dessous sont réalisées, sauf mention contraire.
 ### 3.5 Sélection des moments
 - **F15** — Mise en correspondance de chaque citation trouvée en ligne avec la transcription, de façon tolérante aux petites variantes de formulation.
 - **F16** — Score de chaque moment candidat, combinant : citations cultes cochées par l'utilisateur et indices locaux (dialogues, intensité sonore, répliques exclamatives, sons marquants).
-- **F17** — Calcul des bornes du clip : **durée entre 60 et 120 secondes**, coupe sur un changement de plan, sans couper au milieu d'une phrase.
+- **F17** — Calcul des bornes du clip : **durée choisie par l'utilisateur** (30 s, 45 s, 1 min, 1 min 30 ou 2 min ; 1 min par défaut), à ±15 % près (au moins ±8 s), coupe sur un changement de plan, sans couper au milieu d'une phrase.
 - **F18** — Pas de chevauchement entre deux clips.
 - **F19** — **10 clips** proposés par défaut, nombre réglable (jusqu'à 30).
 
@@ -109,7 +109,7 @@ Toutes les exigences ci-dessous sont réalisées, sauf mention contraire.
 - **F29** — File d'attente : les vidéos sont traitées une par une, dans l'ordre d'arrivée, de l'identification à l'export, avec l'avancement visible dans la page.
 - **F30** — Surveillance facultative du dossier `a_traiter/` : toute vidéo déposée est ajoutée à la file une fois sa copie terminée.
 - **F31** — Ajout d'une saison entière (un dossier et ses sous-dossiers). À la fin, un récapitulatif `output/saisons/<saison>.json` rassemble les 10 meilleurs extraits de tous les épisodes.
-- **F32** — Réglages du traitement automatique (extraits par épisode, format, musique, reconnaissance des sons) enregistrés d'une session à l'autre.
+- **F32** — Réglages du traitement automatique (extraits par épisode, durée des extraits, format, musique, reconnaissance des sons) enregistrés d'une session à l'autre.
 
 ---
 
