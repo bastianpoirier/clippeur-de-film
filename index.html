@@ -44,8 +44,14 @@
   h1 { font-size: clamp(42px, 7vw, 64px); font-weight: 500; line-height: 1.02; letter-spacing: -.02em; margin: 0 0 18px; }
   .chapo { font-size: 23px; line-height: 1.45; color: var(--texte-second); margin: 0 0 22px; }
   .signature { font: 14px/1.6 var(--sans); color: var(--texte-legende); margin: 0 0 8px; }
-  .liens { font: 15px/1.6 var(--sans); margin: 0; }
-  .liens a { margin-right: 18px; }
+  .appel { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 26px; }
+  .bouton-demo { display: inline-flex; align-items: center; gap: 12px; font: 600 20px/1 var(--sans); color: var(--fond);
+    background: var(--accent); text-decoration: none; padding: 20px 30px; border-radius: 4px;
+    transition: background .15s, transform .15s; }
+  .bouton-demo:hover { background: var(--texte); transform: translateY(-1px); }
+  .bouton-demo span { transition: transform .15s; }
+  .bouton-demo:hover span { transform: translateX(4px); }
+  .appel p { margin: 0; font: 14.5px/1.55 var(--sans); color: var(--texte-second); }
 
   h2 { font-size: 30px; font-weight: 500; letter-spacing: -.01em; line-height: 1.2; margin: 56px 0 14px; }
   h3 { font-size: 21px; font-weight: 600; line-height: 1.3; margin: 34px 0 6px; }
@@ -59,7 +65,7 @@
 
   pre.formule { font: 15px/1.7 var(--mono); background: none; border: none; border-left: 3px solid var(--accent); border-radius: 0; padding: 2px 0 2px 16px; }
 
-  /* Figure 1 : les mesures du pilote */
+  /* Figure 1 : les mesures de Tears of Steel */
   figure.mesures { margin: 48px auto 8px; }
   .pistes { position: relative; display: grid; grid-template-columns: 7.5rem 1fr; column-gap: 12px; row-gap: 3px; font: 12.5px/1 var(--sans); }
   .pistes .nom { color: var(--texte-second); display: flex; align-items: center; justify-content: flex-end; text-align: right; }
@@ -91,7 +97,9 @@
   .controles button:hover { border-color: var(--texte); }
   figcaption { font: 14.5px/1.55 var(--sans); color: var(--texte-second); margin-top: 18px; max-width: 40rem; }
   figcaption b { color: var(--texte); font-weight: 600; }
-  .lecture-extrait { font: 14.5px/1.55 var(--sans); min-height: 3.2em; margin-top: 10px; color: var(--texte); }
+  .lecture-extrait { font: 14.5px/1.55 var(--sans); min-height: 3.2em; margin-top: 10px; color: var(--texte);
+    display: flex; gap: 14px; align-items: flex-start; }
+  .lecture-extrait img { width: 160px; aspect-ratio: 16 / 9; object-fit: cover; flex: none; border-radius: 2px; background: var(--filet); }
   .lecture-extrait .heure { font-family: var(--mono); font-size: 13px; color: var(--texte-legende); }
   @media (max-width: 600px) {
     .pistes { grid-template-columns: 5.2rem 1fr; font-size: 11.5px; }
@@ -107,10 +115,8 @@
   td.nombre { text-align: right; font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
   td.heure { font-family: var(--mono); font-size: 13.5px; white-space: nowrap; }
   tr.choisi td { background: var(--accent-fond); }
+  #lignes-tableau tr { cursor: pointer; }
 
-  .demo-lien { display: inline-block; font: 600 16px/1 var(--sans); color: var(--fond); background: var(--texte); text-decoration: none;
-    padding: 14px 20px; border-radius: 4px; margin: 4px 0 26px; }
-  .demo-lien:hover { background: var(--accent); }
 
   footer { border-top: 1px solid var(--filet); margin-top: 72px; padding: 22px 0 48px; font: 14px/1.6 var(--sans); color: var(--texte-legende); }
   footer a { color: var(--texte-second); }
@@ -136,20 +142,26 @@
     <h1>Clippeur de film</h1>
     <p class="chapo">Un programme qui analyse un film ou un épisode de série et propose les passages à découper pour les réseaux sociaux. Il tourne sur un portable sans carte graphique, et n'utilise aucun service payant.</p>
     <p class="signature">Bastian Poirier · projet personnel · Python, FFmpeg</p>
-    <p class="liens"><a href="demo/">Essayer la démo</a><a href="https://github.com/bastianpoirier/clippeur-de-film">Le code sur GitHub</a></p>
+    <div class="appel">
+      <a class="bouton-demo" href="demo/">Essayer la démo <span aria-hidden="true">→</span></a>
+      <p>Dans le navigateur, sans rien installer : <i>Tears of Steel</i> est déjà analysé.<br>
+        <a href="https://github.com/bastianpoirier/clippeur-de-film">Le code sur GitHub</a></p>
+    </div>
   </div>
 
   <figure class="mesures large" aria-labelledby="legende-fig1">
     <div class="pistes" id="pistes"></div>
     <div class="controles"><button type="button" id="lecture">Pause</button><span id="horloge">0:00</span></div>
     <div class="lecture-extrait colonne" style="padding:0; margin-left:0" id="lecture-extrait" aria-live="polite"></div>
-    <figcaption id="legende-fig1"><b>Fig. 1.</b> Ce que le programme mesure sur le pilote de <i>Breaking Bad</i> (58 min). Chaque ligne est une mesure prise seconde par seconde ; les traits rouges marquent les répliques de Wikiquote retrouvées dans les sous-titres. En haut, les dix extraits retenus, numérotés du mieux noté au moins bien noté. Survolez ou touchez un numéro pour voir l'extrait.</figcaption>
+    <figcaption id="legende-fig1"><b>Fig. 1.</b> Ce que le programme mesure sur <i>Tears of Steel</i>, un court métrage libre de la Blender Foundation (12 min). Chaque ligne est une mesure prise seconde par seconde. En haut, les quatre extraits retenus, numérotés du mieux noté au moins bien noté. Survolez ou touchez un numéro pour voir l'extrait. Images : <i>Tears of Steel</i>, © Blender Foundation, mango.blender.org, licence CC BY 3.0.</figcaption>
   </figure>
 
   <article class="colonne">
     <h2>D'où vient le projet</h2>
     <p>Je voulais publier des extraits de films et de séries sur TikTok et Instagram. Publier prend deux minutes. Trouver les bons passages, couper au bon endroit et recadrer en vertical prend beaucoup plus longtemps, et il faut recommencer à chaque épisode.</p>
     <p>J'ai donc écrit un programme qui fait ce premier tri. On lui donne un fichier vidéo, il rend une dizaine d'extraits de 1 à 2 minutes, chacun avec la raison pour laquelle il a été choisi. Je me suis fixé deux règles : ne payer aucun service, donc pas d'API d'IA, et tout faire tourner sur mon ordinateur portable.</p>
+    <p>Quand j'ai commencé ce projet, les règles sur la reprise d'extraits de films étaient moins strictes qu'aujourd'hui. Je n'ai finalement jamais rien publié avec : sans les droits sur les films, ce n'était pas possible légalement. Le programme est resté un projet technique, et c'est pour la même raison que la démo utilise des films libres de droits.</p>
+    <p>Il ne se limite d'ailleurs pas aux films : il prend n'importe quel fichier vidéo. Une vidéo YouTube sous licence Creative Commons, ou la rediffusion d'un live Twitch qu'on a le droit de réutiliser (le sien, ou celui d'un streamer qui l'autorise), fonctionne aussi. Faute de page Wikiquote, ce sont alors les dialogues, le volume et les réactions (rires, cris) qui décident des extraits.</p>
 
     <h2>Ce que fait le programme</h2>
     <p>Il commence par identifier l'œuvre à partir du nom du fichier (titre, saison, épisode) et récupère sa fiche sur Wikipédia et Wikidata.</p>
@@ -168,25 +180,19 @@ local = 0,35 × dialogues
       + 0,15 × exclamations</pre>
     <p>Chaque terme vaut entre 0 et 1 sur la fenêtre. Quand aucune citation n'est retrouvée, seul le terme local compte.</p>
 
-    <h2>Sur le pilote de Breaking Bad</h2>
-    <p>Six répliques de la page Wikiquote de la saison 1 ont été retrouvées dans les sous-titres de l'épisode. Les cinq extraits les mieux notés en contiennent toutes :</p>
+    <h2>Sur Tears of Steel</h2>
+    <p><i>Tears of Steel</i> n'a pas de page Wikiquote. La moitié de la formule ne sert donc à rien ici, et la note plafonne à 31 sur 100 : le programme ne s'appuie que sur ce qu'il entend. Il retient quatre passages :</p>
     <div class="tableau">
       <table id="tableau">
         <thead><tr><th class="nombre">N°</th><th>Début</th><th class="nombre">Durée</th><th class="nombre">Note</th><th>Pourquoi il a été retenu</th></tr></thead>
-        <tbody>
-          <tr data-debut="2482"><td class="nombre">1</td><td class="heure">41:22</td><td class="nombre">114 s</td><td class="nombre">72</td><td>Deux citations dans la même scène, son fort</td></tr>
-          <tr data-debut="1961"><td class="nombre">2</td><td class="heure">32:41</td><td class="nombre">73 s</td><td class="nombre">63</td><td><q>Did you learn nothing from my chemistry class?</q>, dialogues serrés, coups de feu</td></tr>
-          <tr data-debut="2148"><td class="nombre">3</td><td class="heure">35:48</td><td class="nombre">68 s</td><td class="nombre">60</td><td>Une citation, dialogues serrés</td></tr>
-          <tr data-debut="1680"><td class="nombre">4</td><td class="heure">28:00</td><td class="nombre">72 s</td><td class="nombre">58</td><td><q>Why are you here?</q>, sept répliques exclamatives ou interrogatives</td></tr>
-          <tr data-debut="125"><td class="nombre">5</td><td class="heure">2:05</td><td class="nombre">62 s</td><td class="nombre">57</td><td>La confession filmée de Walter au début de l'épisode</td></tr>
-        </tbody>
+        <tbody id="lignes-tableau"></tbody>
       </table>
     </div>
-    <p>Les cinq suivants n'ont aucune citation et plafonnent entre 12 et 18 sur 100. Sans Wikiquote, le programme a beaucoup moins d'avis, et ça se voit.</p>
+    <p>Sur un film très cité, les citations comptent pour 60 % de la note, et les passages qui contiennent une réplique connue passent largement devant les autres.</p>
 
     <h2>Trois points moins simples qu'ils n'en ont l'air</h2>
     <h3>Retrouver une citation dans des sous-titres</h3>
-    <p>Wikiquote donne <q>Wow, this is a really great look for you.</q> Les sous-titres de l'épisode disent <q>Wow, this is... This is a good look for you.</q> Une comparaison exacte échoue. Le programme compare donc chaque citation à des groupes de 1 à 4 sous-titres consécutifs avec RapidFuzz (correspondance partielle, seuil de 82 sur 100). Il ignore les répliques de moins de quatre mots, qu'on retrouverait n'importe où.</p>
+    <p>Une réplique recopiée sur Wikiquote et le sous-titre correspondant ne sont presque jamais identiques : ponctuation différente, mot en plus, phrase coupée sur deux sous-titres. Une comparaison exacte échoue. Le programme compare donc chaque citation à des groupes de 1 à 4 sous-titres consécutifs avec RapidFuzz (correspondance partielle, seuil de 82 sur 100). Il ignore les répliques de moins de quatre mots, qu'on retrouverait n'importe où.</p>
     <h3>Reconnaître des sons sans carte graphique</h3>
     <p>Le modèle (AST, entraîné sur AudioSet) tourne avec ONNX Runtime, dans une version compressée de 90 Mo. Il attend un spectrogramme calculé à la manière de Kaldi ; je l'ai réécrit en NumPy pour ne pas avoir à installer PyTorch. Il faut compter 4 à 12 minutes par heure de film.</p>
     <h3>Noter des milliers de fenêtres</h3>
@@ -195,14 +201,14 @@ local = 0,35 × dialogues
     <h2>Ce qui ne va pas encore</h2>
     <ul class="limites">
       <li>Sans sous-titres dans le fichier, la transcription est lente : plus d'une heure pour certains films.</li>
-      <li>Un film peu cité sur Wikiquote donne des extraits moins sûrs, comme dans le tableau plus haut.</li>
+      <li>Un film peu cité sur Wikiquote donne des extraits moins sûrs, comme on le voit plus haut avec <i>Tears of Steel</i>.</li>
       <li>La note mesure l'intensité d'une scène (dialogues, bruit, réactions), pas son importance dans l'histoire. Un moment calme mais décisif peut passer à la trappe.</li>
       <li>Seuls le français et l'anglais sont pris en charge.</li>
     </ul>
 
     <h2>Essayer</h2>
-    <p>La démo en ligne est la vraie interface de l'application. Un navigateur ne peut ni faire tourner Python ni lire un film de plusieurs Go, alors elle rejoue des résultats que l'application a calculés sur trois épisodes. Les images et les vidéos sont masquées, pour une question de droits.</p>
-    <a class="demo-lien" href="demo/">Ouvrir la démo</a>
+    <p>La démo en ligne est la vraie interface de l'application. Un navigateur ne peut ni faire tourner Python ni lire un film de plusieurs Go, alors elle rejoue des résultats que l'application a calculés sur trois courts métrages libres de la Blender Foundation : <i>Tears of Steel</i>, <i>Sintel</i> et <i>Cosmos Laundromat</i>. Leur licence (Creative Commons BY) permet d'en montrer les images et de les rediffuser : une copie légère de <i>Tears of Steel</i> est hébergée avec le site, et la démo s'ouvre avec ce film déjà analysé.</p>
+    <a class="bouton-demo" href="demo/" style="margin: 4px 0 26px">Ouvrir la démo <span aria-hidden="true">→</span></a>
     <p>Pour l'installer (Windows, avec Python 3.12 et FFmpeg) :</p>
 <pre><code>git clone https://github.com/bastianpoirier/clippeur-de-film
 cd clippeur-de-film
@@ -258,11 +264,14 @@ lancer.bat</code></pre>
     for (const x of elements.find(x => x.e === e).noeuds) x.classList.add("choisi");
     document.querySelector(`#tableau tr[data-debut="${e.debut}"]`)?.classList.add("choisi");
     lecture.innerHTML = "";
+    if (e.image) lecture.append(Object.assign(document.createElement("img"), { src: `demo/${e.image}`, alt: "" }));
+    const texte = document.createElement("div");
     const h = document.createElement("span");
     h.className = "heure";
     h.textContent = `n° ${rang} · ${heure(e.debut)} → ${heure(e.fin)} · note ${Math.round(e.score)}`;
     const titre = e.titre.length > 80 ? e.titre.slice(0, 80).replace(/\s\S*$/, "") + "…" : e.titre;
-    lecture.append(h, document.createElement("br"), `« ${titre} »`);
+    texte.append(h, document.createElement("br"), `« ${titre} »`);
+    lecture.append(texte);
   }
 
   [...F.extraits].sort((a, b) => a.debut - b.debut).forEach((e, i) => {
@@ -295,7 +304,8 @@ lancer.bat</code></pre>
     elements.push({ e, noeuds: [numero, bloc] });
   });
 
-  const zoneCitations = ligne("Citations", "citations");
+  // Pas de ligne « Citations » pour un film sans page Wikiquote.
+  const zoneCitations = F.citations.length ? ligne("Citations", "citations") : null;
   for (const [debut] of F.citations) {
     const trait = document.createElement("span");
     trait.className = "citation";
@@ -310,14 +320,18 @@ lancer.bat</code></pre>
   courbe(ligne("Volume"), F.pistes.volume.map(v => (v - vMin) / (vMax - vMin || 1)), "var(--piste-volume)");
   courbe(ligne("Rires, cris, coups"), sons.map(v => v * 2), "var(--piste-sons)");
   courbe(ligne("Musique"), F.pistes.musique, "var(--piste-musique)");
-  courbe(ligne("Changements de plan"), F.pistes.plans.map(v => v / 8), "var(--piste-plans)");
+  const plansMax = Math.max(...F.pistes.plans) || 1;
+  courbe(ligne("Changements de plan"), F.pistes.plans.map(v => v / plansMax), "var(--piste-plans)");
 
-  // Règle des minutes : chaque graduation à sa vraie place (l'épisode dure un peu plus de 58 min).
+  // Règle des minutes : chaque graduation à sa vraie place, toutes les 2 min pour un court métrage.
   const regle = document.createElement("div");
   regle.className = "regle";
-  for (const m of [0, 10, 20, 30, 40, 50]) {
+  const pasMinutes = F.duree > 1800 ? 10 : 2;
+  const graduations = [];
+  for (let m = 0; m * 60 < F.duree - 30; m += pasMinutes) graduations.push(m);
+  for (const m of graduations) {
     const s = document.createElement("span");
-    s.textContent = m === 50 ? "50 min" : m;
+    s.textContent = m === graduations.at(-1) ? `${m} min` : m;
     s.style.left = pc(m * 60);
     regle.append(s);
   }
@@ -354,6 +368,22 @@ lancer.bat</code></pre>
   function majBouton() { bouton.textContent = enLecture ? "Pause" : "Lecture"; }
   bouton.onclick = () => { enLecture = !enLecture; majBouton(); };
   majBouton();
+
+  // Tableau des extraits, du mieux noté au moins bien noté.
+  const raisonCourte = r => r.replace(/^./, c => c.toUpperCase());
+  for (const [i, e] of classement.entries()) {
+    const tr = document.createElement("tr");
+    tr.dataset.debut = e.debut;
+    for (const [texte, classe] of [[i + 1, "nombre"], [heure(e.debut), "heure"], [`${e.fin - e.debut} s`, "nombre"],
+                                   [Math.round(e.score), "nombre"], [raisonCourte(e.raison), ""]]) {
+      const td = document.createElement("td");
+      td.textContent = texte;
+      if (classe) td.className = classe;
+      tr.append(td);
+    }
+    tr.addEventListener("click", () => { allerA(e.debut); choisir(e); });
+    document.getElementById("lignes-tableau").append(tr);
+  }
 
   choisir(classement[0]);  // le mieux noté est affiché d'emblée
   if (!enLecture) allerA(classement[0].debut);

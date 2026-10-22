@@ -1,25 +1,46 @@
 # Clippeur de film
 
-Application locale et gratuite qui analyse un film ou un épisode de série, recherche ses citations cultes sur Wikiquote, puis en extrait les meilleurs moments sous forme de clips de 1 à 2 minutes, au format d'origine ou en vertical 9:16 pour les réseaux sociaux.
+Un programme qui analyse un film ou un épisode de série et propose les passages à découper en clips de 1 à 2 minutes pour les réseaux sociaux. Il tourne en local sur un PC Windows, sans carte graphique, et n'utilise aucun service payant.
 
-**[Présentation du projet](https://bastianpoirier.github.io/clippeur-de-film/)** · **[Démo en ligne](https://bastianpoirier.github.io/clippeur-de-film/demo/)** · [Cahier des charges](CAHIER_DES_CHARGES.md)
+[Présentation du projet](https://bastianpoirier.github.io/clippeur-de-film/) · [Démo en ligne](https://bastianpoirier.github.io/clippeur-de-film/demo/) · [Cahier des charges](CAHIER_DES_CHARGES.md)
 
-La démo en ligne est la vraie interface, alimentée par des résultats calculés à l'avance sur trois épisodes (sans images ni vidéos, pour respecter les droits d'auteur). Elle se reconstruit avec `outils/construire_demo.py`.
+![Clippeur de film : les mesures prises sur Tears of Steel et les extraits retenus](assets/apercu.png)
+
+## Ce que fait le programme
+
+On lui donne un fichier vidéo. Il identifie l'œuvre à partir du nom du fichier (fiche Wikipédia et Wikidata), lit les sous-titres ou transcrit les dialogues avec Whisper, cherche les répliques célèbres sur Wikiquote et les retrouve dans les dialogues. En parallèle, il mesure le volume, repère les changements de plan avec FFmpeg et reconnaît les rires, cris, explosions et la musique avec un petit modèle audio (AST) exécuté en local.
+
+Chaque fenêtre de 60 à 120 secondes reçoit ensuite une note :
+
+```
+note  = 0,6 × citations + 0,4 × local
+local = 0,35 × dialogues + 0,25 × volume + 0,25 × sons + 0,15 × exclamations
+```
+
+Les meilleures fenêtres sont gardées sans chevauchement, commencent et finissent sur une réplique entière, et sont calées sur le changement de plan le plus proche. Chaque extrait proposé indique pourquoi il a été retenu. L'export se fait en MP4, au format d'origine ou en vertical 9:16, avec le son ramené à −14 LUFS.
+
+## Droits d'auteur
+
+Le programme sert à repérer et découper des passages, pas à les publier. Je ne l'ai jamais utilisé pour publier quoi que ce soit : sans les droits sur les films, ce n'était pas possible légalement.
+
+Il accepte n'importe quel fichier vidéo : un film, mais aussi une vidéo YouTube sous licence Creative Commons ou la rediffusion d'un live Twitch qu'on a le droit de réutiliser. Les extraits produits ne sont publiables que si l'on a les droits sur la vidéo d'origine.
+
+La démo en ligne utilise uniquement des films libres de la Blender Foundation (voir [Crédits](#crédits)).
 
 ## Installation
 
-Prérequis : Python 3.12 et FFmpeg.
+Il faut Windows, [Python 3.12](https://www.python.org/downloads/) et [FFmpeg](https://ffmpeg.org/download.html) accessible dans le `PATH`.
 
 ```powershell
+git clone https://github.com/bastianpoirier/clippeur-de-film
+cd clippeur-de-film
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-### Aucune clé nécessaire
+Aucun compte ni clé n'est nécessaire. Au premier usage, l'application télécharge le modèle Whisper (environ 500 Mo, seulement si une vidéo n'a pas de sous-titres) et le modèle de reconnaissance des sons (environ 90 Mo).
 
-L'application est entièrement gratuite et ne demande aucun compte. La fiche du film (résumé, réalisation, acteurs, image) vient de Wikipédia et Wikidata, les citations de Wikiquote.
-
-Facultatif : avec une clé [TMDb](https://www.themoviedb.org/settings/api) (gratuite, mais il faut créer un compte), la fiche vient de TMDb à la place, avec l'affiche et plus de personnages. La clé se colle dans la page (« Utiliser TMDb à la place »), qui la vérifie puis l'enregistre dans `.env` (exclu de Git).
+Une clé [TMDb](https://www.themoviedb.org/settings/api) est facultative : collée dans la page (« Utiliser TMDb à la place »), elle donne une fiche plus complète. Elle est enregistrée dans `.env`, exclu de Git.
 
 ## Utilisation
 
@@ -31,80 +52,68 @@ Double-cliquer sur `lancer.bat`, ou :
 .\.venv\Scripts\python.exe -m clippeur interface
 ```
 
-La page s'ouvre dans le navigateur (http://127.0.0.1:5000).
+La page s'ouvre sur http://127.0.0.1:5000. « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; la vidéo est lue là où elle est, sans être copiée. Ensuite tout s'enchaîne : identification, transcription, citations, puis proposition des extraits. On peut corriger l'identification, cocher les citations qui comptent, regarder un aperçu de chaque extrait, ajuster son début et sa fin, choisir le format et une musique de fond, puis exporter. Les fichiers arrivent dans `output/<film>/`, avec un récapitulatif `extraits.json`.
 
-1. **Film** : « Choisir un film » ouvre la fenêtre Windows de choix de fichier ; le film est lu là où il est, sans être copié. Il est identifié automatiquement (titre, année, saison et épisode pour une série, fiche Wikipédia), et on peut corriger si ce n'est pas le bon. Ensuite tout s'enchaîne : la langue des dialogues est détectée d'après la piste audio, puis viennent la transcription, les citations et la proposition des extraits.
-2. **Transcription** des dialogues avec leurs horaires.
-3. **Citations cultes** : les citations célèbres de l'œuvre sont cherchées sur Wikiquote, puis retrouvées dans les dialogues du film. On coche celles qui doivent compter pour le choix des extraits, et on peut choisir une autre page Wikiquote si la première n'est pas la bonne.
-4. **Extraits** : chaque extrait proposé s'affiche avec une miniature, la raison de son choix et ses sources ; ▶ prépare un aperçu en quelques secondes. On peut ajuster le début et la fin de chaque extrait, et décocher ceux qu'on ne veut pas, puis on exporte. Les extraits sont enregistrés dans `output/<film>/`, avec un récapitulatif `extraits.json`, le son remis au niveau des réseaux sociaux (-14 LUFS).
-5. **Répliques** : toute la transcription, avec un champ de recherche.
+La page propose aussi :
 
-Le choix des extraits combine les citations cultes cochées et des indices locaux (densité des dialogues, volume sonore, répliques exclamatives). Les bornes sont calées sur des changements de plan, sans couper de réplique.
-
-#### Reconnaissance des sons
-
-Avec la case « Reconnaître les rires, cris, explosions et musique » (cochée par défaut), la bande son est analysée par tranches de 10 secondes avec le modèle AST, entraîné sur les catégories de sons d'AudioSet. Il tourne en local sur le processeur ; sa version compressée (environ 90 Mo) est téléchargée au premier lancement. Les rires, cris, explosions ou coups de feu et la musique comptent alors dans la note des moments, et apparaissent dans la raison du choix.
-
-#### Montage
-
-Dans « Montage des extraits », avant les aperçus et l'export :
-- **Format** : format et résolution d'origine (par défaut), ou vertical 9:16 en 1080×1920 (TikTok, Instagram Reels, YouTube Shorts), soit recadré au centre, soit avec le film entier posé sur un fond flou. Les fichiers verticaux se terminent par `_vertical.mp4`.
-- **Musique** de fond, avec son volume (20 % par défaut) et un fondu au début et à la fin. Les morceaux se déposent dans le dossier `musiques/` (MP3, WAV, M4A, AAC, OGG, FLAC, OPUS) et apparaissent dans la liste sans redémarrer. Ils ne sont pas envoyés sur GitHub. Attention aux droits d'auteur : préférez des musiques libres de droits.
-
-#### Traitement automatique
-
-La carte « Traitement automatique » traite les vidéos toutes seules, l'une après l'autre, du début (identification) jusqu'à l'export des extraits :
-- en cochant « Surveiller le dossier « à traiter » », toute vidéo déposée dans le dossier `a_traiter/` du projet est prise en charge (l'application attend que la copie soit finie) ;
-- « Traiter une saison entière… » ajoute d'un coup toutes les vidéos d'un dossier et de ses sous-dossiers, dans l'ordre des noms. À la fin, `output/saisons/<saison>.json` rassemble les 10 meilleurs extraits de tous les épisodes.
-
-Les réglages de cette carte (extraits par épisode, format, musique, reconnaissance des sons) sont enregistrés et servent à tous les traitements automatiques.
-
-#### Séries du moment
-
-« Afficher les séries du moment » montre les séries les plus consultées sur Wikipédia en français ces 7 derniers jours (statistiques publiques de Wikimedia), ou les tendances de la semaine de TMDb si une clé est enregistrée. La liste est calculée une fois par jour.
+- un traitement automatique : toute vidéo déposée dans `a_traiter/` (si la surveillance est activée), ou toute une saison choisie d'un coup, est traitée seule jusqu'à l'export. Pour une saison, `output/saisons/<saison>.json` rassemble les 10 meilleurs extraits ;
+- une banque de musiques de fond : les morceaux se déposent dans `musiques/` et restent sur le PC ;
+- les séries du moment : les séries les plus consultées sur Wikipédia en français ces 7 derniers jours.
 
 ### Ligne de commande
 
 ```powershell
-# Transcrire les dialogues d'un film avec leurs horaires
-.\.venv\Scripts\python.exe -m clippeur transcrire "C:\chemin\vers\le\film.mkv"
-
-# Identifier le film et rechercher ses citations cultes sur Wikiquote (--page pour choisir la page)
-.\.venv\Scripts\python.exe -m clippeur rechercher "C:\chemin\vers\le\film.mkv"
-
-# Proposer des extraits, et les exporter en MP4
-.\.venv\Scripts\python.exe -m clippeur extraits "C:\chemin\vers\le\film.mkv" --nombre 10 --exporter
+.\.venv\Scripts\python.exe -m clippeur transcrire "C:\films\film.mkv"
+.\.venv\Scripts\python.exe -m clippeur rechercher "C:\films\film.mkv"
+.\.venv\Scripts\python.exe -m clippeur extraits "C:\films\film.mkv" --nombre 10 --exporter
 ```
 
-La transcription utilise, dans cet ordre :
-1. un fichier de sous-titres placé à côté du film (`film.srt`, `film.fr.srt`...) ;
-2. la piste de sous-titres intégrée au fichier, dans la langue choisie ;
-3. sinon, la reconnaissance vocale Whisper, en local sur le processeur. Le modèle (environ 500 Mo) est téléchargé au premier lancement.
-
-Les résultats intermédiaires sont mis en cache dans `cache/<film>/` ; une relance les relit au lieu de tout refaire.
-
-Options :
-- `--langue fr|en` : langue des dialogues (`fr` par défaut). Sert à choisir les sous-titres, la langue de Whisper et celle des citations recherchées.
-- `--modele tiny|base|small|medium` : modèle Whisper. `small` par défaut ; `medium` est plus précis mais environ 3 fois plus lent.
-- `--forcer` (transcrire) : refait la transcription même si elle est en cache.
-- `--page` (rechercher) : page Wikiquote à utiliser, si celle trouvée automatiquement n'est pas la bonne.
-- `--port` et `--sans-navigateur` (interface) : port de la page (5000 par défaut), et lancement sans ouvrir le navigateur.
-
-Dans la page, la langue peut aussi rester sur « automatique » : elle est alors détectée d'après la piste audio du fichier.
-
-## Dossiers
-
-| Dossier | Contenu |
+| Commande | Options |
 |---|---|
-| `a_traiter/` | Vidéos à traiter automatiquement (si la surveillance est activée) |
-| `cache/` | Résultats intermédiaires de chaque film, réglages du traitement automatique |
-| `output/` | Extraits exportés, un dossier par film ; récapitulatifs des saisons dans `output/saisons/` |
-| `musiques/` | Banque de musiques de fond |
+| `transcrire` | `--langue fr\|en` (fr par défaut), `--modele tiny\|base\|small\|medium` (small par défaut), `--forcer` pour refaire une transcription en cache |
+| `rechercher` | `--langue`, `--page` pour imposer une page Wikiquote |
+| `extraits` | `--langue`, `--nombre` (10 par défaut), `--exporter` pour écrire les MP4 |
+| `interface` | `--port` (5000 par défaut), `--sans-navigateur` |
 
-Ces dossiers restent sur le PC : ils sont exclus de Git.
+Pour les dialogues, l'application prend dans l'ordre : un fichier de sous-titres placé à côté de la vidéo (`film.srt`, `film.en.srt`…), une piste de sous-titres intégrée au fichier, sinon la transcription Whisper sur le processeur. Les résultats intermédiaires sont gardés dans `cache/<film>/` : une relance les relit au lieu de tout refaire.
+
+## Organisation du dépôt
+
+| Chemin | Contenu |
+|---|---|
+| `clippeur/` | L'application : un module par étape (`transcription.py`, `recherche.py`, `sons.py`, `selection.py`, `export.py`…), la page locale (`web.py`, `templates/index.html`) et la file d'attente |
+| `tests/` | Tests automatisés (pytest) |
+| `index.html`, `assets/` | Page de présentation publiée sur GitHub Pages, ses couleurs (`tokens.css`), les mesures de la figure (`frise.js`) et l'image d'aperçu des partages |
+| `demo/` | Démo en ligne : la page de l'application, une simulation du serveur (`simulation.js`), les résultats précalculés (`donnees.js`), les images des extraits et une copie 480p de *Tears of Steel* |
+| `outils/` | `construire_demo.py`, qui régénère la démo, et `apercu.html`, la source de l'image d'aperçu |
+| `CAHIER_DES_CHARGES.md` | Exigences et choix techniques |
+
+`a_traiter/`, `cache/`, `output/` et le contenu de `musiques/` restent sur le PC : ils sont exclus de Git.
+
+## Démo en ligne
+
+Un navigateur ne peut ni faire tourner Python ni lire un film de plusieurs Go. La démo reprend donc la vraie page de l'application, et `demo/simulation.js` répond à la place du serveur avec des résultats que l'application a réellement calculés. Elle s'ouvre avec *Tears of Steel* déjà analysé ; choisir un autre film rejoue l'analyse en accéléré.
+
+Pour la régénérer après une modification de l'application :
+
+```powershell
+.\.venv\Scripts\python.exe outils\construire_demo.py "C:\films\Tears of Steel (2012).mov" "C:\films\Sintel (2010).mkv" "C:\films\Cosmos Laundromat (2015).mp4"
+```
+
+Le premier film sert aussi à la figure de la page de présentation.
 
 ## Tests
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
 ```
+
+## Crédits
+
+Films utilisés par la démo et la page de présentation, sous licence Creative Commons BY, © Blender Foundation :
+
+- *Tears of Steel* (2012), [mango.blender.org](https://mango.blender.org), CC BY 3.0
+- *Sintel* (2010), [durian.blender.org](https://durian.blender.org), CC BY 3.0
+- *Cosmos Laundromat* (2015), [gooseberry.blender.org](https://gooseberry.blender.org), CC BY 4.0
+
+Données : Wikipédia, Wikidata et Wikiquote. Reconnaissance des sons : modèle AST entraîné sur AudioSet ; transcription : [faster-whisper](https://github.com/SYSTRAN/faster-whisper).

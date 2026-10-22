@@ -8,6 +8,8 @@ __pycache__/
 
 # Vidéos et sorties
 *.mp4
+# Sauf la copie légère de Tears of Steel (CC BY) lue par la démo en ligne
+!demo/films/*.mp4
 *.mkv
 *.avi
 *.mov

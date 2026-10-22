@@ -37,7 +37,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "Prise en compte de 6 citation(s) culte(s) de Wikiquote.",
+     "message": "Aucune citation culte retenue : choix sur les seuls indices locaux.",
      "pourcentage": null
     },
     {
@@ -49,7 +49,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "10 extraits proposés.",
+     "message": "4 extraits proposés.",
      "pourcentage": null
     },
     {
@@ -58,771 +58,606 @@ window.DONNEES_DEMO = {
    ],
    "identification": {
     "devine": {
-     "titre": "Breaking Bad",
-     "annee": null,
-     "type": "serie",
-     "saison": 1,
-     "episode": 1
+     "titre": "Tears of Steel",
+     "annee": 2012,
+     "type": "film",
+     "saison": null,
+     "episode": null
     },
     "candidats": [
      {
-      "ref": "Breaking Bad",
-      "type": "serie",
-      "titre": "Breaking Bad",
+      "ref": "Tears of Steel",
+      "type": "film",
+      "titre": "Tears of Steel",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Walter White (personnage)",
-      "type": "serie",
-      "titre": "Walter White (personnage)",
+      "ref": "Catherine Zeta-Jones",
+      "type": "film",
+      "titre": "Catherine Zeta-Jones",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Aaron Paul",
-      "type": "serie",
-      "titre": "Aaron Paul",
+      "ref": "The Bangles",
+      "type": "film",
+      "titre": "The Bangles",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Pluribus",
-      "type": "serie",
-      "titre": "Pluribus",
+      "ref": "Derek de Lint",
+      "type": "film",
+      "titre": "Derek de Lint",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Bill Burr",
-      "type": "serie",
-      "titre": "Bill Burr",
+      "ref": "Adeline Chetail",
+      "type": "film",
+      "titre": "Adeline Chetail",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Krysten Ritter",
-      "type": "serie",
-      "titre": "Krysten Ritter",
+      "ref": "Monica Bellucci",
+      "type": "film",
+      "titre": "Monica Bellucci",
       "annee": null,
       "source": "Wikipédia"
      }
     ],
     "fiche": {
-     "ref": "Breaking Bad",
-     "type": "serie",
-     "titre": "Breaking Bad",
-     "titre_original": "Breaking Bad",
-     "annee": 2008,
-     "synopsis": "Breaking Bad, ou Breaking Bad : Le Chimiste au Québec, est une série télévisée américaine dramatique, criminelle et policière de type néo-western créée par le réalisateur et scénariste Vince Gilligan. Elle est composée de 5 saisons et 62 épisodes d'environ 47 minutes. Elle est diffusée simultanément du 20 janvier 2008 au 29 septembre 2013 sur AMC aux États-Unis et au Canada.\nLa série raconte l'histoire de Walter White (Bryan Cranston) un professeur de chimie surqualifié et père de famille, qui, ayant appris qu'il est atteint d'un cancer du poumon en phase terminale, sombre dans le crime pour assurer l'avenir financier de sa famille. Pour cela, il se lance dans la fabrication et la vente de méthamphétamine avec l'aide de l'un de ses anciens élèves, Jesse Pinkman (Aaron Paul).",
-     "realisation": "Vince Gilligan",
+     "ref": "Tears of Steel",
+     "type": "film",
+     "titre": "Tears of Steel",
+     "titre_original": "Tears of Steel",
+     "annee": 2012,
+     "synopsis": "Tears of Steel (Larmes d'acier) est un court métrage libre de science-fiction post-apocalyptique néerlandais, sorti en 2012 et produit par la fondation Blender.\nUn groupe de guerriers et de scientifiques rassemblés à la Oude Kerk d'Amsterdam essayent de revivre un événement du passé pour sauver le monde de la destruction par des robots.",
+     "realisation": "Ian Hubert",
      "acteurs": [
       {
-       "nom": "Anna Gunn",
-       "personnage": "Skyler White"
-      },
-      {
-       "nom": "Aaron Paul",
-       "personnage": "Jesse Pinkman"
-      },
-      {
-       "nom": "Dean Norris",
-       "personnage": "Hank Schrader"
-      },
-      {
-       "nom": "Betsy Brandt",
-       "personnage": "Marie Schrader"
-      },
-      {
-       "nom": "RJ Mitte",
-       "personnage": "Walter White Jr."
-      },
-      {
-       "nom": "Jonathan Banks",
-       "personnage": "Mike Ehrmantraut"
-      },
-      {
-       "nom": "Bryan Cranston",
-       "personnage": "Walter White"
-      },
-      {
-       "nom": "Bob Odenkirk",
-       "personnage": "Saul Goodman"
+       "nom": "Derek de Lint",
+       "personnage": ""
       }
      ],
-     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Breaking_Bad_logo.svg/330px-Breaking_Bad_logo.svg.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-     "saison": 1,
-     "episode": 1,
+     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Tos-poster.png/330px-Tos-poster.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+     "saison": null,
+     "episode": null,
      "source": "Wikipédia",
-     "url": "https://fr.wikipedia.org/wiki/Breaking_Bad"
+     "url": "https://fr.wikipedia.org/wiki/Tears_of_Steel"
     },
     "avertissement": null
    },
    "transcription": {
-    "film": "Breaking Bad S01E01 Pilot.mkv (démo : 60 premières répliques)",
+    "film": "Tears of Steel (2012).mov",
     "langue": "en",
-    "source": "piste intégrée",
+    "source": "fichier Tears of Steel (2012).en.srt",
     "segments": [
      {
-      "debut": 69.236,
-      "fin": 72.78,
-      "texte": "Oh, my God. Christ!"
+      "debut": 23.0,
+      "fin": 24.5,
+      "texte": "You're a jerk, Thom."
      },
      {
-      "debut": 75.993,
-      "fin": 78.661,
-      "texte": "Shit."
+      "debut": 25.0,
+      "fin": 27.0,
+      "texte": "Look Celia, we have to follow our passions;"
      },
      {
-      "debut": 84.918,
-      "fin": 87.378,
-      "texte": "Oh, God. Oh, my God."
+      "debut": 27.0,
+      "fin": 30.5,
+      "texte": "...you have your robotics, and I just want to be awesome in space."
      },
      {
-      "debut": 87.546,
-      "fin": 90.84,
-      "texte": "Oh, my God. Oh, my God. Think, think, think."
+      "debut": 30.8,
+      "fin": 34.0,
+      "texte": "Why don't you just admit that you're freaked out by my robot hand?"
      },
      {
-      "debut": 93.844,
-      "fin": 95.511,
-      "texte": "Oh, my gosh."
+      "debut": 34.5,
+      "fin": 36.0,
+      "texte": "I'm not freaked out by- it's..."
      },
      {
-      "debut": 124.958,
-      "fin": 127.21,
-      "texte": "Okay. Come on, come on, come on."
+      "debut": 37.0,
+      "fin": 38.0,
+      "texte": "...alright! Fine!"
      },
      {
-      "debut": 127.377,
-      "fin": 129.212,
-      "texte": "Come on."
+      "debut": 38.0,
+      "fin": 41.0,
+      "texte": "I'm freaked out! I have nightmares that I'm being chased..."
      },
      {
-      "debut": 134.051,
-      "fin": 136.302,
-      "texte": "My name is Walter Hartwell White."
+      "debut": 41.0,
+      "fin": 42.0,
+      "texte": "...by these giant robotic claws of death..."
      },
      {
-      "debut": 136.47,
-      "fin": 139.222,
-      "texte": "I live at 308 Negra Arroyo Lane,"
+      "debut": 42.2,
+      "fin": 45.0,
+      "texte": "\"Fourty years later\" Whatever, Thom. We're done."
      },
      {
-      "debut": 139.389,
-      "fin": 141.974,
-      "texte": "Albuquerque, New Mexico, 87104."
+      "debut": 50.0,
+      "fin": 53.5,
+      "texte": "Robot's memory synced and locked!"
      },
      {
-      "debut": 142.142,
-      "fin": 143.476,
-      "texte": "To all law-enforcement entities,"
+      "debut": 61.0,
+      "fin": 63.0,
+      "texte": "This is pretty freaky."
      },
      {
-      "debut": 143.644,
-      "fin": 146.02,
-      "texte": "this is not an admission of guilt."
+      "debut": 117.0,
+      "fin": 119.0,
+      "texte": "Shouldn't you be down there?"
      },
      {
-      "debut": 146.188,
-      "fin": 149.649,
-      "texte": "I am speaking to my family now."
+      "debut": 131.0,
+      "fin": 133.0,
+      "texte": "I heard you guys talking last night."
      },
      {
-      "debut": 155.781,
-      "fin": 157.907,
-      "texte": "Skyler."
+      "debut": 136.0,
+      "fin": 138.0,
+      "texte": "It's not my fault, you know."
      },
      {
-      "debut": 158.075,
-      "fin": 160.243,
-      "texte": "You are the love of my life."
+      "debut": 191.0,
+      "fin": 192.0,
+      "texte": "Are you ready?"
      },
      {
-      "debut": 160.41,
-      "fin": 162.37,
-      "texte": "I hope you know that."
+      "debut": 193.0,
+      "fin": 195.0,
+      "texte": "Of course you're ready, you're a rockstar."
      },
      {
-      "debut": 163.747,
-      "fin": 165.915,
-      "texte": "Walter Jr."
+      "debut": 197.0,
+      "fin": 198.0,
+      "texte": "How's it looking, Barley?"
      },
      {
-      "debut": 166.083,
-      "fin": 168.334,
-      "texte": "You're my big man."
+      "debut": 199.0,
+      "fin": 201.0,
+      "texte": "We should have about ten minutes..."
      },
      {
-      "debut": 168.502,
-      "fin": 173.089,
-      "texte": "There are... There are going to be some things..."
+      "debut": 201.5,
+      "fin": 203.0,
+      "texte": "Well that's perfect."
      },
      {
-      "debut": 173.257,
-      "fin": 175.925,
-      "texte": "Things that you'll come to learn about me"
+      "debut": 203.5,
+      "fin": 206.5,
+      "texte": "We're on in one! All systems go! Yeah you, go!"
      },
      {
-      "debut": 176.093,
-      "fin": 177.802,
-      "texte": "in the next few days."
+      "debut": 208.0,
+      "fin": 212.0,
+      "texte": "Go! Move your asses! Go go go!"
      },
      {
-      "debut": 177.97,
-      "fin": 183.307,
-      "texte": "I just want you to know that no matter how it may look"
+      "debut": 213.0,
+      "fin": 217.0,
+      "texte": "I love it! Come on, go!"
      },
      {
-      "debut": 183.475,
-      "fin": 186.269,
-      "texte": "I only had you in my heart."
+      "debut": 223.0,
+      "fin": 224.0,
+      "texte": "That's nice."
      },
      {
-      "debut": 192.276,
-      "fin": 194.485,
-      "texte": "Goodbye."
+      "debut": 224.5,
+      "fin": 225.7,
+      "texte": "Nothing to worry about."
      },
      {
-      "debut": 313.897,
-      "fin": 315.898,
-      "texte": "Money before the panel earlier this year."
+      "debut": 226.0,
+      "fin": 227.0,
+      "texte": "Thom."
      },
      {
-      "debut": 316.066,
-      "fin": 317.566,
-      "texte": "Happy birthday."
+      "debut": 231.0,
+      "fin": 233.0,
+      "texte": "There she is."
      },
      {
-      "debut": 317.734,
-      "fin": 319.902,
-      "texte": "Oh."
+      "debut": 233.5,
+      "fin": 234.5,
+      "texte": "Now."
      },
      {
-      "debut": 320.07,
-      "fin": 321.32,
-      "texte": "Look at that."
+      "debut": 235.0,
+      "fin": 236.0,
+      "texte": "You love her."
      },
      {
-      "debut": 322.072,
-      "fin": 324.657,
-      "texte": "That is veggie bacon."
+      "debut": 237.0,
+      "fin": 238.5,
+      "texte": "She is your passion!"
      },
      {
-      "debut": 324.825,
-      "fin": 326.575,
-      "texte": "Believe it or not. Zero cholesterol"
+      "debut": 240.0,
+      "fin": 241.0,
+      "texte": "Be tender to her."
      },
      {
-      "debut": 326.743,
-      "fin": 328.661,
-      "texte": "and you won't even taste the difference."
+      "debut": 241.5,
+      "fin": 244.5,
+      "texte": "Be honest! Eh- be tender."
      },
      {
-      "debut": 328.829,
-      "fin": 330.079,
-      "texte": "Mm."
+      "debut": 245.0,
+      "fin": 248.0,
+      "texte": "Remind her what love is."
      },
      {
-      "debut": 330.247,
-      "fin": 331.747,
-      "texte": "What time do you think you'll be home?"
+      "debut": 292.0,
+      "fin": 295.0,
+      "texte": "...and, action!"
      },
      {
-      "debut": 331.915,
-      "fin": 332.957,
-      "texte": "Same time."
+      "debut": 296.5,
+      "fin": 298.0,
+      "texte": "Memory overwrite in progress!"
      },
      {
-      "debut": 333.125,
-      "fin": 335.584,
-      "texte": "I don't want him dicking you around tonight."
+      "debut": 299.0,
+      "fin": 301.0,
+      "texte": "You're a jerk, Thom!"
      },
      {
-      "debut": 335.752,
-      "fin": 339.422,
-      "texte": "You get paid till 5, you work till 5. No later."
+      "debut": 302.5,
+      "fin": 305.0,
+      "texte": "Ohp- Sorry! Sorry."
      },
      {
-      "debut": 339.589,
-      "fin": 340.965,
-      "texte": "Aha."
+      "debut": 316.0,
+      "fin": 317.0,
+      "texte": "Look Celia."
      },
      {
-      "debut": 341.133,
-      "fin": 343.259,
-      "texte": "Hey."
+      "debut": 318.0,
+      "fin": 320.0,
+      "texte": "We have to follow our passions."
      },
      {
-      "debut": 343.427,
-      "fin": 345.511,
-      "texte": "Hey, happy birthday. Well, thank you."
+      "debut": 321.0,
+      "fin": 323.0,
+      "texte": "You have your robotics..."
      },
      {
-      "debut": 345.679,
-      "fin": 347.596,
-      "texte": "You're late again."
+      "debut": 325.0,
+      "fin": 328.0,
+      "texte": "...and I just want to be awesome in space."
      },
      {
-      "debut": 347.764,
-      "fin": 350.349,
-      "texte": "There was no hot water again."
+      "debut": 339.0,
+      "fin": 341.0,
+      "texte": "Okay, they're coming. Two minutes left!"
      },
      {
-      "debut": 350.517,
-      "fin": 352.393,
-      "texte": "I have an easy fix for that."
+      "debut": 343.0,
+      "fin": 344.0,
+      "texte": "Speed it up, Thom!"
      },
      {
-      "debut": 352.561,
-      "fin": 353.894,
-      "texte": "You wake up early,"
+      "debut": 345.0,
+      "fin": 346.0,
+      "texte": "Vivacissimo!"
      },
      {
-      "debut": 354.062,
-      "fin": 357.148,
-      "texte": "and then you get to be the first person in the shower. Hm."
+      "debut": 347.0,
+      "fin": 350.0,
+      "texte": "Why don't you just admit that you're freaked out by my robot hand?"
      },
      {
-      "debut": 357.315,
-      "fin": 359.025,
-      "texte": "I have an idea."
+      "debut": 356.0,
+      "fin": 359.0,
+      "texte": "Listen Celia, I was young..."
      },
      {
-      "debut": 360.986,
-      "fin": 364.447,
-      "texte": "How about buy a new hot-water heater?"
+      "debut": 359.5,
+      "fin": 361.0,
+      "texte": "...and a dick."
      },
      {
-      "debut": 364.614,
-      "fin": 369.201,
-      "texte": "How's that idea? For the million-billionth time."
+      "debut": 361.0,
+      "fin": 363.0,
+      "texte": "But that's no reason to destroy the world."
      },
      {
-      "debut": 371.455,
-      "fin": 373.164,
-      "texte": "Did you take your echinacea?"
+      "debut": 365.0,
+      "fin": 366.0,
+      "texte": "Why does he do this?"
      },
      {
-      "debut": 373.331,
-      "fin": 374.373,
-      "texte": "Yeah."
+      "debut": 366.5,
+      "fin": 368.5,
+      "texte": "We already tried that one!"
      },
      {
-      "debut": 374.541,
-      "fin": 376.459,
-      "texte": "I think it's getting better."
+      "debut": 371.5,
+      "fin": 372.5,
+      "texte": "Abort!"
      },
      {
-      "debut": 376.626,
-      "fin": 379.128,
-      "texte": "What the hell is this?"
+      "debut": 373.0,
+      "fin": 374.0,
+      "texte": "Cut!"
      },
      {
-      "debut": 379.296,
-      "fin": 380.504,
-      "texte": "Hey. It's veggie bacon."
+      "debut": 374.0,
+      "fin": 375.0,
+      "texte": "Whoaaa!"
      },
      {
-      "debut": 380.672,
-      "fin": 383.632,
-      "texte": "We're watching our cholesterol, I guess."
+      "debut": 379.0,
+      "fin": 380.0,
+      "texte": "Whoaaa!"
      },
      {
-      "debut": 383.8,
-      "fin": 387.47,
-      "texte": "Not me. I want real bacon. Not this fake crap."
+      "debut": 381.0,
+      "fin": 383.0,
+      "texte": "Nooooo!"
      },
      {
-      "debut": 387.637,
-      "fin": 389.305,
-      "texte": "Too bad. Eat it."
+      "debut": 383.0,
+      "fin": 385.0,
+      "texte": "You broke my heart."
      },
      {
-      "debut": 389.473,
-      "fin": 392.975,
-      "texte": "Phew. This smells like Band-Aids."
+      "debut": 386.0,
+      "fin": 387.0,
+      "texte": "I know."
      },
      {
-      "debut": 393.143,
-      "fin": 395.019,
-      "texte": "Eat it."
+      "debut": 387.0,
+      "fin": 389.0,
+      "texte": "You forgot me on earth."
      },
      {
-      "debut": 399.608,
-      "fin": 402.359,
-      "texte": "So how does it feel to be old?"
+      "debut": 389.0,
+      "fin": 390.0,
+      "texte": "I know."
      },
      {
-      "debut": 402.527,
-      "fin": 404.32,
-      "texte": "How does it feel to be a smart-ass?"
+      "debut": 390.5,
+      "fin": 393.0,
+      "texte": "I should just crush you."
      },
      {
-      "debut": 404.488,
-      "fin": 406.989,
-      "texte": "Heh. Good."
+      "debut": 396.0,
+      "fin": 397.0,
+      "texte": "I'm-"
+     },
+     {
+      "debut": 407.0,
+      "fin": 408.0,
+      "texte": "I'm sorry."
+     },
+     {
+      "debut": 410.0,
+      "fin": 411.0,
+      "texte": "Good ad-lib."
+     },
+     {
+      "debut": 419.0,
+      "fin": 420.5,
+      "texte": "Not my fault!"
+     },
+     {
+      "debut": 422.0,
+      "fin": 423.0,
+      "texte": "This time."
+     },
+     {
+      "debut": 428.0,
+      "fin": 429.5,
+      "texte": "Quiet on set!"
+     },
+     {
+      "debut": 430.0,
+      "fin": 431.0,
+      "texte": "We're out of time!"
+     },
+     {
+      "debut": 493.0,
+      "fin": 494.0,
+      "texte": "Come on!"
+     },
+     {
+      "debut": 502.0,
+      "fin": 504.0,
+      "texte": "RAAAAAAAAH!"
+     },
+     {
+      "debut": 504.0,
+      "fin": 505.0,
+      "texte": "Memory overwrite, 90%."
+     },
+     {
+      "debut": 506.0,
+      "fin": 508.0,
+      "texte": "Captain! We have to abort!"
+     },
+     {
+      "debut": 518.0,
+      "fin": 520.0,
+      "texte": "The world's changed, Celia..."
+     },
+     {
+      "debut": 534.0,
+      "fin": 536.0,
+      "texte": "...maybe we can too."
+     },
+     {
+      "debut": 538.0,
+      "fin": 539.0,
+      "texte": "Memory overwrite complete!"
+     },
+     {
+      "debut": 559.0,
+      "fin": 560.0,
+      "texte": "You know."
+     },
+     {
+      "debut": 562.0,
+      "fin": 564.0,
+      "texte": "There's a lesson to be learned from this."
+     },
+     {
+      "debut": 566.0,
+      "fin": 567.0,
+      "texte": "Could'a gone worse."
      }
     ]
    },
    "recherche": {
-    "page": "Breaking Bad (season 1)",
-    "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
+    "page": null,
+    "url": null,
     "pages_possibles": [
-     "Breaking Bad (season 1)",
-     "Breaking Bad",
-     "Breaking Bad (season 3)",
-     "Breaking Bad (season 5)",
-     "Breaking Bad (season 2)",
-     "Breaking Bad (season 4)",
-     "Last words in Breaking Bad media",
-     "El Camino: A Breaking Bad Movie"
+     "Henry Steel Olcott",
+     "Superman",
+     "Steel Magnolias",
+     "Irene Cara",
+     "Manowar",
+     "Sword"
     ],
-    "resultats": [
-     {
-      "type": "citation",
-      "titre": "My name is Walter Hartwell White. I live at 308 Negra Arroyo Lane, Albuquerque, ",
-      "repliques": [
-       "My name is Walter Hartwell White. I live at 308 Negra Arroyo Lane, Albuquerque, New Mexico, 87104. To all law enforcement entities, this is not an admission of guilt. I am speaking to my family now. Skyler, you are the love of my life. I hope you know that. Walter Junior, you're my big man. There are... there are going to be some things that you'll come to learn about me in the next few days. I just want you to know that no–no matter how it may look, I only had you in my heart. Goodbye."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 134.051,
-       "fin": 139.222,
-       "score": 100,
-       "replique_trouvee": "My name is Walter Hartwell White. I live at 308 Negra Arroyo Lane, Albuquerque, New Mexico, 87104. To all law enforcement entities, this is not an admission of guilt. I am speaking to my family now. Skyler, you are the love of my life. I hope you know that. Walter Junior, you're my big man. There are... there are going to be some things that you'll come to learn about me in the next few days. I just want you to know that no–no matter how it may look, I only had you in my heart. Goodbye."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Why are you here?",
-      "repliques": [
-       "Why are you here?",
-       "I was curious. Honestly, I never expected you to amount to much, but methamphetamine? I didn't picture that. There's a lot of money in it, huh?",
-       "I don't know what you're talking about.",
-       "No?",
-       "Not a clue.",
-       "\"Cap'n Cook?\" That's not you? Like I said, no one is looking for you.",
-       "Look, I don't know what you think you're doing here, Mr. White. I mean, if you're planning on giving me some bull-winder about getting right with Jesus by turning myself in...",
-       "Not really.",
-       "High school was a long time ago, okay? You ain't Welcome Back, Kotter, so step off. No speeches.",
-       "Short speech. You lost your partner today. What's his name–Emilio? Emilio is going to prison. The DEA took all your money, your lab. You got nothing. Square one. But you know the business. And I know the chemistry. I'm thinking... maybe you and I could partner up.",
-       "You, uh... you want to cook crystal meth? You. You and, uh... and me?",
-       "That's right. Either that... or I turn you in."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 1681.972,
-       "fin": 1800.715,
-       "score": 100,
-       "replique_trouvee": "Why are you here?"
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Did you learn nothing from my chemistry class?",
-      "repliques": [
-       "Did you learn nothing from my chemistry class?",
-       "No. You flunked me, remember?",
-       "No wonder.",
-       "Prick! And let me tell you something else, this ain't chemistry. This is art. Cooking is art. And the shit I cook is the bomb, so don't be telling me.",
-       "The shit you cook is shit. I saw your set-up. Ridiculous. You and I will not make garbage. We will produce a chemically pure and stable product that performs as advertised. No adulterants. No baby formula. No chili powder.",
-       "No, no, chili P is my signature, man!",
-       "Not anymore."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 1997.746,
-       "fin": 2033.781,
-       "score": 100,
-       "replique_trouvee": "Did you learn nothing from my chemistry class?"
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Dude, this isn't even seven grand, alright? My guy wants eighty-five.",
-      "repliques": [
-       "Dude, this isn't even seven grand, alright? My guy wants eighty-five.",
-       "This is all the money I have in the world. You're a drug dealer. Negotiate.",
-       "Y-You are not how I remember you from class. I mean, like, not at all.",
-       "Yeah, well, I gotta go.",
-       "Wait, wait, hold up!  Tell me why you're doing this. Seriously.",
-       "Why do you do it?",
-       "Money! Mainly.",
-       "There you go.",
-       "Nah, come on... Man, some straight like you, giant stick up his ass, all of a sudden at age what, 60, he's just gonna break bad?",
-       "I'm 50.",
-       "It's weird, is all, okay? It doesn't compute. Listen, if you've gone crazy or something; I mean, if y–if you've gone crazy or depressed, I'm just saying... th–that's something I need to know about, okay? I mean, that affects me.",
-       "I am awake.",
-       "What?",
-       "Buy the RV. We start tomorrow."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2148.939,
-       "fin": 2229.101,
-       "score": 100,
-       "replique_trouvee": "This is all the money I have in the world. You're a drug dealer. Negotiate."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Wow, this is a really great look for you. I mean, you're maybe only the world's ",
-      "repliques": [
-       "Wow, this is a really great look for you. I mean, you're maybe only the world's second-biggest homo.",
-       "Shut up and help me.",
-       "Oh, yeah. Oh, yeah. Work it, baby, work it.",
-       "Turn that off!"
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2491.072,
-       "fin": 2498.996,
-       "score": 100,
-       "replique_trouvee": "Shut up and help me."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "This is glass-grade. You got... Jesus, you got crystals in here two inches, thre",
-      "repliques": [
-       "This is glass-grade. You got... Jesus, you got crystals in here two inches, three inches long. This is pure glass! You're a goddamn artist! This-this is art, Mr. White!",
-       "Actually, it's just basic chemistry. But thank you, Jesse, I'm glad it's acceptable.",
-       "\"Acceptable\"? You're the goddamn Iron Chef! Every chiphead from here to Timbaktu's going to want a taste!"
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2567.44,
-       "fin": 2596.593,
-       "score": 100,
-       "replique_trouvee": "This is glass-grade. You got... Jesus, you got crystals in here two inches, three inches long. This is pure glass! You're a goddamn artist! This-this is art, Mr. White!"
-      },
-      "retenue": true
-     }
-    ],
-    "avertissements": []
+    "resultats": [],
+    "avertissements": [
+     "Aucune page Wikiquote trouvée pour cette œuvre. Vérifiez son titre, ou choisissez une page dans la liste."
+    ]
    },
    "proposition": {
-    "film": "Breaking Bad S01E01 Pilot.mkv",
-    "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E01 Pilot.mkv",
-    "duree": 3486.483,
+    "film": "Tears of Steel (2012).mov",
+    "chemin": "C:\\Films\\Tears of Steel (2012).mov",
+    "duree": 734.166667,
     "extraits": [
      {
       "numero": 1,
-      "debut": 2482.19,
-      "fin": 2596.64,
-      "score": 71.6,
-      "titre": "Wow, this is a really great look for you. I mean, you're maybe only the world's ",
-      "raison": "Citation culte (Wikiquote (en)) : « Wow, this is a really great look for you. I mean, you're maybe only the world's  » · Citation culte (Wikiquote (en)) : « This is glass-grade. You got... Jesus, you got crystals in here two inches, thre » · Passages sonores intenses",
+      "debut": 427.79,
+      "fin": 509.96,
+      "score": 31.0,
+      "titre": "Captain! We have to abort!",
+      "raison": "Passages sonores intenses, 5 répliques exclamatives ou interrogatives, explosions ou coups de feu",
       "repliques": [
-       "Wow, this is... This is a good look for you.",
-       "I mean, you're maybe only the world's second-biggest homo.",
-       "Would you shut up and help me?",
-       "Oh, yeah. Oh, yeah.",
-       "…"
+       "Quiet on set!",
+       "We're out of time!",
+       "Come on!",
+       "RAAAAAAAAH!",
+       "Memory overwrite, 90%.",
+       "Captain! We have to abort!"
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 114.4
+      "sources": [],
+      "duree": 82.2,
+      "image": "images/tears-of-steel-01.jpg",
+      "video": "films/tears-of-steel-480p.mp4#t=427.8,510.0"
      },
      {
       "numero": 2,
-      "debut": 1960.71,
-      "fin": 2033.91,
-      "score": 63.0,
-      "titre": "Did you learn nothing from my chemistry class?",
-      "raison": "Citation culte (Wikiquote (en)) : « Did you learn nothing from my chemistry class? » · Dialogues denses, 4 répliques exclamatives ou interrogatives, explosions ou coups de feu",
+      "debut": 324.08,
+      "fin": 393.5,
+      "score": 30.3,
+      "titre": "Okay, they're coming. Two minutes left!",
+      "raison": "Dialogues denses, 11 répliques exclamatives ou interrogatives",
       "repliques": [
-       "You got your usual paraphernalia, Griffin beakers,",
-       "there's your Erlenmeyer flask. Butthe pièce de résistance,",
-       "a round bottom boiling flask, 5000 milliliters. Huh?",
-       "I cook in one of those. A big one.",
-       "…"
+       "...and I just want to be awesome in space.",
+       "Okay, they're coming. Two minutes left!",
+       "Speed it up, Thom!",
+       "Vivacissimo!",
+       "Why don't you just admit that you're freaked out by my robot hand?",
+       "Listen Celia, I was young...",
+       "...and a dick.",
+       "But that's no reason to destroy the world.",
+       "Why does he do this?",
+       "We already tried that one!",
+       "Abort!",
+       "Cut!",
+       "Whoaaa!",
+       "Whoaaa!",
+       "Nooooo!",
+       "You broke my heart.",
+       "I know.",
+       "You forgot me on earth.",
+       "I know.",
+       "I should just crush you."
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 73.2
+      "sources": [],
+      "duree": 69.4,
+      "image": "images/tears-of-steel-02.jpg",
+      "video": "films/tears-of-steel-480p.mp4#t=324.1,393.5"
      },
      {
       "numero": 3,
-      "debut": 2147.9,
-      "fin": 2215.63,
-      "score": 60.0,
-      "titre": "Dude, this isn't even seven grand, alright? My guy wants eighty-five.",
-      "raison": "Citation culte (Wikiquote (en)) : « Dude, this isn't even seven grand, alright? My guy wants eighty-five. » · Dialogues denses, 3 répliques exclamatives ou interrogatives",
+      "debut": 189.5,
+      "fin": 301.5,
+      "score": 21.4,
+      "titre": "We're on in one! All systems go! Yeah you, go!",
+      "raison": "Dialogues denses, 10 répliques exclamatives ou interrogatives",
       "repliques": [
-       "Dude, this isn't even seven grand, all right?",
-       "My guy wants 85.",
-       "This is all the money I have in the world.",
-       "You're a drug dealer. Negotiate.",
-       "…"
+       "Are you ready?",
+       "Of course you're ready, you're a rockstar.",
+       "How's it looking, Barley?",
+       "We should have about ten minutes...",
+       "Well that's perfect.",
+       "We're on in one! All systems go! Yeah you, go!",
+       "Go! Move your asses! Go go go!",
+       "I love it! Come on, go!",
+       "That's nice.",
+       "Nothing to worry about.",
+       "Thom.",
+       "There she is.",
+       "Now.",
+       "You love her.",
+       "She is your passion!",
+       "Be tender to her.",
+       "Be honest! Eh- be tender.",
+       "Remind her what love is.",
+       "...and, action!",
+       "Memory overwrite in progress!",
+       "You're a jerk, Thom!"
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 67.7
+      "sources": [],
+      "duree": 112.0,
+      "image": "images/tears-of-steel-03.jpg",
+      "video": "films/tears-of-steel-480p.mp4#t=189.5,301.5"
      },
      {
       "numero": 4,
-      "debut": 1679.8,
-      "fin": 1752.29,
-      "score": 57.5,
-      "titre": "Why are you here?",
-      "raison": "Citation culte (Wikiquote (en)) : « Why are you here? » · Dialogues denses, 7 répliques exclamatives ou interrogatives",
+      "debut": 22.7,
+      "fin": 119.88,
+      "score": 17.9,
+      "titre": "I'm freaked out! I have nightmares that I'm being chased...",
+      "raison": "Dialogues denses, 5 répliques exclamatives ou interrogatives",
       "repliques": [
-       "Look, no one's looking for you.",
-       "Why are you here?",
-       "I was curious.",
-       "Honestly, I never expected you to amount to much...",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 72.5
-     },
-     {
-      "numero": 5,
-      "debut": 124.66,
-      "fin": 186.77,
-      "score": 56.8,
-      "titre": "My name is Walter Hartwell White. I live at 308 Negra Arroyo Lane, Albuquerque, ",
-      "raison": "Citation culte (Wikiquote (en)) : « My name is Walter Hartwell White. I live at 308 Negra Arroyo Lane, Albuquerque,  » · Dialogues denses",
-      "repliques": [
-       "Okay. Come on, come on, come on.",
-       "Come on.",
-       "My name is Walter Hartwell White.",
-       "I live at 308 Negra Arroyo Lane,",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 62.1
-     },
-     {
-      "numero": 6,
-      "debut": 671.04,
-      "fin": 734.36,
-      "score": 18.4,
-      "titre": "Shit, I seen one of those bounce off a windshield one time.",
-      "raison": "Dialogues denses, 4 répliques exclamatives ou interrogatives, rires, musique",
-      "repliques": [
-       "Glock 22, that's my daily carry, okay?",
-       "I mean, unless you're talking, what, Plus P Plus loads,",
-       "you can forget the 9 mil, all right?",
-       "Shit, I seen one of those bounce off a windshield one time.",
-       "…"
+       "You're a jerk, Thom.",
+       "Look Celia, we have to follow our passions;",
+       "...you have your robotics, and I just want to be awesome in space.",
+       "Why don't you just admit that you're freaked out by my robot hand?",
+       "I'm not freaked out by- it's...",
+       "...alright! Fine!",
+       "I'm freaked out! I have nightmares that I'm being chased...",
+       "...by these giant robotic claws of death...",
+       "\"Fourty years later\" Whatever, Thom. We're done.",
+       "Robot's memory synced and locked!",
+       "This is pretty freaky.",
+       "Shouldn't you be down there?"
       ],
       "sources": [],
-      "duree": 63.3
-     },
-     {
-      "numero": 7,
-      "debut": 2643.35,
-      "fin": 2713.88,
-      "score": 15.5,
-      "titre": "Yeah. Booya! See, what'd I say?",
-      "raison": "Dialogues denses, passages sonores intenses, 7 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Hey, yo. Kraze, how you doing, my man?",
-       "Hey, you got a new dog. Right on, man.",
-       "What's his name?",
-       "Yeah, I had a dog like that once,",
-       "…"
-      ],
-      "sources": [],
-      "duree": 70.5
-     },
-     {
-      "numero": 8,
-      "debut": 2310.22,
-      "fin": 2371.41,
-      "score": 14.7,
-      "titre": "You'd better go. Take it. Take your shot. Take it!",
-      "raison": "Dialogues denses, 9 répliques exclamatives ou interrogatives, musique",
-      "repliques": [
-       "Where...? I have no idea.",
-       "No, you know what? Don't even look at them.",
-       "They're obviously very stupid. Yep.",
-       "Yeah.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 61.2
-     },
-     {
-      "numero": 9,
-      "debut": 743.78,
-      "fin": 807.97,
-      "score": 12.6,
-      "titre": "- Hank, how much money is that? - It's about 700 grand.",
-      "raison": "Dialogues denses, 6 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "At which point, we apprehended three individuals",
-       "and placed them into custody.",
-       "I'm proud to say the outstanding professionalism",
-       "of my fellow agents at the Albuquerque District Office",
-       "…"
-      ],
-      "sources": [],
-      "duree": 64.2
-     },
-     {
-      "numero": 10,
-      "debut": 1344.92,
-      "fin": 1411.45,
-      "score": 12.3,
-      "titre": "Kind of, uh, I don't know what do you call that? Um,",
-      "raison": "Dialogues denses, 12 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Oh, listen. I didn't wake you, did I?",
-       "Oh, good, good.",
-       "Oh, no, no. Nothing's wrong. I just...",
-       "I've been, uh, thinking about that offer",
-       "…"
-      ],
-      "sources": [],
-      "duree": 66.5
+      "duree": 97.2,
+      "image": "images/tears-of-steel-04.jpg",
+      "video": "films/tears-of-steel-480p.mp4#t=22.7,119.9"
      }
     ]
    },
-   "nom": "Breaking Bad S01E01 Pilot.mkv",
-   "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E01 Pilot.mkv"
+   "nom": "Tears of Steel (2012).mov",
+   "chemin": "C:\\Films\\Tears of Steel (2012).mov",
+   "credit": "Tears of Steel, © Blender Foundation, mango.blender.org, CC BY 3.0"
   },
   {
    "deroule": [
@@ -860,7 +695,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "Prise en compte de 5 citation(s) culte(s) de Wikiquote.",
+     "message": "Aucune citation culte retenue : choix sur les seuls indices locaux.",
      "pourcentage": null
     },
     {
@@ -872,7 +707,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "10 extraits proposés.",
+     "message": "3 extraits proposés.",
      "pourcentage": null
     },
     {
@@ -881,741 +716,290 @@ window.DONNEES_DEMO = {
    ],
    "identification": {
     "devine": {
-     "titre": "Breaking Bad",
-     "annee": null,
-     "type": "serie",
-     "saison": 1,
-     "episode": 3
+     "titre": "Sintel",
+     "annee": 2010,
+     "type": "film",
+     "saison": null,
+     "episode": null
     },
     "candidats": [
      {
-      "ref": "Breaking Bad",
-      "type": "serie",
-      "titre": "Breaking Bad",
+      "ref": "Sintel",
+      "type": "film",
+      "titre": "Sintel",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Walter White (personnage)",
-      "type": "serie",
-      "titre": "Walter White (personnage)",
+      "ref": "Elephants Dream",
+      "type": "film",
+      "titre": "Elephants Dream",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Bill Burr",
-      "type": "serie",
-      "titre": "Bill Burr",
+      "ref": "Halina Reijn",
+      "type": "film",
+      "titre": "Halina Reijn",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Pluribus",
-      "type": "serie",
-      "titre": "Pluribus",
+      "ref": "Blender",
+      "type": "film",
+      "titre": "Blender",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Aaron Paul",
-      "type": "serie",
-      "titre": "Aaron Paul",
+      "ref": "27 septembre 2010",
+      "type": "film",
+      "titre": "27 septembre 2010",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Jesse Plemons",
-      "type": "serie",
-      "titre": "Jesse Plemons",
+      "ref": "Fondation Blender",
+      "type": "film",
+      "titre": "Fondation Blender",
       "annee": null,
       "source": "Wikipédia"
      }
     ],
     "fiche": {
-     "ref": "Breaking Bad",
-     "type": "serie",
-     "titre": "Breaking Bad",
-     "titre_original": "Breaking Bad",
-     "annee": 2008,
-     "synopsis": "Breaking Bad, ou Breaking Bad : Le Chimiste au Québec, est une série télévisée américaine dramatique, criminelle et policière de type néo-western créée par le réalisateur et scénariste Vince Gilligan. Elle est composée de 5 saisons et 62 épisodes d'environ 47 minutes. Elle est diffusée simultanément du 20 janvier 2008 au 29 septembre 2013 sur AMC aux États-Unis et au Canada.\nLa série raconte l'histoire de Walter White (Bryan Cranston) un professeur de chimie surqualifié et père de famille, qui, ayant appris qu'il est atteint d'un cancer du poumon en phase terminale, sombre dans le crime pour assurer l'avenir financier de sa famille. Pour cela, il se lance dans la fabrication et la vente de méthamphétamine avec l'aide de l'un de ses anciens élèves, Jesse Pinkman (Aaron Paul).",
-     "realisation": "Vince Gilligan",
-     "acteurs": [
-      {
-       "nom": "Anna Gunn",
-       "personnage": "Skyler White"
-      },
-      {
-       "nom": "Aaron Paul",
-       "personnage": "Jesse Pinkman"
-      },
-      {
-       "nom": "Dean Norris",
-       "personnage": "Hank Schrader"
-      },
-      {
-       "nom": "Betsy Brandt",
-       "personnage": "Marie Schrader"
-      },
-      {
-       "nom": "RJ Mitte",
-       "personnage": "Walter White Jr."
-      },
-      {
-       "nom": "Jonathan Banks",
-       "personnage": "Mike Ehrmantraut"
-      },
-      {
-       "nom": "Bryan Cranston",
-       "personnage": "Walter White"
-      },
-      {
-       "nom": "Bob Odenkirk",
-       "personnage": "Saul Goodman"
-      }
-     ],
-     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Breaking_Bad_logo.svg/330px-Breaking_Bad_logo.svg.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-     "saison": 1,
-     "episode": 3,
+     "ref": "Sintel",
+     "type": "film",
+     "titre": "Sintel",
+     "titre_original": "Sintel",
+     "annee": 2010,
+     "synopsis": "Sintel est un court métrage d'animation néerlandais réalisé par Colin Levy, sorti en 2010.\nCe film est le troisième court métrage libre de la fondation Blender, après Elephants Dream et Big Buck Bunny. Sous le nom de code « Durian », il a été réalisé en grande partie à l'aide de logiciels open source (seule la partie sonore a utilisé des logiciels propriétaires), principalement Blender. Le film est disponible sur Internet depuis le 30 septembre 2010 sous licence Creative Commons Attribution 3.0, et l'équipe de production prévoit de fournir en ligne les fichiers qui ont servi à sa réalisation.",
+     "realisation": "Colin Levy",
+     "acteurs": [],
+     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Sintel_poster.jpg/330px-Sintel_poster.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+     "saison": null,
+     "episode": null,
      "source": "Wikipédia",
-     "url": "https://fr.wikipedia.org/wiki/Breaking_Bad"
+     "url": "https://fr.wikipedia.org/wiki/Sintel"
     },
     "avertissement": null
    },
    "transcription": {
-    "film": "Breaking Bad S01E03 and the Bag's in the River.mkv (démo : 60 premières répliques)",
+    "film": "Sintel (2010).mkv",
     "langue": "en",
     "source": "piste intégrée",
     "segments": [
      {
-      "debut": 45.713,
-      "fin": 47.338,
-      "texte": "Let's break it down."
+      "debut": 107.25,
+      "fin": 109.22,
+      "texte": "This blade has a dark past."
      },
      {
-      "debut": 49.299,
-      "fin": 51.759,
-      "texte": "Hydrogen. What does that give us?"
+      "debut": 111.8,
+      "fin": 115.8,
+      "texte": "It has shed much innocent blood."
      },
      {
-      "debut": 51.927,
-      "fin": 54.762,
-      "texte": "By mole, we're looking at 63 percent."
+      "debut": 118.0,
+      "fin": 121.45,
+      "texte": "You're a fool for traveling alone, so completely unprepared."
      },
      {
-      "debut": 54.93,
-      "fin": 57.056,
-      "texte": "Sixty-three? Wow. Mm-hm."
+      "debut": 121.75,
+      "fin": 124.8,
+      "texte": "You're lucky your blood's still flowing."
      },
      {
-      "debut": 57.224,
-      "fin": 58.641,
-      "texte": "That is a big bite."
+      "debut": 125.25,
+      "fin": 126.3,
+      "texte": "Thank you."
      },
      {
-      "debut": 58.809,
-      "fin": 61.978,
-      "texte": "My next step's gotta be oxygen. Oxygen, 26 percent."
+      "debut": 127.5,
+      "fin": 129.0,
+      "texte": "So..."
      },
      {
-      "debut": 62.146,
-      "fin": 64.355,
-      "texte": "Twenty-six. There you have your water."
+      "debut": 129.4,
+      "fin": 133.8,
+      "texte": "What brings you to the land of the gatekeepers?"
      },
      {
-      "debut": 64.523,
-      "fin": 67.984,
-      "texte": "Carbon, 9 percent. Carbon, 9."
+      "debut": 135.0,
+      "fin": 137.5,
+      "texte": "I'm searching for someone."
      },
      {
-      "debut": 68.152,
-      "fin": 71.112,
-      "texte": "For a total of 98 percent. Right."
+      "debut": 138.0,
+      "fin": 142.2,
+      "texte": "Someone very dear? A kindred spirit?"
      },
      {
-      "debut": 71.28,
-      "fin": 73.656,
-      "texte": "Nitrogen, 1.25 percent."
+      "debut": 143.4,
+      "fin": 145.0,
+      "texte": "A dragon."
      },
      {
-      "debut": 73.824,
-      "fin": 75.575,
-      "texte": "One-point-two-five."
+      "debut": 148.85,
+      "fin": 151.75,
+      "texte": "A dangerous quest for a lone hunter."
      },
      {
-      "debut": 75.743,
-      "fin": 78.077,
-      "texte": "That brings you to 99 and a quarter."
+      "debut": 152.95,
+      "fin": 155.87,
+      "texte": "I've been alone for as long as I can remember."
      },
      {
-      "debut": 78.245,
-      "fin": 81.247,
-      "texte": "Which only leaves you with the trace elements"
+      "debut": 207.25,
+      "fin": 210.5,
+      "texte": "We're almost done. Shhh..."
      },
      {
-      "debut": 81.415,
-      "fin": 84.0,
-      "texte": "down where the magic happens."
+      "debut": 210.75,
+      "fin": 213.5,
+      "texte": "Hey, sit still."
      },
      {
-      "debut": 84.168,
-      "fin": 87.962,
-      "texte": "Oh, wait a minute. What about calcium? Calcium's not a trace."
+      "debut": 228.25,
+      "fin": 232.25,
+      "texte": "Good night, Scales."
      },
      {
-      "debut": 88.13,
-      "fin": 90.047,
-      "texte": "Got a whole skeleton to account for."
+      "debut": 250.35,
+      "fin": 253.85,
+      "texte": "Get him, Scales! Come on!"
      },
      {
-      "debut": 90.215,
-      "fin": 92.133,
-      "texte": "- You would think, right? - Right."
+      "debut": 265.25,
+      "fin": 268.25,
+      "texte": "Scales?"
      },
      {
-      "debut": 92.301,
-      "fin": 95.636,
-      "texte": "Calcium. Calcium's only 0.25 percent."
+      "debut": 304.0,
+      "fin": 307.5,
+      "texte": "Yeah! Come on!"
      },
      {
-      "debut": 95.804,
-      "fin": 98.347,
-      "texte": "What? That low? Uh-huh. Mm-hm."
+      "debut": 338.75,
+      "fin": 342.0,
+      "texte": "Scales!"
      },
      {
-      "debut": 98.515,
-      "fin": 100.516,
-      "texte": "Seriously?"
+      "debut": 445.85,
+      "fin": 447.5,
+      "texte": "I have failed."
      },
      {
-      "debut": 100.684,
-      "fin": 102.435,
-      "texte": "Damn, I never would've thought that."
+      "debut": 452.8,
+      "fin": 456.5,
+      "texte": "You've only failed to see..."
      },
      {
-      "debut": 102.603,
-      "fin": 107.44,
-      "texte": "Okay, so where does iron fit in? Iron."
+      "debut": 457.8,
+      "fin": 460.5,
+      "texte": "These are dragon lands, Sintel."
      },
      {
-      "debut": 107.608,
-      "fin": 109.233,
-      "texte": "Wow, okay,"
+      "debut": 460.85,
+      "fin": 464.0,
+      "texte": "You are closer than you know."
      },
      {
-      "debut": 109.401,
-      "fin": 114.614,
-      "texte": "0.00004 percent."
+      "debut": 557.6,
+      "fin": 559.5,
+      "texte": "Scales!"
      },
      {
-      "debut": 114.782,
-      "fin": 118.534,
-      "texte": "What? You can't have hemoglobin without iron."
+      "debut": 621.6,
+      "fin": 624.0,
+      "texte": "Scales?"
      },
      {
-      "debut": 118.702,
-      "fin": 121.579,
-      "texte": "Apparently, it don't take much. No doubt. Go figure."
-     },
-     {
-      "debut": 121.747,
-      "fin": 123.372,
-      "texte": "Ah, sodium."
-     },
-     {
-      "debut": 123.54,
-      "fin": 126.083,
-      "texte": "Sodium, 0.04."
-     },
-     {
-      "debut": 127.503,
-      "fin": 130.213,
-      "texte": "Phosphorus, 0.19."
-     },
-     {
-      "debut": 130.38,
-      "fin": 133.049,
-      "texte": "Point-one-nine."
-     },
-     {
-      "debut": 133.217,
-      "fin": 134.967,
-      "texte": "There we go."
-     },
-     {
-      "debut": 135.135,
-      "fin": 138.721,
-      "texte": "So the whole thing"
-     },
-     {
-      "debut": 138.889,
-      "fin": 141.057,
-      "texte": "adds up to..."
-     },
-     {
-      "debut": 141.225,
-      "fin": 145.394,
-      "texte": "99.888042 percent."
-     },
-     {
-      "debut": 147.731,
-      "fin": 153.402,
-      "texte": "We are 0.111958 percent"
-     },
-     {
-      "debut": 153.57,
-      "fin": 155.655,
-      "texte": "shy."
-     },
-     {
-      "debut": 155.823,
-      "fin": 158.533,
-      "texte": "Supposedly that's everything. Yeah?"
-     },
-     {
-      "debut": 158.7,
-      "fin": 161.118,
-      "texte": "Mm-hm."
-     },
-     {
-      "debut": 161.286,
-      "fin": 162.745,
-      "texte": "I don't know, it just..."
-     },
-     {
-      "debut": 162.913,
-      "fin": 164.33,
-      "texte": "It just..."
-     },
-     {
-      "debut": 164.498,
-      "fin": 166.582,
-      "texte": "It seems like something's missing, doesn't it?"
-     },
-     {
-      "debut": 168.71,
-      "fin": 172.839,
-      "texte": "There's got to be more to a human being than that."
-     },
-     {
-      "debut": 203.37,
-      "fin": 205.037,
-      "texte": "I hate these shoes."
-     },
-     {
-      "debut": 205.205,
-      "fin": 208.04,
-      "texte": "Shoes make me look like I should be changing bedpans,"
-     },
-     {
-      "debut": 208.208,
-      "fin": 210.293,
-      "texte": "like I should be squeaking around"
-     },
-     {
-      "debut": 210.46,
-      "fin": 212.879,
-      "texte": "bringing soup to some disgusting old person,"
-     },
-     {
-      "debut": 213.046,
-      "fin": 215.047,
-      "texte": "then take the bus home to my 16 cats."
-     },
-     {
-      "debut": 215.215,
-      "fin": 218.342,
-      "texte": "Then why are you wearing them?"
-     },
-     {
-      "debut": 218.51,
-      "fin": 221.929,
-      "texte": "I like the support. My arches happen to be extremely arch-y."
-     },
-     {
-      "debut": 225.1,
-      "fin": 226.601,
-      "texte": "Yo, what's up?"
-     },
-     {
-      "debut": 226.768,
-      "fin": 229.145,
-      "texte": "Hey, can you call me, like, in two minutes?"
-     },
-     {
-      "debut": 229.313,
-      "fin": 230.813,
-      "texte": "Thanks, bye."
-     },
-     {
-      "debut": 232.482,
-      "fin": 234.525,
-      "texte": "I gotta go take this."
-     },
-     {
-      "debut": 234.693,
-      "fin": 237.486,
-      "texte": "Ooh. Female?"
-     },
-     {
-      "debut": 238.822,
-      "fin": 240.823,
-      "texte": "Louis."
-     },
-     {
-      "debut": 240.991,
-      "fin": 244.41,
-      "texte": "Not like it's any of your business, though."
-     },
-     {
-      "debut": 244.578,
-      "fin": 246.662,
-      "texte": "Just be quick about it. No."
-     },
-     {
-      "debut": 246.83,
-      "fin": 251.167,
-      "texte": "Oh, and, um, please don't say, \"Yo.\""
-     },
-     {
-      "debut": 251.335,
-      "fin": 254.128,
-      "texte": "You can't know how much I hate that."
-     },
-     {
-      "debut": 259.176,
-      "fin": 263.012,
-      "texte": "You missed a spot, right there."
+      "debut": 626.2,
+      "fin": 629.8,
+      "texte": "Scales..."
      }
     ]
    },
    "recherche": {
-    "page": "Breaking Bad (season 1)",
-    "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-    "pages_possibles": [
-     "Breaking Bad (season 1)",
-     "Breaking Bad",
-     "Breaking Bad (season 3)",
-     "Breaking Bad (season 5)",
-     "Breaking Bad (season 2)",
-     "Breaking Bad (season 4)",
-     "Last words in Breaking Bad media",
-     "El Camino: A Breaking Bad Movie"
-    ],
-    "resultats": [
-     {
-      "type": "citation",
-      "titre": "We've got work to do.",
-      "repliques": [
-       "We've got work to do.",
-       "No, no! You! You've got work to do! I did my part!",
-       "You mean that obscenity that I spent the last two hours cleaning up?! That is your contribution?!",
-       "Yo, kiss my pink ass, man! I didn't ask for any of this! How am I supposed to live here now, huh?! My whole house smells like toe cheese and dry cleaning!",
-       "Because you didn't follow my instructions!",
-       "Oh well, heil Hitler, bitch! And let me tell you something else. We flipped a coin, okay? You and me. You and me! Coin flip is sacred! Your job is waiting for you in that basement, as per the coin! Fucking do it already!"
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 712.754,
-       "fin": 736.402,
-       "score": 100,
-       "replique_trouvee": "We've got work to do."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "You know who lives in the palace? Meth-heads. Nasty, skeevy meth-heads who'd sel",
-      "repliques": [
-       "You know who lives in the palace? Meth-heads. Nasty, skeevy meth-heads who'd sell their grandma's coochie for a hit.  Oh, you think that's funny? That's funny, huh? Yeah. Let me tell you something. Every one of these miserable wastes of skin got started how? How do you think they started?",
-       "I don't know.",
-       "What do you think it was they were all doing before they graduated to shooting meth in their dicks? A gateway drug. That's what we call it. Dollars to doughnuts, and I shit you not, that gateway drug was marijuana, every time. You understand?",
-       "Um... Yeah. So, why are you telling me this?",
-       "'Cause I love you, you little bastard."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 161.286,
-       "fin": 1046.002,
-       "score": 100,
-       "replique_trouvee": "I don't know."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Walter, you getting to know me is not gonna make it any easier for you to kill m",
-      "repliques": [
-       "Walter, you getting to know me is not gonna make it any easier for you to kill me. Not that I mind, you understand.",
-       "You know, you keep telling me that I don't have it in me. Well, maybe, maybe not. I sure as hell am looking for any reason not to. I mean, any good reason at all. Sell me. Tell me what it is.",
-       "I guess I'd start off by promising that if you let me go, I won't come after you. That you'd be safe. I guess I'd say what happened between us never happened. And what's best for both parties is we forget all about it. But you know that anybody in my situation would make promises like that, and though in my case they happen to be true, you'd never know for sure. So what else can I tell you?",
-       "I don't know. But you gotta convince me and you're going nowhere until you do."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 1661.243,
-       "fin": 1744.409,
-       "score": 100,
-       "replique_trouvee": "You know, you keep telling me that I don't have it in me. Well, maybe, maybe not. I sure as hell am looking for any reason not to. I mean, any good reason at all. Sell me. Tell me what it is."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "You're doing the right thing, Walter.",
-      "repliques": [
-       "You're doing the right thing, Walter.",
-       "Do you want to...  So, you're not angry?",
-       "How do you mean? Angry? No. Live and let live, man.",
-       "That's very understanding.",
-       "Whatever, man. I just want to go home.",
-       "Me, too.",
-       "Unlock me, Walter.",
-       "The moment I do, are you gonna stick me with that broken piece of plate?",
-       "I'm sorry... I'm sorry... I'm so sorry."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2262.177,
-       "fin": 2382.796,
-       "score": 100,
-       "replique_trouvee": "You're doing the right thing, Walter."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "I don't know. Just... doesn't it seem like... something's missing?",
-      "repliques": [
-       "I don't know. Just... doesn't it seem like... something's missing?",
-       "What about the soul?",
-       "The soul? There's nothing but chemistry here."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2733.648,
-       "fin": 2765.387,
-       "score": 100,
-       "replique_trouvee": "What about the soul?"
-      },
-      "retenue": true
-     }
-    ],
-    "avertissements": []
+    "page": null,
+    "url": null,
+    "pages_possibles": [],
+    "resultats": [],
+    "avertissements": [
+     "Aucune page Wikiquote trouvée pour cette œuvre. Vérifiez son titre, ou choisissez une page dans la liste."
+    ]
    },
    "proposition": {
-    "film": "Breaking Bad S01E03 and the Bag's in the River.mkv",
-    "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E03 and the Bag's in the River.mkv",
-    "duree": 2891.889,
+    "film": "Sintel (2010).mkv",
+    "chemin": "C:\\Films\\Sintel (2010).mkv",
+    "duree": 888.032,
     "extraits": [
      {
       "numero": 1,
-      "debut": 598.76,
-      "fin": 665.46,
-      "score": 66.6,
-      "titre": "You know who lives in the palace? Meth-heads. Nasty, skeevy meth-heads who'd sel",
-      "raison": "Citation culte (Wikiquote (en)) : « You know who lives in the palace? Meth-heads. Nasty, skeevy meth-heads who'd sel » · Dialogues denses, passages sonores intenses, 6 répliques exclamatives ou interrogatives, explosions ou coups de feu, musique",
+      "debut": 557.3,
+      "fin": 624.5,
+      "score": 27.4,
+      "titre": "Scales!",
+      "raison": "Passages sonores intenses, explosions ou coups de feu",
       "repliques": [
-       "your real problem's sitting upstairs.",
-       "Occupied.",
-       "Hey, yo, I'm trying to pinch one off in here.",
-       "Just give me some privacy, would you?",
-       "…"
+       "Scales!",
+       "Scales?"
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 66.7
+      "sources": [],
+      "duree": 67.2,
+      "image": "images/sintel-01.jpg",
+      "video": "https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4#t=557.3,624.5"
      },
      {
       "numero": 2,
-      "debut": 708.12,
-      "fin": 818.19,
-      "score": 63.0,
-      "titre": "We've got work to do.",
-      "raison": "Citation culte (Wikiquote (en)) : « We've got work to do. » · Dialogues denses, passages sonores intenses, 10 répliques exclamatives ou interrogatives",
+      "debut": 263.25,
+      "fin": 342.29,
+      "score": 22.3,
+      "titre": "Yeah! Come on!",
+      "raison": "Passages sonores intenses, 3 répliques exclamatives ou interrogatives",
       "repliques": [
-       "Jesse, where the hell do you think you're going?",
-       "Back off, man. Jesus.",
-       "We've got work to do. No, no.",
-       "You... You got work to do. I did my part.",
-       "…"
+       "Scales?",
+       "Yeah! Come on!",
+       "Scales!"
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 110.1
+      "sources": [],
+      "duree": 79.0,
+      "image": "images/sintel-02.jpg",
+      "video": "https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4#t=263.2,342.3"
      },
      {
       "numero": 3,
-      "debut": 1702.49,
-      "fin": 1793.96,
-      "score": 58.4,
-      "titre": "Walter, you getting to know me is not gonna make it any easier for you to kill m",
-      "raison": "Citation culte (Wikiquote (en)) : « Walter, you getting to know me is not gonna make it any easier for you to kill m » · Dialogues denses, 3 répliques exclamatives ou interrogatives",
+      "debut": 106.95,
+      "fin": 214.92,
+      "score": 13.2,
+      "titre": "I've been alone for as long as I can remember.",
+      "raison": "Dialogues denses, cris",
       "repliques": [
-       "I guess I'd start off by promising that if you let me go",
-       "I won't come after you, that you'd be safe.",
-       "I guess I'd say what happened between us",
-       "never happened.",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 91.5
-     },
-     {
-      "numero": 4,
-      "debut": 2645.39,
-      "fin": 2756.0,
-      "score": 55.6,
-      "titre": "I don't know. Just... doesn't it seem like... something's missing?",
-      "raison": "Citation culte (Wikiquote (en)) : « I don't know. Just... doesn't it seem like... something's missing? » · 5 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "You're wasting your time.",
-       "Give it up. If this here's a trap car,",
-       "it's gonna take more than your dumb white ass to find it.",
-       "Oh, yeah? You are talking to the trap-car master,",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 110.6
-     },
-     {
-      "numero": 5,
-      "debut": 2315.6,
-      "fin": 2383.3,
-      "score": 55.3,
-      "titre": "You're doing the right thing, Walter.",
-      "raison": "Citation culte (Wikiquote (en)) : « You're doing the right thing, Walter. » · Passages sonores intenses",
-      "repliques": [
-       "Me too.",
-       "Unlock me, Walter.",
-       "The moment I do...",
-       "are you gonna stick me with that broken piece of plate?",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 67.7
-     },
-     {
-      "numero": 6,
-      "debut": 1091.55,
-      "fin": 1158.91,
-      "score": 17.4,
-      "titre": "I ain't doing him, he's a kid. Jesus, was that my question?",
-      "raison": "Dialogues denses, passages sonores intenses, 12 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "- Wendy. - Wendy, huh?",
-       "How much you charge for a windy, Wendy?",
-       "I ain't doing him, he's a kid. Jesus, was that my question?",
-       "Don't think so hard, it's gonna hurt your brain.",
-       "…"
+       "This blade has a dark past.",
+       "It has shed much innocent blood.",
+       "You're a fool for traveling alone, so completely unprepared.",
+       "You're lucky your blood's still flowing.",
+       "Thank you.",
+       "So...",
+       "What brings you to the land of the gatekeepers?",
+       "I'm searching for someone.",
+       "Someone very dear? A kindred spirit?",
+       "A dragon.",
+       "A dangerous quest for a lone hunter.",
+       "I've been alone for as long as I can remember.",
+       "We're almost done. Shhh...",
+       "Hey, sit still."
       ],
       "sources": [],
-      "duree": 67.4
-     },
-     {
-      "numero": 7,
-      "debut": 980.19,
-      "fin": 1043.17,
-      "score": 16.6,
-      "titre": "Figure we'll come over here and check out how the other half lives.",
-      "raison": "Dialogues denses, passages sonores intenses, 9 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Sure about that? Yeah, pretty sure.",
-       "I thought we were going to Cold Stone Creamery.",
-       "Yeah, yeah, well, we took a little detour.",
-       "Figure we'll come over here and check out how the other half lives.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 63.0
-     },
-     {
-      "numero": 8,
-      "debut": 45.41,
-      "fin": 107.94,
-      "score": 15.8,
-      "titre": "Oh, wait a minute. What about calcium? Calcium's not a trace.",
-      "raison": "Dialogues denses, 7 répliques exclamatives ou interrogatives, musique",
-      "repliques": [
-       "Let's break it down.",
-       "Hydrogen. What does that give us?",
-       "By mole, we're looking at 63 percent.",
-       "Sixty-three? Wow. Mm-hm.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 62.5
-     },
-     {
-      "numero": 9,
-      "debut": 833.46,
-      "fin": 894.68,
-      "score": 15.5,
-      "titre": "I want you to talk to him. Walt should talk to him.",
-      "raison": "Dialogues denses, passages sonores intenses, 7 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "I'm back, babe. What's up?",
-       "Walter Jr. Yeah, what about him?",
-       "Marijuana. He's smoking it. Bullshit.",
-       "Excuse me, his own mother seems to think so.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 61.2
-     },
-     {
-      "numero": 10,
-      "debut": 2559.17,
-      "fin": 2621.08,
-      "score": 15.1,
-      "titre": "are going to have to be making do with me today.",
-      "raison": "Dialogues denses, passages sonores intenses, 5 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Everybody,",
-       "I need you all to take your seats.",
-       "Settle down, please. Thank you.",
-       "I understand that Mr. White is feeling",
-       "…"
-      ],
-      "sources": [],
-      "duree": 61.9
+      "duree": 108.0,
+      "image": "images/sintel-03.jpg",
+      "video": "https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4#t=107.0,214.9"
      }
     ]
    },
-   "nom": "Breaking Bad S01E03 and the Bag's in the River.mkv",
-   "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E03 and the Bag's in the River.mkv"
+   "nom": "Sintel (2010).mkv",
+   "chemin": "C:\\Films\\Sintel (2010).mkv",
+   "credit": "Sintel, © Blender Foundation, durian.blender.org, CC BY 3.0"
   },
   {
    "deroule": [
@@ -1653,7 +1037,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "Prise en compte de 4 citation(s) culte(s) de Wikiquote.",
+     "message": "Aucune citation culte retenue : choix sur les seuls indices locaux.",
      "pourcentage": null
     },
     {
@@ -1665,7 +1049,7 @@ window.DONNEES_DEMO = {
      "pourcentage": null
     },
     {
-     "message": "10 extraits proposés.",
+     "message": "2 extraits proposés.",
      "pourcentage": null
     },
     {
@@ -1674,725 +1058,463 @@ window.DONNEES_DEMO = {
    ],
    "identification": {
     "devine": {
-     "titre": "Breaking Bad",
-     "annee": null,
-     "type": "serie",
-     "saison": 1,
-     "episode": 4
+     "titre": "Cosmos Laundromat",
+     "annee": 2015,
+     "type": "film",
+     "saison": null,
+     "episode": null
     },
     "candidats": [
      {
-      "ref": "Breaking Bad",
-      "type": "serie",
-      "titre": "Breaking Bad",
+      "ref": "Cosmos Laundromat",
+      "type": "film",
+      "titre": "Cosmos Laundromat",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Walter White (personnage)",
-      "type": "serie",
-      "titre": "Walter White (personnage)",
+      "ref": "Pierre Bokma",
+      "type": "film",
+      "titre": "Pierre Bokma",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Pluribus",
-      "type": "serie",
-      "titre": "Pluribus",
+      "ref": "Blender",
+      "type": "film",
+      "titre": "Blender",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Krysten Ritter",
-      "type": "serie",
-      "titre": "Krysten Ritter",
+      "ref": "Fondation Blender",
+      "type": "film",
+      "titre": "Fondation Blender",
       "annee": null,
       "source": "Wikipédia"
      },
      {
-      "ref": "Bill Burr",
-      "type": "serie",
-      "titre": "Bill Burr",
-      "annee": null,
-      "source": "Wikipédia"
-     },
-     {
-      "ref": "Jesse Plemons",
-      "type": "serie",
-      "titre": "Jesse Plemons",
+      "ref": "David Revoy",
+      "type": "film",
+      "titre": "David Revoy",
       "annee": null,
       "source": "Wikipédia"
      }
     ],
     "fiche": {
-     "ref": "Breaking Bad",
-     "type": "serie",
-     "titre": "Breaking Bad",
-     "titre_original": "Breaking Bad",
-     "annee": 2008,
-     "synopsis": "Breaking Bad, ou Breaking Bad : Le Chimiste au Québec, est une série télévisée américaine dramatique, criminelle et policière de type néo-western créée par le réalisateur et scénariste Vince Gilligan. Elle est composée de 5 saisons et 62 épisodes d'environ 47 minutes. Elle est diffusée simultanément du 20 janvier 2008 au 29 septembre 2013 sur AMC aux États-Unis et au Canada.\nLa série raconte l'histoire de Walter White (Bryan Cranston) un professeur de chimie surqualifié et père de famille, qui, ayant appris qu'il est atteint d'un cancer du poumon en phase terminale, sombre dans le crime pour assurer l'avenir financier de sa famille. Pour cela, il se lance dans la fabrication et la vente de méthamphétamine avec l'aide de l'un de ses anciens élèves, Jesse Pinkman (Aaron Paul).",
-     "realisation": "Vince Gilligan",
-     "acteurs": [
-      {
-       "nom": "Anna Gunn",
-       "personnage": "Skyler White"
-      },
-      {
-       "nom": "Aaron Paul",
-       "personnage": "Jesse Pinkman"
-      },
-      {
-       "nom": "Dean Norris",
-       "personnage": "Hank Schrader"
-      },
-      {
-       "nom": "Betsy Brandt",
-       "personnage": "Marie Schrader"
-      },
-      {
-       "nom": "RJ Mitte",
-       "personnage": "Walter White Jr."
-      },
-      {
-       "nom": "Jonathan Banks",
-       "personnage": "Mike Ehrmantraut"
-      },
-      {
-       "nom": "Bryan Cranston",
-       "personnage": "Walter White"
-      },
-      {
-       "nom": "Bob Odenkirk",
-       "personnage": "Saul Goodman"
-      }
-     ],
-     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Breaking_Bad_logo.svg/330px-Breaking_Bad_logo.svg.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
-     "saison": 1,
-     "episode": 4,
+     "ref": "Cosmos Laundromat",
+     "type": "film",
+     "titre": "Cosmos Laundromat",
+     "titre_original": "Cosmos Laundromat",
+     "annee": 2015,
+     "synopsis": "Cosmos Laundromat est un court métrage d'animation néerlandais réalisé par Mathieu Auvray, produit par Ton Roosendaal, sorti en 2015.\nIl s'agit du cinquième court métrage libre de la fondation Blender. Sous le nom de code « Gooseberry », il est réalisé en grande partie à l'aide de logiciels open source, principalement Blender. La première partie du film est disponible sur Internet depuis le 10 aout 2015 sous licence Creative Commons Attribution 4.0.",
+     "realisation": "Mathieu Auvray",
+     "acteurs": [],
+     "affiche": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Tornado_deevad_01.jpg/330px-Tornado_deevad_01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+     "saison": null,
+     "episode": null,
      "source": "Wikipédia",
-     "url": "https://fr.wikipedia.org/wiki/Breaking_Bad"
+     "url": "https://fr.wikipedia.org/wiki/Cosmos_Laundromat"
     },
     "avertissement": null
    },
    "transcription": {
-    "film": "Breaking Bad S01E04 Cancer Man.mkv (démo : 60 premières répliques)",
+    "film": "Cosmos Laundromat (2015).mp4",
     "langue": "en",
-    "source": "piste intégrée",
+    "source": "fichier Cosmos Laundromat (2015).en.srt",
     "segments": [
      {
-      "debut": 3.9210000000000003,
-      "fin": 7.131,
-      "texte": "Operation Icebreaker."
+      "debut": 140.0,
+      "fin": 141.003,
+      "texte": "Excuse me?"
      },
      {
-      "debut": 9.718,
-      "fin": 12.637,
-      "texte": "How we liking that? We never used that before, did we?"
+      "debut": 141.008,
+      "fin": 142.01,
+      "texte": "Excuse me, sir?"
      },
      {
-      "debut": 12.805,
-      "fin": 14.222,
-      "texte": "Isn't that the name of a breath mint?"
+      "debut": 144.0,
+      "fin": 145.005,
+      "texte": "Excuse me?"
      },
      {
-      "debut": 14.39,
-      "fin": 15.556000000000001,
-      "texte": "What? Ice Breakers, right?"
+      "debut": 147.0,
+      "fin": 149.0,
+      "texte": "Oh, come on."
      },
      {
-      "debut": 15.724,
-      "fin": 18.059,
-      "texte": "- Breath mint? - Nobody's gonna think that."
+      "debut": 150.0,
+      "fin": 152.0,
+      "texte": "Do you have a moment, sir?"
      },
      {
-      "debut": 18.227,
-      "fin": 19.519,
-      "texte": "Gonna be thinking about some big-ass ship"
+      "debut": 152.0,
+      "fin": 157.005,
+      "texte": "I'm kind of in the middle of something here. Yes? Thank you."
      },
      {
-      "debut": 19.687,
-      "fin": 21.062,
-      "texte": "in the North Pole breaking ice."
+      "debut": 157.005,
+      "fin": 158.014,
+      "texte": "I've come a long way for you, Franck."
      },
      {
-      "debut": 21.23,
-      "fin": 24.232,
-      "texte": "Says you. I'm gonna be thinking Operation Breath Mint."
+      "debut": 169.0,
+      "fin": 171.0,
+      "texte": "My name is Victor."
      },
      {
-      "debut": 24.4,
-      "fin": 25.817,
-      "texte": "I'm thinking Operation Breath Mint"
+      "debut": 172.0,
+      "fin": 174.0,
+      "texte": "Hi."
      },
      {
-      "debut": 25.984,
-      "fin": 28.236,
-      "texte": "every time you and me are on a stakeout together, all right?"
+      "debut": 174.0,
+      "fin": 176.0,
+      "texte": "And you are...."
      },
      {
-      "debut": 28.404,
-      "fin": 31.239,
-      "texte": "Your breath can knock a buzzard off a shit wagon."
+      "debut": 178.0,
+      "fin": 179.005,
+      "texte": "You are Franck."
      },
      {
-      "debut": 31.407,
-      "fin": 35.618,
-      "texte": "All right, Operation TBD."
+      "debut": 180.005,
+      "fin": 183.01,
+      "texte": "You are so much more than just a sheep, aren't you?"
      },
      {
-      "debut": 35.786,
-      "fin": 36.911,
-      "texte": "Thanks for nothing, Gom."
+      "debut": 185.0,
+      "fin": 188.0,
+      "texte": "Oh yeah? How would you know?"
      },
      {
-      "debut": 37.079,
-      "fin": 41.499,
-      "texte": "Anyway, say hello to Domingo Gallardo Molina."
+      "debut": 190.0,
+      "fin": 192.009,
+      "texte": "Look at you. You're an adventurer, Franck."
      },
      {
-      "debut": 41.667,
-      "fin": 45.753,
-      "texte": "A.k.a. Krazy-8. Way smarter than your average cheese eater."
+      "debut": 192.009,
+      "fin": 196.01,
+      "texte": "Just like me, you're... a lone wolf."
      },
      {
-      "debut": 45.921,
-      "fin": 47.38,
-      "texte": "I turned him out when he was street level,"
+      "debut": 198.0,
+      "fin": 202.0,
+      "texte": "Tell me, does one choose to be alone?"
      },
      {
-      "debut": 47.548,
-      "fin": 49.257,
-      "texte": "but this dude's like The Jeffersons,"
+      "debut": 203.0,
+      "fin": 205.0,
+      "texte": "No, one doesn't."
      },
      {
-      "debut": 49.425,
-      "fin": 50.425,
-      "texte": "moving on up."
+      "debut": 205.0,
+      "fin": 207.006,
+      "texte": "One doesn’t even choose to be a wolf."
      },
      {
-      "debut": 50.592,
-      "fin": 51.968,
-      "texte": "Every small-time dealer he'd throw at us,"
+      "debut": 210.0,
+      "fin": 212.0,
+      "texte": "Or does one?"
      },
      {
-      "debut": 52.136,
-      "fin": 53.72,
-      "texte": "he'd end up snaking all their customers."
+      "debut": 215.0,
+      "fin": 218.008,
+      "texte": "Well, mister... err... Hector."
      },
      {
-      "debut": 53.887,
-      "fin": 56.431,
-      "texte": "Now it turns out that he's missing, presumed dead."
+      "debut": 218.008,
+      "fin": 219.01,
+      "texte": "Victor. Victor."
      },
      {
-      "debut": 56.598,
-      "fin": 58.474,
-      "texte": "Found his car out in the boonies."
+      "debut": 220.0,
+      "fin": 226.0,
+      "texte": "I don’t know what you’re on about but I'm just a sheep minding its own business."
      },
      {
-      "debut": 58.642,
-      "fin": 62.77,
-      "texte": "Last guy he ratted out was none other than his cousin,"
+      "debut": 226.0,
+      "fin": 228.006,
+      "texte": "And I suggest you do the same."
      },
      {
-      "debut": 62.938,
-      "fin": 65.231,
-      "texte": "Emilio Koyama."
+      "debut": 228.006,
+      "fin": 231.01,
+      "texte": "No. No no no, Franck. Wait wait wait."
      },
      {
-      "debut": 65.399,
-      "fin": 67.442,
-      "texte": "You thinking the cousin found out and took revenge?"
+      "debut": 232.0,
+      "fin": 235.0,
+      "texte": "No. This is not... the way."
      },
      {
-      "debut": 67.609,
-      "fin": 70.111,
-      "texte": "Could be. Turns out he's missing too."
+      "debut": 235.0,
+      "fin": 238.005,
+      "texte": "Just give me one minute of your precious time."
      },
      {
-      "debut": 70.279,
-      "fin": 73.698,
-      "texte": "And normally I'd say someone did the world a favor."
+      "debut": 238.005,
+      "fin": 241.005,
+      "texte": "Precious time? Hehehe."
      },
      {
-      "debut": 73.866,
-      "fin": 77.785,
-      "texte": "But our snitch's car, turns out we find two grams of meth in it,"
+      "debut": 241.005,
+      "fin": 243.005,
+      "texte": "Yeah just give me one minute."
      },
      {
-      "debut": 77.953,
-      "fin": 79.996,
-      "texte": "we take it to the lab, they come back,"
+      "debut": 243.005,
+      "fin": 246.005,
+      "texte": "You would have one more minute, wouldn't you?"
      },
      {
-      "debut": 80.164,
-      "fin": 82.957,
-      "texte": "they tell us it is the purest they've ever seen."
+      "debut": 248.0,
+      "fin": 251.0,
+      "texte": "Okay half. Half a minute."
      },
      {
-      "debut": 83.125,
-      "fin": 85.626,
-      "texte": "Ninety-nine-point-one percent."
+      "debut": 265.001,
+      "fin": 269.003,
+      "texte": "I knew it. I knew it."
      },
      {
-      "debut": 85.794,
-      "fin": 88.212,
-      "texte": "I mean, our chemist is blown away. Said he couldn't do the same thing better."
+      "debut": 269.003,
+      "fin": 271.01,
+      "texte": "You will not regret this."
      },
      {
-      "debut": 88.38,
-      "fin": 90.757,
-      "texte": "Worse yet, it didn't come out of some super lab in Mexico,"
+      "debut": 272.0,
+      "fin": 275.0,
+      "texte": "The adventures you will have."
      },
      {
-      "debut": 90.924,
-      "fin": 94.093,
-      "texte": "we're thinking this was cooked right here in the Land of Enchantment."
+      "debut": 275.0,
+      "fin": 278.005,
+      "texte": "All the lives you've ever wanted."
      },
      {
-      "debut": 94.261,
-      "fin": 97.764,
-      "texte": "Car was abandoned at what appears to be a cook site."
+      "debut": 278.005,
+      "fin": 281.007,
+      "texte": "All you’ve been missing."
      },
      {
-      "debut": 97.931,
-      "fin": 100.975,
-      "texte": "This is the, uh, only other thing left behind."
+      "debut": 281.007,
+      "fin": 285.01,
+      "texte": "Here. This is... the best product we have... in store."
      },
      {
-      "debut": 101.143,
-      "fin": 102.435,
-      "texte": "We're sending it off to Quantico,"
+      "debut": 286.0,
+      "fin": 290.0,
+      "texte": "Variable spin speed, excellent tumble performance..."
      },
      {
-      "debut": 102.603,
-      "fin": 104.103,
-      "texte": "see if they can pull something off it."
+      "debut": 290.0,
+      "fin": 294.0,
+      "texte": "...in one... handy... device. Squeaky clean."
      },
      {
-      "debut": 104.271,
-      "fin": 106.355,
-      "texte": "Meantime, our guys swabbed the filter element"
+      "debut": 297.0,
+      "fin": 301.0,
+      "texte": "Well this... this better be good."
      },
      {
-      "debut": 106.523,
-      "fin": 109.358,
-      "texte": "and found the same 99.1 meth."
+      "debut": 301.0,
+      "fin": 304.0,
+      "texte": "Took me ages to tie that rope."
      },
      {
-      "debut": 110.652,
-      "fin": 112.862,
-      "texte": "So be on notice."
+      "debut": 305.0,
+      "fin": 307.0,
+      "texte": "With my fucking hooves."
      },
      {
-      "debut": 113.03,
-      "fin": 116.073,
-      "texte": "We got new players in town."
+      "debut": 307.0,
+      "fin": 309.0,
+      "texte": "No more need for hooves."
      },
      {
-      "debut": 116.241,
-      "fin": 119.786,
-      "texte": "Now, we don't know who they are, or where they come from,"
+      "debut": 309.0,
+      "fin": 311.0,
+      "texte": "No more sheepy business."
      },
      {
-      "debut": 119.953,
-      "fin": 122.413,
-      "texte": "but they possess an extremely high skill set."
+      "debut": 312.0,
+      "fin": 314.005,
+      "texte": "Ho! Time flies."
      },
      {
-      "debut": 122.581,
-      "fin": 125.333,
-      "texte": "Me, personally,"
+      "debut": 314.005,
+      "fin": 316.007,
+      "texte": "Wait wait wait wait wait wait."
      },
      {
-      "debut": 125.501,
-      "fin": 129.17,
-      "texte": "I'm thinking Albuquerque just might have a new kingpin."
+      "debut": 316.007,
+      "fin": 317.015,
+      "texte": "How does this thing work?"
      },
      {
-      "debut": 163.914,
-      "fin": 166.29,
-      "texte": "Jesus, Walt, you're burning the shit out of them."
+      "debut": 318.005,
+      "fin": 320.01,
+      "texte": "I mean, how do I make it work?"
      },
      {
-      "debut": 166.458,
-      "fin": 168.709,
-      "texte": "Oh. Damn it."
+      "debut": 321.0,
+      "fin": 322.005,
+      "texte": "No you don't."
      },
      {
-      "debut": 168.877,
-      "fin": 171.295,
-      "texte": "Hey, Sky, you got any more chicken?"
+      "debut": 322.005,
+      "fin": 323.01,
+      "texte": "I just turned it on for you."
      },
      {
-      "debut": 171.463,
-      "fin": 173.464,
-      "texte": "Emeril here is gonna need a fresh pack."
+      "debut": 326.0,
+      "fin": 327.0,
+      "texte": "When can I go?"
      },
      {
-      "debut": 173.632,
-      "fin": 175.424,
-      "texte": "Bam."
+      "debut": 329.0,
+      "fin": 330.0,
+      "texte": "Where can I go?"
      },
      {
-      "debut": 175.592,
-      "fin": 176.884,
-      "texte": "All right, looking good."
+      "debut": 330.0,
+      "fin": 333.0,
+      "texte": "We will pick you up. Don't worry, just stay here."
      },
      {
-      "debut": 177.052,
-      "fin": 179.804,
-      "texte": "Is this low-fat mayonnaise in the coleslaw?"
+      "debut": 333.0,
+      "fin": 335.0,
+      "texte": "In this exact place."
      },
      {
-      "debut": 179.972,
-      "fin": 183.14,
-      "texte": "Uh, I... I don't know, it's store-bought."
+      "debut": 335.0,
+      "fin": 337.0,
+      "texte": "Don't move. Just wait."
      },
      {
-      "debut": 183.308,
-      "fin": 184.934,
-      "texte": "Okay, uh, Hank,"
+      "debut": 338.0,
+      "fin": 340.0,
+      "texte": "That's it?"
      },
      {
-      "debut": 185.102,
-      "fin": 186.143,
-      "texte": "you need another beer?"
+      "debut": 341.0,
+      "fin": 342.0,
+      "texte": "Hey!"
      },
      {
-      "debut": 186.311,
-      "fin": 187.854,
-      "texte": "Does the pope shit in his hat?"
+      "debut": 342.005,
+      "fin": 343.01,
+      "texte": "Hey!"
      },
      {
-      "debut": 188.021,
-      "fin": 190.064,
-      "texte": "Yeah, I don't think that he does, Hank,"
+      "debut": 344.0,
+      "fin": 345.005,
+      "texte": "Wait, mister!"
      },
      {
-      "debut": 190.232,
-      "fin": 191.774,
-      "texte": "and I think everybody would like it"
+      "debut": 345.005,
+      "fin": 348.009,
+      "texte": "Eh, Casper!"
      },
      {
-      "debut": 191.942,
-      "fin": 193.359,
-      "texte": "if you'd stop saying that."
+      "debut": 348.009,
+      "fin": 350.01,
+      "texte": "Hector whatever!"
      }
     ]
    },
    "recherche": {
-    "page": "Breaking Bad (season 1)",
-    "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
+    "page": null,
+    "url": null,
     "pages_possibles": [
-     "Breaking Bad (season 1)",
-     "Breaking Bad",
-     "Breaking Bad (season 3)",
-     "Breaking Bad (season 5)",
-     "Breaking Bad (season 2)",
-     "Breaking Bad (season 4)",
-     "Last words in Breaking Bad media",
-     "El Camino: A Breaking Bad Movie"
+     "Numb3rs"
     ],
-    "resultats": [
-     {
-      "type": "citation",
-      "titre": "So be on notice. We got new players in town. We don't know who they are, where t",
-      "repliques": [
-       "So be on notice. We got new players in town. We don't know who they are, where they come from, but they possess an extremely high skill-set. Me personally? I'm thinking Albuquerque just might have a new kingpin."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 110.652,
-       "fin": 116.073,
-       "score": 100,
-       "replique_trouvee": "So be on notice. We got new players in town. We don't know who they are, where they come from, but they possess an extremely high skill-set. Me personally? I'm thinking Albuquerque just might have a new kingpin."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "I have cancer. Lung cancer. It's bad.",
-      "repliques": [
-       "I have cancer. Lung cancer. It's bad."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 440.816,
-       "fin": 460.668,
-       "score": 100,
-       "replique_trouvee": "I have cancer. Lung cancer. It's bad."
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "You can't be serious. What the hell are you doing here?",
-      "repliques": [
-       "You can't be serious. What the hell are you doing here?",
-       "Yo, I waited 'til the ball buster left. I mean, no offense.",
-       "Who sent you? You wearing a wire? You setting me up?!",
-       "Homo.  A wire? You want a wire? I got a wire.  Speak into the mic, bitch!  What the hell's wrong with you? \"A wire.\" Jesus!",
-       "So who did you tell about–",
-       "Nobody! What are you, nuts?",
-       "Then why are you here?",
-       "I don't know. To like... touch base—",
-       "Touch base?",
-       "Yeah, you know...what you call... a debrief? Maybe we could like... I thought we could debrief.",
-       "Wow, that's... that's what you think we need, to debrief?",
-       "Yeah, after what happened, it just seems like the thing to do. Kind of, you know, talk about it. We can't talk to anybody else. Anyway, that and I wanted to... I wanted to tell you how much everybody digs that meth we cooked.",
-       "Everybody digs... the meth we cooked?",
-       "Seriously, I got dudes that would give their left nut for a little more.",
-       "Great.",
-       "I'm just saying, if you ever...saw your way clear to... you know, you and I... cooking a little more.",
-       "Get the hell off my property.",
-       "What? I'm just saying.",
-       "Go and don't come back. Now!",
-       "Alright. You know what?  Four grand. Your share from selling that batch. That's why I'm here. Yeah, that's right. I didn't smoke it all."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2146.102,
-       "fin": 2281.487,
-       "score": 100,
-       "replique_trouvee": "You can't be serious. What the hell are you doing here?"
-      },
-      "retenue": true
-     },
-     {
-      "type": "citation",
-      "titre": "Can I call them and tell them you'll start next week?",
-      "repliques": [
-       "Can I call them and tell them you'll start next week?",
-       "I just think that we need to... discuss it a little more, that's all.",
-       "What is there to discuss? You're going to get the best treatment and he's the best.",
-       "Well, there's the money discussion. $90,000 out of pocket. Maybe more.",
-       "There's a way, Walt. There's financing, there's installment plans. I could always go back to work. Walt, there's always a way.",
-       "Alright. Skyler, say that there is a way, and we spend all that money, and... am I supposed to leave you with all that debt? I just don't want emotions ruling us. Maybe treatment isn't the way to go.",
-       "Then why don't you just fucking die already? Just give up and die."
-      ],
-      "source": "Wikiquote (en)",
-      "source_url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)",
-      "popularite": 4,
-      "position": {
-       "debut": 2590.129,
-       "fin": 2681.428,
-       "score": 100,
-       "replique_trouvee": "I just think that we need to... discuss it a little more, that's all."
-      },
-      "retenue": true
-     }
-    ],
-    "avertissements": []
+    "resultats": [],
+    "avertissements": [
+     "Aucune page Wikiquote trouvée pour cette œuvre. Vérifiez son titre, ou choisissez une page dans la liste."
+    ]
    },
    "proposition": {
-    "film": "Breaking Bad S01E04 Cancer Man.mkv",
-    "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E04 Cancer Man.mkv",
-    "duree": 2895.685,
+    "film": "Cosmos Laundromat (2015).mp4",
+    "chemin": "C:\\Films\\Cosmos Laundromat (2015).mp4",
+    "duree": 730.615873,
     "extraits": [
      {
       "numero": 1,
-      "debut": 45.62,
-      "fin": 122.5,
-      "score": 65.5,
-      "titre": "So be on notice. We got new players in town. We don't know who they are, where t",
-      "raison": "Citation culte (Wikiquote (en)) : « So be on notice. We got new players in town. We don't know who they are, where t » · Dialogues denses, passages sonores intenses",
+      "debut": 184.7,
+      "fin": 246.5,
+      "score": 23.2,
+      "titre": "I don’t know what you’re on about but I'm just a sheep minding its own business.",
+      "raison": "Dialogues denses, 5 répliques exclamatives ou interrogatives",
       "repliques": [
-       "I turned him out when he was street level,",
-       "but this dude's like The Jeffersons,",
-       "moving on up.",
-       "Every small-time dealer he'd throw at us,",
-       "…"
+       "Oh yeah? How would you know?",
+       "Look at you. You're an adventurer, Franck.",
+       "Just like me, you're... a lone wolf.",
+       "Tell me, does one choose to be alone?",
+       "No, one doesn't.",
+       "One doesn’t even choose to be a wolf.",
+       "Or does one?",
+       "Well, mister... err... Hector.",
+       "Victor. Victor.",
+       "I don’t know what you’re on about but I'm just a sheep minding its own business.",
+       "And I suggest you do the same.",
+       "No. No no no, Franck. Wait wait wait.",
+       "No. This is not... the way.",
+       "Just give me one minute of your precious time.",
+       "Precious time? Hehehe.",
+       "Yeah just give me one minute.",
+       "You would have one more minute, wouldn't you?"
       ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 76.9
+      "sources": [],
+      "duree": 61.8,
+      "image": "images/cosmos-laundromat-01.jpg",
+      "video": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20%281080p%29.mp4#t=184.7,246.5"
      },
      {
       "numero": 2,
-      "debut": 2563.1,
-      "fin": 2637.63,
-      "score": 60.0,
-      "titre": "Can I call them and tell them you'll start next week?",
-      "raison": "Citation culte (Wikiquote (en)) : « Can I call them and tell them you'll start next week? » · Dialogues denses, 4 répliques exclamatives ou interrogatives",
+      "debut": 274.7,
+      "fin": 337.5,
+      "score": 23.0,
+      "titre": "Ho! Time flies.",
+      "raison": "Dialogues denses, 5 répliques exclamatives ou interrogatives",
       "repliques": [
-       "The Air Force is aware of the widely-held belief",
-       "that some of these could be flying saucers from...",
-       "You know, this is actually very hopeful.",
-       "Nothing conclusive in the evidence,",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 74.5
-     },
-     {
-      "numero": 3,
-      "debut": 2149.56,
-      "fin": 2219.76,
-      "score": 59.5,
-      "titre": "You can't be serious. What the hell are you doing here?",
-      "raison": "Citation culte (Wikiquote (en)) : « You can't be serious. What the hell are you doing here? » · Dialogues denses, 12 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "What the hell are you doing here?",
-       "Yo, I waited till the ball buster left.",
-       "I mean, no offense.",
-       "Who sent you, huh? Huh?",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 70.2
-     },
-     {
-      "numero": 4,
-      "debut": 446.82,
-      "fin": 556.93,
-      "score": 57.9,
-      "titre": "I have cancer. Lung cancer. It's bad.",
-      "raison": "Citation culte (Wikiquote (en)) : « I have cancer. Lung cancer. It's bad. » · Dialogues denses, 5 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Lung cancer.",
-       "It's bad.",
-       "Ask him how long he's known.",
-       "I guess a month, maybe.",
-       "…"
-      ],
-      "sources": [
-       {
-        "nom": "Wikiquote (en)",
-        "url": "https://en.wikiquote.org/wiki/Breaking_Bad_(season_1)"
-       }
-      ],
-      "duree": 110.1
-     },
-     {
-      "numero": 5,
-      "debut": 656.19,
-      "fin": 719.34,
-      "score": 18.2,
-      "titre": "- Didn't he get locked up? - No, man, uh, he's out.",
-      "raison": "Dialogues denses, passages sonores intenses, 6 répliques exclamatives ou interrogatives, musique",
-      "repliques": [
-       "Yo, check out these, uh, fake Pop-Tarts.",
-       "These are mad tight, yo. No, thanks, man, pass.",
-       "Your loss. These are from, like, Canada, or something. Imported.",
-       "Hey, yo, what happened to your hallway, man?",
-       "…"
+       "All the lives you've ever wanted.",
+       "All you’ve been missing.",
+       "Here. This is... the best product we have... in store.",
+       "Variable spin speed, excellent tumble performance...",
+       "...in one... handy... device. Squeaky clean.",
+       "Well this... this better be good.",
+       "Took me ages to tie that rope.",
+       "With my fucking hooves.",
+       "No more need for hooves.",
+       "No more sheepy business.",
+       "Ho! Time flies.",
+       "Wait wait wait wait wait wait.",
+       "How does this thing work?",
+       "I mean, how do I make it work?",
+       "No you don't.",
+       "I just turned it on for you.",
+       "When can I go?",
+       "Where can I go?",
+       "We will pick you up. Don't worry, just stay here.",
+       "In this exact place.",
+       "Don't move. Just wait."
       ],
       "sources": [],
-      "duree": 63.1
-     },
-     {
-      "numero": 6,
-      "debut": 231.77,
-      "fin": 292.71,
-      "score": 15.9,
-      "titre": "Anyway, how about your dad here? That there's a good story, Walt.",
-      "raison": "Dialogues denses, passages sonores intenses, 6 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "What, are you kidding me?",
-       "You look like a damn movie star, man.",
-       "Girls gotta be lining up left and right.",
-       "Tell him how good-looking he is.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 60.9
-     },
-     {
-      "numero": 7,
-      "debut": 1448.73,
-      "fin": 1509.63,
-      "score": 15.7,
-      "titre": "Because no matter how they divide it up, someone would be left out.",
-      "raison": "Dialogues denses, passages sonores intenses, 5 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "- Sorry. Hi. - Yeah. Oh, totally.",
-       "Hi. What can I do for you today?",
-       "Which dude?",
-       "- Dude that looks like a lizard? - Next in line.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 60.9
-     },
-     {
-      "numero": 8,
-      "debut": 738.69,
-      "fin": 799.92,
-      "score": 15.6,
-      "titre": "L-I'm just saying, uh, hey, I got... I got plenty of pot.",
-      "raison": "Dialogues denses, passages sonores intenses, musique",
-      "repliques": [
-       "Yeah?",
-       "Oh, yeah. Came up with this whole new recipe.",
-       "It's more like a formula.",
-       "It's, like, way, way more chemically...",
-       "…"
-      ],
-      "sources": [],
-      "duree": 61.2
-     },
-     {
-      "numero": 9,
-      "debut": 1360.23,
-      "fin": 1425.55,
-      "score": 14.6,
-      "titre": "- Hey! - Put that douche bag",
-      "raison": "Dialogues denses, passages sonores intenses, 6 répliques exclamatives ou interrogatives",
-      "repliques": [
-       "Hey, no, hey!",
-       "- Hey! - Put that douche bag",
-       "- on the phone. - Oh, come on.",
-       "Hey, am I? Am I gonna have to come down there",
-       "…"
-      ],
-      "sources": [],
-      "duree": 65.3
-     },
-     {
-      "numero": 10,
-      "debut": 312.27,
-      "fin": 412.7,
-      "score": 13.1,
-      "titre": "and once I caught on to that, I would do crossword puzzles",
-      "raison": "Dialogues denses, 8 répliques exclamatives ou interrogatives, cris",
-      "repliques": [
-       "it got to be so that I would only go in",
-       "when I knew she was working.",
-       "When it was slow, she would lean against the counter,",
-       "doing her crossword puzzles, uh, but kind of hiding it.",
-       "…"
-      ],
-      "sources": [],
-      "duree": 100.4
+      "duree": 62.8,
+      "image": "images/cosmos-laundromat-02.jpg",
+      "video": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20%281080p%29.mp4#t=274.7,337.5"
      }
     ]
    },
-   "nom": "Breaking Bad S01E04 Cancer Man.mkv",
-   "chemin": "C:\\Films\\Breaking Bad\\Saison 1\\Breaking Bad S01E04 Cancer Man.mkv"
+   "nom": "Cosmos Laundromat (2015).mp4",
+   "chemin": "C:\\Films\\Cosmos Laundromat (2015).mp4",
+   "credit": "Cosmos Laundromat, © Blender Foundation, gooseberry.blender.org, CC BY 4.0"
   }
  ],
- "dossier_saison": "C:\\Films\\Breaking Bad\\Saison 1",
+ "dossier_saison": "C:\\Films\\Blender Open Movies",
  "tendances": {
   "source": "Wikipédia (articles les plus consultés, 7 derniers jours)",
   "date": "17/10/2026",

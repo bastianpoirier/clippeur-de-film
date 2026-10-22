@@ -90,7 +90,7 @@
         }
         continue;
       }
-      if (message.endsWith("extraits proposés.")) message = `${Math.min(nombre, 10)} extraits proposés.`;
+      if (message.endsWith("extraits proposés.")) message = `${proposition(episode, nombre).extraits.length} extraits proposés.`;
       suivi(message, null);
       await pause(700 * VITESSE);
     }
@@ -298,7 +298,7 @@
       titre.textContent = "Choisir un film";
       const aide = document.createElement("p");
       aide.textContent = "Dans l'application, la fenêtre Windows de choix de fichier s'ouvre ici. "
-        + "Pour la démo, choisissez un des épisodes déjà analysés :";
+        + "Pour la démo, choisissez un des films déjà analysés :";
       const liste = document.createElement("div");
       liste.className = "liste-demo";
       for (const episode of D.episodes) {
@@ -307,7 +307,7 @@
         const fiche = episode.identification.fiche;
         const duree = Math.round(episode.proposition.duree / 60);
         bouton.append(episode.nom.replace(/\.\w+$/, ""), Object.assign(document.createElement("small"), {
-          textContent: `${fiche.titre} · saison ${fiche.saison}, épisode ${fiche.episode} · ${duree} min`,
+          textContent: `${fiche.titre}${fiche.annee ? `, ${fiche.annee}` : ""} · ${duree} min · ${episode.proposition.extraits.length} extraits`,
         }));
         bouton.onclick = () => { fenetre.close(); resoudre(episode.chemin); };
         liste.append(bouton);
@@ -330,25 +330,50 @@
   window.DEMO = {
     // À la place de l'image du film : un cadre gris avec le numéro et les horaires de l'extrait.
     miniature(e) {
+      if (e.image) return e.image;
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
         <rect width="640" height="360" fill="#2b2a28"/>
         <text x="28" y="62" font-family="system-ui,sans-serif" font-size="34" font-weight="600" fill="#e8e6e1">n° ${e.numero}</text>
         <text x="28" y="98" font-family="ui-monospace,Consolas,monospace" font-size="20" fill="#b3afa8">${heure(e.debut)} – ${heure(e.fin)}</text>
-        <text x="28" y="334" font-family="system-ui,sans-serif" font-size="15" fill="#8a867f">image masquée dans la démo</text>
       </svg>`;
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     },
 
-    // À la place de l'aperçu vidéo préparé par FFmpeg : ce qu'il contiendrait.
+    // À la place de l'aperçu préparé par FFmpeg : le passage lu dans la copie publique du film (archive.org),
+    // entre le début et la fin de l'extrait. Le recadrage 9:16 et la musique ne sont appliqués que dans l'application.
     apercu(video, attente, e, m) {
-      video.controls = false;
-      video.autoplay = false;
-      const format = D.montage.formats[m.format];
-      const musique = m.musique ? `, musique « ${m.musique} » à ${m.volume_musique} %` : "";
-      attente.textContent = `Ici, l'application prépare en quelques secondes un aperçu MP4 de ${Math.round(e.fin - e.debut)} s `
-        + `(${format}${musique}). Vidéo masquée dans la démo.`;
+      if (!e.video) {
+        video.controls = false;
+        attente.textContent = "Aperçu indisponible pour ce film dans la démo.";
+        return;
+      }
+      video.src = `${e.video.split("#")[0]}#t=${e.debut},${e.fin}`;
+      // Le fragment #t suffit d'habitude ; on se cale aussi à la main, au cas où le serveur ou le navigateur l'ignore.
+      video.addEventListener("loadedmetadata", () => { if (Math.abs(video.currentTime - e.debut) > 1) video.currentTime = e.debut; });
+      video.addEventListener("timeupdate", () => { if (video.currentTime >= e.fin) video.pause(); });
+      if (m.format !== "original" || m.musique) {
+        const reglages = [m.format !== "original" && D.montage.formats[m.format], m.musique && `musique « ${m.musique} »`]
+          .filter(Boolean).join(", ");
+        setTimeout(() => {
+          const note = document.createElement("span");
+          note.className = "note-apercu";
+          note.textContent = `Démo : passage original. Dans l'application, l'aperçu est déjà monté (${reglages}).`;
+          video.parentNode?.append(note);
+        });
+      }
     },
   };
+
+  // À l'ouverture, le premier film est déjà chargé : la page affiche ses résultats sans rien choisir ni attendre.
+  const premier = D.episodes[0];
+  Object.assign(etat, {
+    film: premier.nom, chemin: premier.chemin,
+    message: `${premier.proposition.extraits.length} extraits proposés.`,
+    journal: premier.deroule.filter(p => p.message && p.pourcentage == null && !p.message.startsWith("Transcription déjà faite"))
+      .map(p => p.message),
+    identification: clone(premier.identification), transcription: clone(premier.transcription),
+    recherche: clone(premier.recherche), proposition: proposition(premier, 10),
+  });
 
   // --- Les appels de la page vers le serveur arrivent ici ---
   const fetchOrigine = window.fetch.bind(window);

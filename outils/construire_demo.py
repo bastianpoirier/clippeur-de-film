@@ -1,16 +1,19 @@
 """Construit la démo en ligne (dossier « demo ») à partir de la vraie page et de vrais résultats.
 
 La démo est la page de l'application, sans serveur : un script (demo/simulation.js) répond à la place
-du serveur Python, avec des résultats calculés ici par le vrai parcours, sur des épisodes déjà analysés.
+du serveur Python, avec des résultats calculés ici par le vrai parcours de l'application.
 
-Pour respecter les droits d'auteur, la démo ne contient aucune image ni vidéo des épisodes, et seulement
-quelques répliques de chacun. Les noms de fichiers sont nettoyés (pas de chemin du PC).
+Les films utilisés sont ceux de la Blender Foundation, sous licence Creative Commons BY : la démo peut donc
+montrer leurs vraies images (miniatures copiées dans demo/images) et lire les extraits depuis les copies
+publiques des films. Les noms de fichiers sont nettoyés (pas de chemin du PC).
 
-    .venv\\Scripts\\python.exe outils\\construire_demo.py "C:\\dossier\\de\\la\\saison" --episodes 1 3 4
+    .venv\\Scripts\\python.exe outils\\construire_demo.py "C:\\films\\Tears of Steel (2012).mov" ...
 """
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,17 +23,33 @@ sys.path.insert(0, str(RACINE))
 from clippeur import cache  # noqa: E402
 from clippeur.export import FORMATS, VOLUME_MUSIQUE_DEFAUT  # noqa: E402
 from clippeur.file_attente import REGLAGES_PAR_DEFAUT  # noqa: E402
+from clippeur.selection import nom_de_fichier  # noqa: E402
 from clippeur.traitement import analyser_film  # noqa: E402
 from clippeur.transcription import MODELE_PAR_DEFAUT  # noqa: E402
 
 DOSSIER_DEMO = RACINE / "demo"
+DOSSIER_IMAGES = DOSSIER_DEMO / "images"
 GABARIT = RACINE / "clippeur" / "templates" / "index.html"
-DOSSIER_FICTIF = "C:\\Films\\Breaking Bad\\Saison 1"  # affiché à la place du vrai chemin du PC
-
-REPLIQUES_TRANSCRIPTION = 60  # répliques de la transcription montrées dans la démo
-REPLIQUES_PAR_EXTRAIT = 4
+DOSSIER_FICTIF = "C:\\Films"  # affiché à la place du vrai chemin du PC
 NB_EXTRAITS = 10
 MUSIQUES_EXEMPLE = ["piano-calme (exemple).mp3", "electro-rythmee (exemple).mp3"]
+
+# Copies des films lues par la démo pour les aperçus, et mention de la licence (CC BY). Tears of Steel,
+# chargé à l'ouverture de la démo, a sa propre copie légère (demo/films, encodée en 480p avec FFmpeg).
+SOURCES = {
+    "Tears of Steel": {
+        "video": "films/tears-of-steel-480p.mp4",  # copie 480p hébergée avec la démo (CC BY le permet)
+        "credit": "Tears of Steel, © Blender Foundation, mango.blender.org, CC BY 3.0",
+    },
+    "Sintel": {
+        "video": "https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4",
+        "credit": "Sintel, © Blender Foundation, durian.blender.org, CC BY 3.0",
+    },
+    "Cosmos Laundromat": {
+        "video": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20%281080p%29.mp4",
+        "credit": "Cosmos Laundromat, © Blender Foundation, gooseberry.blender.org, CC BY 4.0",
+    },
+}
 
 POLICES = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
            '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
@@ -50,12 +69,23 @@ ENTETE = """
 INTRO = """
   <div class="intro-demo">
     <h1 class="titre-demo">Démo</h1>
-    <p>C'est l'interface de l'application, telle qu'elle tourne sur un PC. Ici, aucun film n'est analysé : la page
-      rejoue des résultats que l'application a calculés à l'avance sur trois épisodes de <i>Breaking Bad</i>, en
-      accéléré. Les images et les vidéos sont masquées, et seules quelques répliques sont affichées.</p>
-    <p class="consigne">Pour commencer, choisissez un épisode à l'étape <a href="#etape-film">1. Film</a>.</p>
+    <p>C'est l'interface de l'application, telle qu'elle tourne sur un PC. Les résultats affichés ont été calculés
+      par l'application sur trois courts métrages libres de la Blender Foundation (<i>Tears of Steel</i>,
+      <i>Sintel</i> et <i>Cosmos Laundromat</i>) ; la page les rejoue sans rien analyser.</p>
+    <p class="consigne"><i>Tears of Steel</i> est déjà chargé : ses <a href="#carte-extraits">extraits</a> sont
+      prêts, cliquez sur une image pour voir le passage. Pour voir l'analyse se dérouler, choisissez un autre film
+      à l'étape <a href="#etape-film">1. Film</a>.</p>
   </div>
   <p class="intertitre-demo">Les autres outils de l'application</p>
+"""
+
+CREDITS = """
+<footer class="credits-demo">
+  <p>Films de la Blender Foundation, sous licence Creative Commons BY :
+    <i>Tears of Steel</i> (2012, mango.blender.org), <i>Sintel</i> (2010, durian.blender.org) et
+    <i>Cosmos Laundromat</i> (2015, gooseberry.blender.org). Les aperçus de <i>Tears of Steel</i> viennent d'une copie en 480p hébergée avec cette page, ceux des deux autres
+    films de leurs copies sur archive.org.</p>
+</footer>
 """
 
 # Remplacements dans la page : ce qui demande le serveur (fichiers vidéo, images) est pris en charge
@@ -66,6 +96,7 @@ REMPLACEMENTS = [
     ("</style>", "</style>\n" + POLICES + '<link rel="stylesheet" href="../assets/tokens.css">\n'
                  '<link rel="stylesheet" href="demo.css">'),
     ("<body>\n<main>\n", "<body>\n" + ENTETE + "<main>\n" + INTRO),
+    ("</main>\n", "</main>\n" + CREDITS),
     ('<section class="carte">\n    <h2>1. Film</h2>', '<section class="carte" id="etape-film">\n    <h2>1. Film</h2>'),
     ('<section class="carte">\n    <h2>2. Transcription</h2>',
      '<section class="carte" id="carte-transcription">\n    <h2>2. Transcription</h2>'),
@@ -82,18 +113,7 @@ REMPLACEMENTS = [
 ]
 
 
-def nom_propre(film: Path) -> str:
-    """« Breaking.Bad.S01E01.Pilot.720p.10bit.BluRay....mkv » → « Breaking Bad S01E01 Pilot.mkv »."""
-    from guessit import guessit
-
-    g = guessit(film.name)
-    nom = f"{g['title']} S{g['season']:02d}E{g['episode']:02d}"
-    if g.get("episode_title"):
-        nom += f" {g['episode_title']}"
-    return nom + film.suffix
-
-
-def analyser(film: Path) -> dict:
+def analyser(film: Path, langue: str) -> dict:
     """Le vrai parcours de l'application, avec ses messages d'avancement et ses résultats, dans l'ordre."""
     deroule = []
 
@@ -103,16 +123,16 @@ def analyser(film: Path) -> dict:
     def etape(nom: str, resultat: dict) -> None:
         deroule.append({"etape": nom})
 
-    resultats = analyser_film(film, suivi, langue=None, nombre=NB_EXTRAITS, avec_sons=True, etape=etape)
+    resultats = analyser_film(film, suivi, langue=langue, nombre=NB_EXTRAITS, avec_sons=True, etape=etape)
     # Les messages de pourcentage sont nombreux : on garde ceux du journal et quelques étapes de progression.
     deroule = [d for i, d in enumerate(deroule) if d.get("pourcentage") is None or i % 10 == 0]
     return {"deroule": deroule} | resultats
 
 
-def frise(film: Path, episode: dict, nb_cases: int = 160) -> dict:
-    """Résumé de l'analyse d'un épisode, pour la frise de la page de présentation : des valeurs
-    entre 0 et 1 par tranche de temps (aucun texte des dialogues), et la place des citations et des extraits."""
-    duree = episode["proposition"]["duree"]
+def frise(film: Path, resultat: dict, nb_cases: int = 160) -> dict:
+    """Résumé de l'analyse d'un film, pour la figure de la page de présentation : des valeurs entre 0 et 1
+    par tranche de temps, et la place des citations et des extraits."""
+    duree = resultat["proposition"]["duree"]
     pas = duree / nb_cases
 
     def par_case(valeurs_par_seconde, agreger=max):
@@ -123,7 +143,7 @@ def frise(film: Path, episode: dict, nb_cases: int = 160) -> dict:
         return cases
 
     parole = [0.0] * (int(duree) + 1)
-    for s in episode["transcription"]["segments"]:
+    for s in resultat["transcription"]["segments"]:
         for t in range(int(s["debut"]), min(int(s["fin"]) + 1, len(parole))):
             parole[t] = 1.0
     volume = [min(max((v + 55) / 40, 0.0), 1.0) for v in cache.lire(film, "volume")["volume"]]
@@ -142,29 +162,32 @@ def frise(film: Path, episode: dict, nb_cases: int = 160) -> dict:
             "plans": arrondir(par_case(plans, sum)),
         },
         "citations": [[round(r["position"]["debut"]), round(r["position"]["fin"])]
-                      for r in episode["recherche"]["resultats"] if r.get("position")],
-        "extraits": [{"debut": round(e["debut"]), "fin": round(e["fin"]), "score": e["score"], "titre": e["titre"].strip()}
-                     for e in episode["proposition"]["extraits"]],
+                      for r in (resultat["recherche"] or {}).get("resultats", []) if r.get("position")],
+        "extraits": [{"debut": round(e["debut"]), "fin": round(e["fin"]), "score": e["score"], "titre": e["titre"].strip(),
+                      "raison": e["raison"], "image": e.get("image")}
+                     for e in resultat["proposition"]["extraits"]],
     }
 
 
-def alleger(episode: dict) -> dict:
-    """Ne garde que quelques répliques, et rien qui pointe vers des fichiers du PC."""
-    transcription = episode["transcription"]
-    transcription["segments"] = transcription["segments"][:REPLIQUES_TRANSCRIPTION]
-    transcription["film"] += f" (démo : {REPLIQUES_TRANSCRIPTION} premières répliques)"
-    for extrait in episode["proposition"]["extraits"]:
+def illustrer(film: Path, resultat: dict, titre: str) -> None:
+    """Extrait du film une vraie image par extrait (640 px, au même instant que la miniature de l'application),
+    et ajoute à chaque extrait l'adresse de son aperçu."""
+    DOSSIER_IMAGES.mkdir(parents=True, exist_ok=True)
+    source = SOURCES.get(titre, {})
+    for extrait in resultat["proposition"]["extraits"]:
         extrait.pop("miniature", None)
-        if len(extrait["repliques"]) > REPLIQUES_PAR_EXTRAIT:
-            extrait["repliques"] = extrait["repliques"][:REPLIQUES_PAR_EXTRAIT] + ["…"]
-    return episode
+        nom = f"{nom_de_fichier(titre)}-{extrait['numero']:02d}.jpg"
+        instant = extrait["debut"] + min((extrait["fin"] - extrait["debut"]) / 2, 10)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{instant:.2f}", "-i", str(film), "-frames:v", "1",
+                        "-vf", "scale=640:-2:flags=lanczos", "-q:v", "4", str(DOSSIER_IMAGES / nom)], check=True)
+        extrait["image"] = f"images/{nom}"
+        if source.get("video"):
+            extrait["video"] = f"{source['video']}#t={extrait['debut']:.1f},{extrait['fin']:.1f}"
 
 
-def anonymiser(donnees: dict, film: Path, propre: str) -> dict:
+def anonymiser(donnees: dict, film: Path) -> dict:
     texte = json.dumps(donnees, ensure_ascii=False)
-    for avant, apres in [(str(film), f"{DOSSIER_FICTIF}\\{propre}"), (str(film.parent), DOSSIER_FICTIF),
-                         (film.name, propre), (film.stem, Path(propre).stem),
-                         (str(cache.DOSSIER_CACHE), "cache")]:
+    for avant, apres in [(str(film.parent), DOSSIER_FICTIF), (str(cache.DOSSIER_CACHE), "cache")]:
         texte = texte.replace(json.dumps(avant, ensure_ascii=False)[1:-1], json.dumps(apres, ensure_ascii=False)[1:-1])
     return json.loads(texte)
 
@@ -180,31 +203,31 @@ def construire_page() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("dossier", type=Path, help="dossier de la saison (épisodes déjà analysés)")
-    parser.add_argument("--episodes", type=int, nargs="+", default=[1, 3, 4])
+    parser.add_argument("films", type=Path, nargs="+", help="fichiers des films ; le premier sert à la figure de la présentation")
+    parser.add_argument("--langue", default="en", choices=["fr", "en"], help="langue des dialogues (en par défaut)")
     args = parser.parse_args()
 
-    videos = sorted(f for f in args.dossier.iterdir() if f.suffix.lower() in {".mkv", ".mp4", ".avi", ".mov"})
-    episodes = []
-    for film in videos:
-        propre = nom_propre(film)
-        if not any(f"E{n:02d}" in propre for n in args.episodes):
-            continue
-        print(f"Analyse de {propre}...")
-        episode = analyser(film)
-        if not episodes:  # la frise de la présentation montre le premier épisode
+    if DOSSIER_IMAGES.exists():
+        shutil.rmtree(DOSSIER_IMAGES)
+    films = []
+    for film in args.films:
+        titre = film.stem.split(" (")[0]
+        print(f"Analyse de {film.name}...")
+        resultat = analyser(film, args.langue)
+        illustrer(film, resultat, titre)
+        if not films:  # la figure de la présentation montre le premier film
             (RACINE / "assets").mkdir(exist_ok=True)
             (RACINE / "assets" / "frise.js").write_text(
                 "// Généré par outils/construire_demo.py : ne pas modifier à la main.\n"
-                f"window.FRISE = {json.dumps(frise(film, episode) | {'nom': propre}, ensure_ascii=False)};\n",
+                f"window.FRISE = {json.dumps(frise(film, resultat) | {'nom': titre}, ensure_ascii=False)};\n",
                 encoding="utf-8")
-        episode = alleger(episode)
-        episodes.append(anonymiser(episode, film, propre) | {"nom": propre, "chemin": f"{DOSSIER_FICTIF}\\{propre}"})
+        films.append(anonymiser(resultat, film) | {"nom": film.name, "chemin": f"{DOSSIER_FICTIF}\\{film.name}",
+                                                    "credit": SOURCES.get(titre, {}).get("credit")})
 
     tendances = next(iter(sorted(cache.DOSSIER_CACHE.glob("tendances_*.json"), reverse=True)), None)
     donnees = {
-        "episodes": episodes,
-        "dossier_saison": DOSSIER_FICTIF,
+        "episodes": films,
+        "dossier_saison": f"{DOSSIER_FICTIF}\\Blender Open Movies",
         "tendances": json.loads(tendances.read_text(encoding="utf-8")) if tendances else None,
         "montage": {"formats": FORMATS, "musiques": MUSIQUES_EXEMPLE, "volume_musique": VOLUME_MUSIQUE_DEFAUT},
         "reglages_auto": REGLAGES_PAR_DEFAUT,
@@ -214,7 +237,7 @@ def main() -> None:
         "// Généré par outils/construire_demo.py : ne pas modifier à la main.\n"
         f"window.DONNEES_DEMO = {json.dumps(donnees, ensure_ascii=False, indent=1)};\n", encoding="utf-8")
     construire_page()
-    print(f"Démo construite dans {DOSSIER_DEMO} ({len(episodes)} épisodes).")
+    print(f"Démo construite dans {DOSSIER_DEMO} ({len(films)} films).")
 
 
 if __name__ == "__main__":
